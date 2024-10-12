@@ -10,6 +10,7 @@ import 'package:user_app/core/providers/product_provider.dart';
 import 'package:user_app/core/providers/theme_change_provider.dart';
 import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/core/providers/wishlist_provider.dart';
+import 'package:user_app/firebase_options.dart';
 import 'package:user_app/ui/screens/sign_up.dart';
 import 'package:user_app/ui/screens/splash_screen.dart';
 import 'package:user_app/ui/screens/update_users_inofrmation.dart';
@@ -29,7 +30,9 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   final isDarkTheme = await ThemePreferences().getTheme();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -44,14 +47,15 @@ void main() async {
 class MyApp extends StatelessWidget {
   final bool isDarkTheme;
 
-  const MyApp({Key? key, required this.isDarkTheme}) : super(key: key);
+  const MyApp({super.key, required this.isDarkTheme});
 
   @override
   Widget build(BuildContext context) {
-    return Sizer(builder: (context, orientation, deviceType) {
-      return ChangeNotifierProvider(
-        create: (_) => ThemeChangeProvider(isDarkTheme),
-        child: FutureBuilder(
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return ChangeNotifierProvider(
+          create: (_) => ThemeChangeProvider(isDarkTheme),
+          child: FutureBuilder(
             future: Firebase.initializeApp(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
@@ -114,14 +118,17 @@ class MyApp extends StatelessWidget {
                   theme: Styles.getThemeData(themeChangeProvider.isDarkTheme),
                   home: Scaffold(
                     body: Center(
-                        child: CircularProgressIndicator(
-                      color: Theme.of(context).primaryColor,
-                    )),
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
                   ),
                 ),
               );
-            }),
-      );
-    });
+            },
+          ),
+        );
+      },
+    );
   }
 }

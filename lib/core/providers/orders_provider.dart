@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:user_app/core/models/orders_model.dart';
 
-class OrdersProvider extends ChangeNotifier {
+class OrdersProvider with ChangeNotifier {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 

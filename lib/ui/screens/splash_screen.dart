@@ -40,19 +40,16 @@ fetchingData(){
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
-    List<ProductModel> _productList = productProvider.products;
+   List<ProductModel> _productList = productProvider.products;
      return SafeArea(
        child: Scaffold(
         backgroundColor: Colors.white,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SafeArea(
-              child: SizedBox(
-                width: 385,
-                height: 220,
-                child: Image.asset('assets/icon.png'),
-              ),
+            SizedBox(
+
+              child: Image.asset('assets/icon.png'),
             ),
            SizedBox(height: 5.h,),
             const SpinKitThreeBounce(

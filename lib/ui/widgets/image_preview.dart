@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+///TODO https://gist.github.com/abdulawalarif/bb6261e12e19085906ddc35c3b6d942f briging this package into project
 /// Custom widget to show the preview of image from the device memory
 
 class ImagePreview extends StatelessWidget {

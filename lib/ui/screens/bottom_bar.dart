@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import 'package:user_app/ui/constants/app_consntants.dart';
 import 'package:user_app/ui/screens/feeds.dart';
 import 'package:user_app/ui/screens/home.dart';
@@ -28,7 +29,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       {'page': HomeScreen(), 'title': 'Home'},
       {'page': FeedsScreen(), 'title': 'Feeds'},
       {'page': SearchScreen(), 'title': 'Search'},
-      {'page': Authenticate(child: WishlistScreen()), 'title': 'Wishlist'},
+      {
+        'page': const Authenticate(child: WishlistScreen()),
+        'title': 'Wishlist',
+      },
       {'page': Authenticate(child: UserInfoScreen()), 'title': 'User'},
     ];
     _selectedIndex = 0;
@@ -39,47 +43,50 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: _pages[_selectedIndex]['page'],
-      bottomNavigationBar: BottomAppBar(
-        elevation: 10,
-        notchMargin: 6,
-        clipBehavior: Clip.antiAlias,
-        shape: CircularNotchedRectangle(),
-        child: BottomNavigationBar(
-          unselectedItemColor: Theme.of(context).unselectedWidgetColor,
-          selectedItemColor: Theme.of(context).primaryColor,
-          onTap: _selectedPages,
-          currentIndex: _selectedIndex,
-          type: BottomNavigationBarType.fixed,
-          showUnselectedLabels: false,
-          showSelectedLabels: false,
-          backgroundColor: Theme.of(context).cardColor,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(mHomeIcon),
-              label: 'Home',
-              tooltip: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(mFeedsIcon),
-              label: 'Feeds',
-              tooltip: 'Feeds',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(null),
-              label: 'Search',
-              tooltip: 'Search',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(mWishListIcon),
-              label: 'Wishlist',
-              tooltip: 'Wishlist',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(mUserIcon),
-              label: 'User',
-              tooltip: 'User',
-            ),
-          ],
+      bottomNavigationBar: SizedBox(
+        height: 11.h,
+        child: BottomAppBar(
+          elevation: 10,
+          notchMargin: 6,
+          clipBehavior: Clip.antiAlias,
+          shape: const CircularNotchedRectangle(),
+          child: BottomNavigationBar(
+            unselectedItemColor: Theme.of(context).unselectedWidgetColor,
+            selectedItemColor: Theme.of(context).primaryColor,
+            onTap: _selectedPages,
+            currentIndex: _selectedIndex,
+            type: BottomNavigationBarType.fixed,
+            showUnselectedLabels: false,
+            showSelectedLabels: false,
+            backgroundColor: Theme.of(context).cardColor,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(mHomeIcon),
+                label: 'Home',
+                tooltip: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(mFeedsIcon),
+                label: 'Feeds',
+                tooltip: 'Feeds',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(null),
+                label: 'Search',
+                tooltip: 'Search',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(mWishListIcon),
+                label: 'Wishlist',
+                tooltip: 'Wishlist',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(mUserIcon),
+                label: 'User',
+                tooltip: 'User',
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButtonLocation:
@@ -88,9 +95,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         onPressed: () {
           _selectedPages(2);
         },
-        child: Icon(mSearchIcon),
         elevation: 2,
         splashColor: Theme.of(context).primaryColor.withAlpha(2),
+        child: const Icon(mSearchIcon),
       ),
     );
   }
