@@ -4,6 +4,7 @@ import 'package:user_app/core/models/product_model.dart';
 
 class ProductProvider with ChangeNotifier {
   List<ProductModel> _products = [];
+  bool _isFetched = false;
 
   List<ProductModel> get products => _products;
 
@@ -24,13 +25,16 @@ class ProductProvider with ChangeNotifier {
       .toList();
 
   Future<void> fetchProducts() async {
+    if (_isFetched) return; // Prevents multiple fetches
     await FirebaseFirestore.instance
         .collection('products')
         .get()
-        .then((snapshot) => {
-              snapshot.docs.forEach((element) {
-                _products.insert(0, ProductModel.fromJson(element.data()));
-              })
-            });
+        .then((snapshot) {
+      snapshot.docs.forEach((element) {
+        _products.insert(0, ProductModel.fromJson(element.data()));
+      });
+      _isFetched = true; // Set flag to true after fetching
+      notifyListeners(); // Notify the listeners about the update
+    });
   }
 }

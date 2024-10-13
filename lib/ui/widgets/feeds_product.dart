@@ -34,7 +34,7 @@ class FeedsProduct extends StatelessWidget {
                         /// TODO edited imageList
                           image: NetworkImage(_product.imageUrls![0]),
                           onError: (object, stacktrace) => {},
-                          fit: BoxFit.contain)),
+                          fit: BoxFit.contain,),),
                 ),
                 const    badges.Badge(
                 //  toAnimate: false,
@@ -64,7 +64,7 @@ class FeedsProduct extends StatelessWidget {
                               );
                             },
                           ),
-                        )))
+                        ),),),
               ],
             ),
             Container(
@@ -83,14 +83,14 @@ class FeedsProduct extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        color: Theme.of(context).primaryColor, fontSize: 16),
+                        color: Theme.of(context).primaryColor, fontSize: 16,),
                   ),
                   const SizedBox(height: 10),
 
                 ],
               ),
-            )
-          ]),
+            ),
+          ],),
         ),
       ),
     );

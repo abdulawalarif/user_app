@@ -51,7 +51,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ProductImagesListOnDetailsView(product: _product),
+                child: ProductImagesListWidget(productImgList: _product.imageUrls??[]),
               ),
               const SizedBox(height: 20,),
               Container(
@@ -100,13 +100,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   IconButton(
                                 onPressed: () {
                                   wishlistProvider
-                                      .addAndRemoveItem(WishlistModel(
+                                      .addAndRemoveItem(
+                                      WishlistModel(
                                     id: _productId,
                                     /// TODO edited imageList
                                     imageUrl: _product.imageUrls![0],
                                     name: _product.name,
                                     price: _product.price,
-                                   ));
+                                   ),);
                                 },
                                 icon:
                                     wishlistProvider.isInWishList(_product.id)
