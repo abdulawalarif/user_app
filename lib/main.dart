@@ -29,19 +29,12 @@ import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
   final isDarkTheme = await ThemePreferences().getTheme();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-  runApp(
-    MyApp(
-      isDarkTheme: isDarkTheme,
-    ),
-  );
+  runApp(MyApp(isDarkTheme: isDarkTheme));
 }
 
 class MyApp extends StatelessWidget {
@@ -53,77 +46,40 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Sizer(
       builder: (context, orientation, deviceType) {
-        return ChangeNotifierProvider(
-          create: (_) => ThemeChangeProvider(isDarkTheme),
-          child: FutureBuilder(
-            future: Firebase.initializeApp(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return MultiProvider(
-                  providers: [
-                    ChangeNotifierProvider(create: (_) => AuthProvider()),
-                    ChangeNotifierProvider(create: (_) => UserDataProvider()),
-                    ChangeNotifierProvider(create: (_) => ProductProvider()),
-                    ChangeNotifierProvider(create: (_) => CartProvider()),
-                    ChangeNotifierProvider(create: (_) => WishlistProvider()),
-                    ChangeNotifierProvider(create: (_) => OrdersProvider()),
-                  ],
-                  child: Consumer<ThemeChangeProvider>(
-                    builder: (_, themeChangeProvider, __) {
-                      return MaterialApp(
-                        debugShowCheckedModeBanner: false,
-                        title: 'Store App',
-                        theme: Styles.getThemeData(
-                            themeChangeProvider.isDarkTheme),
-                        routes: {
-                          RouteName.mainScreen: (context) => SplashScreen(),
-                          RouteName.bottomBarScreen: (context) =>
-                              BottomBarScreen(),
-                          RouteName.logInScreen: (contex) =>
-                              const LogInScreen(),
-                          RouteName.buyScreen: (contex) => BuyScreen(),
-                          RouteName.signUpScreen: (context) =>
-                              const SignUpScreen(),
-                          RouteName.forgotPasswordScreen: (context) =>
-                              const ForgotPasswordScreen(),
-                          RouteName.productDetailScreen: (context) =>
-                              const ProductDetailScreen(),
-                          RouteName.feedsScreen: (context) => FeedsScreen(),
-                          RouteName.cartScreen: (context) => CartScreen(),
-                          RouteName.updateUserInfo: (context) =>
-                              const UpdateUsersInformation(),
-                          RouteName.wishlistScreen: (context) =>
-                              const WishlistScreen(),
-                          RouteName.categoryScreen: (context) =>
-                              CategoryScreen(),
-                        },
-                      );
-                    },
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Consumer<ThemeChangeProvider>(
-                  builder: (_, themeChangeProvider, __) => MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    theme: Styles.getThemeData(themeChangeProvider.isDarkTheme),
-                    home: const Scaffold(
-                      body: Center(child: Text('Something went wrong :(')),
-                    ),
-                  ),
-                );
-              }
-              return Consumer<ThemeChangeProvider>(
-                builder: (_, themeChangeProvider, __) => MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  theme: Styles.getThemeData(themeChangeProvider.isDarkTheme),
-                  home: Scaffold(
-                    body: Center(
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  ),
-                ),
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => AuthProvider()),
+            ChangeNotifierProvider(create: (_) => UserDataProvider()),
+            ChangeNotifierProvider(create: (_) => ProductProvider()),
+            ChangeNotifierProvider(create: (_) => CartProvider()),
+            ChangeNotifierProvider(create: (_) => WishlistProvider()),
+            ChangeNotifierProvider(create: (_) => OrdersProvider()),
+            ChangeNotifierProvider(
+                create: (_) => ThemeChangeProvider(isDarkTheme)),
+          ],
+          child: Consumer<ThemeChangeProvider>(
+            builder: (_, themeChangeProvider, __) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Store App',
+                theme: Styles.getThemeData(themeChangeProvider.isDarkTheme),
+                routes: {
+                  RouteName.mainScreen: (context) => SplashScreen(),
+                  RouteName.bottomBarScreen: (context) => BottomBarScreen(),
+                  RouteName.logInScreen: (contex) => const LogInScreen(),
+                  RouteName.buyScreen: (contex) => BuyScreen(),
+                  RouteName.signUpScreen: (context) => const SignUpScreen(),
+                  RouteName.forgotPasswordScreen: (context) =>
+                      const ForgotPasswordScreen(),
+                  RouteName.productDetailScreen: (context) =>
+                      const ProductDetailScreen(),
+                  RouteName.feedsScreen: (context) => FeedsScreen(),
+                  RouteName.cartScreen: (context) => CartScreen(),
+                  RouteName.updateUserInfo: (context) =>
+                      const UpdateUsersInformation(),
+                  RouteName.wishlistScreen: (context) => const WishlistScreen(),
+                  RouteName.categoryScreen: (context) => CategoryScreen(),
+                },
               );
             },
           ),
