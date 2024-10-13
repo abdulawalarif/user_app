@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    fetchingData();
+   // fetchingData();
     Timer(const Duration(microseconds: 100), () {
       /// will be 2 seconds
       Navigator.pushReplacement(
@@ -28,19 +28,19 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  fetchingData(){
-    final  _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _authProvider.signInAnonymously();
-    final productProvider = Provider.of<ProductProvider>(context, listen: false);
-    final cartProvider = Provider.of<CartProvider>(context, listen: false);
-    cartProvider.getData();
-    productProvider.fetchProducts();
-  }
+  // fetchingData(){
+  //   final  _authProvider = Provider.of<AuthProvider>(context, listen: false);
+  //   _authProvider.signInAnonymously();
+  //   final productProvider = Provider.of<ProductProvider>(context, listen: false);
+  //   final cartProvider = Provider.of<CartProvider>(context, listen: false);
+  //   cartProvider.getData();
+  //   productProvider.fetchProducts();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final productProvider = Provider.of<ProductProvider>(context);
-    List<ProductModel> _productList = productProvider.products;
+    // final productProvider = Provider.of<ProductProvider>(context);
+    // List<ProductModel> _productList = productProvider.products;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
