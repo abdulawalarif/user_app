@@ -6,7 +6,7 @@ import 'package:user_app/ui/constants/app_consntants.dart';
 import 'package:user_app/ui/constants/assets_path.dart';
 import 'package:user_app/ui/constants/route_name.dart';
 import 'package:user_app/core/models/user_model.dart';
- import 'package:user_app/core/providers/theme_change_provider.dart';
+import 'package:user_app/core/providers/theme_change_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/ui/utils/my_alert_dialog.dart';
@@ -54,8 +54,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           _userData.imageUrl,
                           fit: BoxFit.cover,
                         )
-                      : Image.asset(ImagePath.profilePlaceholder,
-                          fit: BoxFit.cover),
+                      : Image.asset(
+                          ImagePath.profilePlaceholder,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               SliverToBoxAdapter(
@@ -85,7 +87,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 context,
                                 () => Navigator.of(context)
                                     .pushNamed(RouteName.cartScreen)),
-
                           ],
                         ),
                       ),
@@ -94,15 +95,18 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       Row(
                         children: [
                           _sectionTitle('User Details'),
-                            const Spacer(),
-                       
+                          const Spacer(),
                           FloatingActionButton(
                             mini: true,
+
                             ///will have to navigate to the update users information page
 
-                            onPressed: () => Navigator.of(context).pushNamed(RouteName.updateUserInfo),
+                            onPressed: () => Navigator.of(context).pushNamed(
+                              RouteName.updateUserInfo,
+                              arguments: _userData,
+                            ),
                             heroTag: 'btn1',
-                            child: Icon(mEditIcon),
+                            child: const Icon(mEditIcon),
                           )
                         ],
                       ),
@@ -110,18 +114,30 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         child: Column(
                           children: [
                             _userInformationListTile(
-                                _userData.fullName, mUserIcon, context),
-
+                              _userData.fullName,
+                              mUserIcon,
+                              context,
+                            ),
                             _userInformationListTile(
-                                 _userData.email, mEmailIcon, context),
+                              _userData.email,
+                              mEmailIcon,
+                              context,
+                            ),
                             _userInformationListTile(
-                                _userData.phoneNumber, mPhoneIcon, context),
+                              _userData.phoneNumber,
+                              mPhoneIcon,
+                              context,
+                            ),
                             _userInformationListTile(
-                                _userData.address, mShippingAddress, context),
+                              _userData.address,
+                              mShippingAddress,
+                              context,
+                            ),
                             _userInformationListTile(
-                                'Joined ${_userData.joinedAt}',
-                                mJoinDateIcon,
-                                context),
+                              'Joined ${_userData.joinedAt}',
+                              mJoinDateIcon,
+                              context,
+                            ),
                           ],
                         ),
                       ),
@@ -176,7 +192,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   Widget _userBagListTile(String title, IconData leadingIcon,
       IconData trailingIcon, BuildContext context, Function() onTap) {
     return ListTile(
-      title: Text(title, ),
+      title: Text(
+        title,
+      ),
       leading: _customIcon(leadingIcon),
       trailing: _customIcon(trailingIcon),
       onTap: onTap,
@@ -188,7 +206,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       padding: const EdgeInsets.fromLTRB(4, 16, 0, 0),
       child: Text(
         title.toUpperCase(),
-
       ),
     );
   }

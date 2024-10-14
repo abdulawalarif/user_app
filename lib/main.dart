@@ -11,20 +11,9 @@ import 'package:user_app/core/providers/theme_change_provider.dart';
 import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/core/providers/wishlist_provider.dart';
 import 'package:user_app/firebase_options.dart';
-import 'package:user_app/ui/screens/sign_up.dart';
-import 'package:user_app/ui/screens/splash_screen.dart';
-import 'package:user_app/ui/screens/update_users_inofrmation.dart';
 import 'ui/constants/route_name.dart';
+import 'ui/constants/routes.dart';
 import 'ui/constants/theme_data.dart';
-import 'ui/screens/bottom_bar.dart';
-import 'ui/screens/buy_screen/buy_screen_main.dart';
-import 'ui/screens/feeds.dart';
-import 'ui/screens/inner_screens/cart.dart';
-import 'ui/screens/inner_screens/category_screen.dart';
-import 'ui/screens/inner_screens/forgot_password.dart';
-import 'ui/screens/inner_screens/product_detail.dart';
-import 'ui/screens/log_in.dart';
-import 'ui/screens/wishlist.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
@@ -63,23 +52,8 @@ class MyApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 title: 'Store App',
                 theme: Styles.getThemeData(themeChangeProvider.isDarkTheme),
-                routes: {
-                  RouteName.mainScreen: (context) => SplashScreen(),
-                  RouteName.bottomBarScreen: (context) => BottomBarScreen(),
-                  RouteName.logInScreen: (contex) => const LogInScreen(),
-                  RouteName.buyScreen: (contex) => BuyScreen(),
-                  RouteName.signUpScreen: (context) => const SignUpScreen(),
-                  RouteName.forgotPasswordScreen: (context) =>
-                      const ForgotPasswordScreen(),
-                  RouteName.productDetailScreen: (context) =>
-                      const ProductDetailScreen(),
-                  RouteName.feedsScreen: (context) => FeedsScreen(),
-                  RouteName.cartScreen: (context) => CartScreen(),
-                  RouteName.updateUserInfo: (context) =>
-                      const UpdateUsersInformation(),
-                  RouteName.wishlistScreen: (context) => const WishlistScreen(),
-                  RouteName.categoryScreen: (context) => CategoryScreen(),
-                },
+                initialRoute: RouteName.mainScreen,
+                onGenerateRoute: Routes.generatedRoute,
               );
             },
           ),

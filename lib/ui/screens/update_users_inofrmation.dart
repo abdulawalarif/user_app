@@ -9,7 +9,8 @@ import 'package:user_app/ui/utils/my_border.dart';
 import 'package:user_app/ui/widgets/image_preview.dart';
 
 class UpdateUsersInformation extends StatefulWidget {
-  const UpdateUsersInformation({super.key});
+UserModel userModel;
+    UpdateUsersInformation({super.key, required this.userModel});
 
   @override
   State<UpdateUsersInformation> createState() => _UpdateUsersInformationState();
@@ -20,9 +21,10 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
   late FocusNode _phoneNumberNode;
   late FocusNode _addressNode;
   final _formKey = GlobalKey<FormState>();
-  late UserModel _userModel;
+
   late bool _isLoading;
   String _pickedImagePath = '';
+  String profileImage = '';
   var fullNameEditingController = TextEditingController();
   var phoneNumberController = TextEditingController();
   var addressEditingController = TextEditingController();
@@ -30,19 +32,18 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
   @override
   void initState() {
     super.initState();
-    _userModel = UserModel();
+
     _isLoading = false;
     _nameNode = FocusNode();
     _phoneNumberNode = FocusNode();
     _addressNode = FocusNode();
 
-    final _userDataProvider = Provider.of<UserDataProvider>(context, listen: false);
-    _userDataProvider.fetchUserData();
 
-    _userModel = _userDataProvider.userData;
-    fullNameEditingController.text= _userModel.fullName;
-    phoneNumberController.text = _userModel.phoneNumber;
-    addressEditingController.text = _userModel.address;
+    fullNameEditingController.text = widget.userModel.fullName;
+    phoneNumberController.text = widget.userModel.phoneNumber;
+    addressEditingController.text = widget.userModel.address;
+    profileImage = widget.userModel.imageUrl??'';
+    print("Image: $profileImage");
   }
 
   @override
@@ -54,27 +55,25 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
   }
 
   void _submitForm() async {
-       final isValid = _formKey.currentState!.validate();
-        FocusScope.of(context).unfocus();
-        if (isValid) {
-        _formKey.currentState!.save();
-         final userDataProvider = Provider.of<UserDataProvider>(context, listen: false);
-        setState(() => _isLoading = true);
-        userDataProvider
-            .updateUserData(
-            _userModel)
-            .then((_) {
-          if (Navigator.canPop(context)) Navigator.pop(context);
-        }).catchError((error) {
-           if (error.toString().toLowerCase().contains('network')) {
-            MyAlertDialog.connectionError(context);
-          } else {
-            MyAlertDialog.error(context, error.message.toString());
-          }
-        }).whenComplete(() {
-          setState(() => _isLoading = false);
-        });
-      }
+    final isValid = _formKey.currentState!.validate();
+    FocusScope.of(context).unfocus();
+    if (isValid) {
+      _formKey.currentState!.save();
+      final userDataProvider =
+          Provider.of<UserDataProvider>(context, listen: false);
+      setState(() => _isLoading = true);
+      userDataProvider.updateUserData(widget.userModel).then((_) {
+        if (Navigator.canPop(context)) Navigator.pop(context);
+      }).catchError((error) {
+        if (error.toString().toLowerCase().contains('network')) {
+          MyAlertDialog.connectionError(context);
+        } else {
+          MyAlertDialog.error(context, error.message.toString());
+        }
+      }).whenComplete(() {
+        setState(() => _isLoading = false);
+      });
+    }
   }
 
   @override
@@ -83,7 +82,6 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
     FirebaseAuth.instance.authStateChanges().listen((firebaseUser) {
       _userDataProvider.fetchUserData();
     });
-    _userModel = _userDataProvider.userData;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -101,34 +99,60 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.07),
 
+                Container(
+
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+
+                    color: Colors.grey[200],
+                    image:
+                    DecorationImage(
+                        image: NetworkImage(profileImage),
+
+                  ),
+                ),
+                ),
+
                 // Upload Profile Picture
                 Center(
-                  child: Stack(children: [
-                    ///if image already exists then will have to write different code for it!
-                    ImagePreview(imagePath: _pickedImagePath),
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: SizedBox(
-                        height: 26,
-                        width: 26,
-                        child: RawMaterialButton(
-                          elevation: 5,
-                          fillColor: Theme.of(context).primaryColor,
-                          shape: const CircleBorder(),
-                          onPressed: () async {
-                            MyAlertDialog.imagePicker(context)
-                                .then((pickedImagePath) => setState(
-                                    () => _pickedImagePath = pickedImagePath))
-                                .then((_) =>
-                                    _userModel.imageUrl = _pickedImagePath);
-                          },
-                          child: const Icon(Icons.add_a_photo,
-                              color: Colors.white, size: 14),
+                  child: Stack(
+                    children: [
+                      ///if image already exists then will have to write different code for it!
+                    //  if(profileImage.isEmpty)
+
+                      ImagePreview(imagePath:profileImage.isEmpty? _pickedImagePath:profileImage),
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: SizedBox(
+                          height: 26,
+                          width: 26,
+                          child: RawMaterialButton(
+                            elevation: 5,
+                            fillColor: Theme.of(context).primaryColor,
+                            shape: const CircleBorder(),
+                            onPressed: () async {
+                              MyAlertDialog.imagePicker(context)
+                                  .then(
+                                    (pickedImagePath) => setState(
+                                      () => _pickedImagePath = pickedImagePath,
+                                    ),
+                                  )
+                                  .then(
+                                    (_) =>
+                                    widget.userModel.imageUrl = _pickedImagePath,
+                                  );
+                            },
+                            child: const Icon(
+                              Icons.add_a_photo,
+                              color: Colors.white,
+                              size: 14,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ]),
+                    ],
+                  ),
                 ),
                 Form(
                   key: _formKey,
@@ -157,7 +181,7 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                           ),
                           onEditingComplete: () =>
                               FocusScope.of(context).requestFocus(_nameNode),
-                          onSaved: (value) => _userModel.fullName = value!,
+                          onSaved: (value) => widget.userModel.fullName = value!,
                         ),
                       ),
 
@@ -184,7 +208,7 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                           ),
                           onEditingComplete: () =>
                               FocusScope.of(context).requestFocus(_addressNode),
-                          onSaved: (value) => _userModel.phoneNumber = value!,
+                          onSaved: (value) => widget.userModel.phoneNumber = value!,
                         ),
                       ),
                       // Address
@@ -211,12 +235,12 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                           ),
                           onEditingComplete: () =>
                               FocusScope.of(context).requestFocus(),
-                          onSaved: (value) => _userModel.address = value!,
+                          onSaved: (value) => widget.userModel.address = value!,
                         ),
                       ),
 
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02),
+                          height: MediaQuery.of(context).size.height * 0.02,),
 
                       Row(
                         children: [
@@ -242,7 +266,7 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                                   ]),
                             ),
                           ),
-                              const Spacer(),
+                          const Spacer(),
                           // cancel Update button
                           GestureDetector(
                             onTap: () {
@@ -252,13 +276,17 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                               width: 30.w,
                               height: 50,
                               decoration: const BoxDecoration(
-                                color: Colors.black12,
-                                  borderRadius: BorderRadius.all(Radius.circular(4))
-                              ),
-                              child: const Center(child:  Text('Cancel', style: TextStyle(
-                                color: Colors.black, fontSize: 15,
-                                fontWeight: FontWeight.bold
-                              ),)),
+                                  color: Colors.black12,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(4))),
+                              child: const Center(
+                                  child: Text(
+                                'Cancel',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              )),
                             ),
                           ),
                         ],
