@@ -16,7 +16,8 @@ import 'package:user_app/ui/widgets/recommendation.dart';
 
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({Key? key}) : super(key: key);
+  final String productId;
+  const ProductDetailScreen({Key? key, required this.productId}) : super(key: key);
 
   @override
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
@@ -35,10 +36,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _productId = ModalRoute.of(context)!.settings.arguments as String;
+
     final _productProvider =
         Provider.of<ProductProvider>(context, listen: false);
-    final _product = _productProvider.findById(_productId);
+    final _product = _productProvider.findById(widget.productId);
 
     List<ProductModel> _productRecommendation =
         _productProvider.findByCategory(_product.category);
@@ -102,7 +103,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   wishlistProvider
                                       .addAndRemoveItem(
                                       WishlistModel(
-                                    id: _productId,
+                                    id: widget.productId,
                                     /// TODO edited imageList
                                     imageUrl: _product.imageUrls![0],
                                     name: _product.name,

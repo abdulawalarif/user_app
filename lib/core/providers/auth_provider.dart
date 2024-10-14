@@ -21,7 +21,7 @@ class AuthProvider with ChangeNotifier {
   }) async {
     try {
       await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+          email: email, password: password,);
 
       // upload user image to firebase storage and get the url
       if (userModel.imageUrl.isNotEmpty) {

@@ -13,63 +13,68 @@ import 'package:user_app/ui/screens/update_users_inofrmation.dart';
 import 'package:user_app/ui/screens/wishlist.dart';
 import '../screens/bottom_bar.dart';
 import '../screens/splash_screen.dart';
+import '../utils/transition_animation.dart';
 
 class Routes {
   static Route<dynamic> generatedRoute(RouteSettings settings) {
     switch (settings.name) {
       case RouteName.mainScreen:
-        return MaterialPageRoute(
+        return SlidePageRoute(
           builder: (BuildContext context) => SplashScreen(),
         );
       case RouteName.bottomBarScreen:
-        return MaterialPageRoute(
+        return SlidePageRoute(
           builder: (BuildContext context) => BottomBarScreen(),
         );
       case RouteName.logInScreen:
-        return MaterialPageRoute(
+        return SlidePageRoute(
           builder: (BuildContext context) => LogInScreen(),
         );
       case RouteName.buyScreen:
-        return MaterialPageRoute(
+        return SlidePageRoute(
           builder: (BuildContext context) => BuyScreen(),
         );
       case RouteName.signUpScreen:
-        return MaterialPageRoute(
+        return SlidePageRoute(
           builder: (BuildContext context) => SignUpScreen(),
         );
       case RouteName.forgotPasswordScreen:
-        return MaterialPageRoute(
+        return SlidePageRoute(
           builder: (BuildContext context) => ForgotPasswordScreen(),
         );
       case RouteName.productDetailScreen:
-        return MaterialPageRoute(
-          builder: (BuildContext context) => ProductDetailScreen(),
+        final String productId = settings.arguments as String;
+        return SlidePageRoute(
+          builder: (BuildContext context) => ProductDetailScreen(productId: productId,),
         );
       case RouteName.feedsScreen:
-        return MaterialPageRoute(
+        return SlidePageRoute(
           builder: (BuildContext context) => FeedsScreen(),
         );
       case RouteName.cartScreen:
-        return MaterialPageRoute(
+        return SlidePageRoute(
           builder: (BuildContext context) => CartScreen(),
         );
 
       case RouteName.wishlistScreen:
-        return MaterialPageRoute(
+        return SlidePageRoute(
           builder: (BuildContext context) => WishlistScreen(),
         );
 
       case RouteName.categoryScreen:
-        return MaterialPageRoute(
+        return SlidePageRoute(
           builder: (BuildContext context) => CategoryScreen(),
         );
 
       case RouteName.updateUserInfo:
         final UserModel userModel = settings.arguments as UserModel;
-        return MaterialPageRoute(
-          builder: (BuildContext context) =>
-              UpdateUsersInformation(userModel: userModel),
+        return SlidePageRoute(
+          builder: (context) => UpdateUsersInformation(userModel: userModel),
         );
+      // return MaterialPageRoute(
+      //   builder: (BuildContext context) =>
+      //       UpdateUsersInformation(userModel: userModel),
+      // );
 
       default:
         return MaterialPageRoute(

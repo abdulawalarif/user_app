@@ -18,8 +18,11 @@ class PopularProduct extends StatelessWidget {
     return Card(
       elevation: 0.6,
       child: InkWell(
-        onTap: () => Navigator.pushNamed(context, RouteName.productDetailScreen,
-            arguments: _popularProduct.id),
+        onTap: () => Navigator.pushNamed(
+          context,
+          RouteName.productDetailScreen,
+          arguments: _popularProduct.id,
+        ),
         child: Container(
             width: 120,
             child: Column(
@@ -48,14 +51,11 @@ class PopularProduct extends StatelessWidget {
                       Text(
                         _popularProduct.name,
                         overflow: TextOverflow.ellipsis,
-                       // style: Theme.of(context).textTheme.bodyText1,
+                        // style: Theme.of(context).textTheme.bodyText1,
                       ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-
-
                           Consumer<WishlistProvider>(
                             builder: (_, wishlistProvider, __) =>
                                 MyButton.smallIcon(
@@ -71,11 +71,12 @@ class PopularProduct extends StatelessWidget {
                               onPressed: () {
                                 wishlistProvider.addAndRemoveItem(WishlistModel(
                                   id: _popularProduct.id,
+
                                   /// TODO edited imageList
                                   imageUrl: _popularProduct.imageUrls![0],
                                   name: _popularProduct.name,
                                   price: _popularProduct.price,
-                                 ));
+                                ));
                               },
                             ),
                           ),

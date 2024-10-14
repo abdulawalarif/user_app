@@ -81,12 +81,18 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 () => Navigator.of(context)
                                     .pushNamed(RouteName.wishlistScreen)),
                             _userBagListTile(
-                                'Cart',
-                                mCartIcon,
-                                mTrailingIcon,
-                                context,
-                                () => Navigator.of(context)
-                                    .pushNamed(RouteName.cartScreen)),
+                              'Cart',
+                              mCartIcon,
+                              mTrailingIcon,
+                              context,
+                              () => Navigator.of(context)
+                                  .pushNamed(RouteName.cartScreen),
+                            ),
+
+                            ///  Navigator.pushReplacement(
+                            //           context,
+                            //           SlidePageRoute(builder: (context) => const LogInScreen(),),
+                            //         );
                           ],
                         ),
                       ),

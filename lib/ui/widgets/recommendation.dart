@@ -21,7 +21,7 @@ class _RecommendationState extends State<Recommendation> {
         child: InkWell(
           onTap: () => Navigator.pushNamed(
               context, RouteName.productDetailScreen,
-              arguments: _product.id),
+              arguments: _product.id,),
           child: Container(
             color: Theme.of(context).cardColor,
             child:
@@ -33,10 +33,10 @@ class _RecommendationState extends State<Recommendation> {
                     image: DecorationImage(
                       /// TODO edited imageList
                         image: NetworkImage(_product.imageUrls![0]),
-                        fit: BoxFit.contain)),
+                        fit: BoxFit.contain,),),
               ),
               Container(
-                margin: EdgeInsets.all(6),
+                margin: const EdgeInsets.all(6),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -59,7 +59,7 @@ class _RecommendationState extends State<Recommendation> {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               color: Theme.of(context).primaryColor,
-                              fontSize: 14),
+                              fontSize: 14,),
                         ),
 
                       ],
