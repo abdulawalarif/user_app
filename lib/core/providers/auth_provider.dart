@@ -14,31 +14,36 @@ class AuthProvider with ChangeNotifier {
   bool get isLoggedIn =>
       _auth.currentUser != null && !_auth.currentUser!.isAnonymous;
 
-  Future<void> signUp(
-      {required String email,
-      required String password,
-      required UserModel userModel}) async {
-    await _auth.createUserWithEmailAndPassword(
-        email: email, password: password);
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required UserModel userModel,
+  }) async {
+    try {
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
 
-    // upload user image to firebase storage and get the url
-    if (userModel.imageUrl.isNotEmpty) {
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child('userimages')
+      // upload user image to firebase storage and get the url
+      if (userModel.imageUrl.isNotEmpty) {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('userimages')
+            .child(userModel.id + '.jpg');
 
-          ///from here i can get the user image location for showing on app
-          .child(userModel.id + '.jpg');
-      await ref
-          .putFile(File(userModel.imageUrl))
-          .then((_) async => ref.getDownloadURL())
-          .then((imageUrl) => userModel.imageUrl = imageUrl)
-          .catchError((e) {
-        print(e.toString());
-      });
+        await ref
+            .putFile(File(userModel.imageUrl))
+            .then((_) async => ref.getDownloadURL())
+            .then((imageUrl) => userModel.imageUrl = imageUrl)
+            .catchError((e) {
+          print('Error uploading image: ${e.toString()}');
+        });
+      }
+
+      await UserDataProvider().uploadUserData(userModel);
+      notifyListeners();
+    } catch (e) {
+      print('Error during sign-up: ${e.toString()}');
     }
-    await UserDataProvider().uploadUserData(userModel);
-    notifyListeners();
   }
 
   Future<void> signInAnonymously() async {
@@ -49,43 +54,59 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> signIn({required String email, required String password}) async {
-    await _auth.signInWithEmailAndPassword(email: email, password: password);
-    notifyListeners();
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      notifyListeners();
+    } catch (e) {
+      print('Error during sign-in: $e');
+      // You can also handle specific error types or show a message to the user
+      // For example: if (e is FirebaseAuthException) { /* handle specific errors */ }
+    }
   }
 
   // Google sign in
   Future<void> googleSignIn() async {
-    final googleAccount = await _googleSignIn.signIn();
-    if (googleAccount != null) {
-      final googleAuth = await googleAccount.authentication;
-      if (googleAuth.accessToken != null && googleAuth.idToken != null) {
-        final credential = GoogleAuthProvider.credential(
-            accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+    try {
+      final googleAccount = await _googleSignIn.signIn();
+      if (googleAccount != null) {
+        final googleAuth = await googleAccount.authentication;
+        if (googleAuth.accessToken != null && googleAuth.idToken != null) {
+          final credential = GoogleAuthProvider.credential(
+              accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
-        final userCredential = await _auth.signInWithCredential(credential);
-        final user = userCredential.user;
+          final userCredential = await _auth.signInWithCredential(credential);
+          final user = userCredential.user;
 
-        if (user != null) {
-          UserModel userModel = new UserModel(
-            id: user.uid,
-            email: user.email ?? '',
-            fullName: user.displayName ?? '',
-            imageUrl: user.photoURL ?? '',
-            phoneNumber: user.phoneNumber ?? '',
-          );
+          if (user != null) {
+            UserModel userModel = new UserModel(
+              id: user.uid,
+              email: user.email ?? '',
+              fullName: user.displayName ?? '',
+              imageUrl: user.photoURL ?? '',
+              phoneNumber: user.phoneNumber ?? '',
+            );
 
-          await UserDataProvider()
-              .uploadUserData(userModel)
-              .then((_) => print('Done Uploading'));
-          notifyListeners();
+            await UserDataProvider()
+                .uploadUserData(userModel)
+                .then((_) => print('Done Uploading'));
+            notifyListeners();
+          }
         }
       }
+    } catch (e) {
+      print('Error during Google Sign-In: $e');
+      // Handle error appropriately
     }
   }
 
   //Reset Password
   Future<void> resetPassword({required String email}) async {
-    await _auth.sendPasswordResetEmail(email: email.trim().toLowerCase());
+    try {
+      await _auth.sendPasswordResetEmail(email: email.trim().toLowerCase());
+      print('Password reset email sent');
+    } catch (e) {
+      print('Failed to send password reset email: $e');
+    }
   }
 
   Future<void> signOut(BuildContext context) async {

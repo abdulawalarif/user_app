@@ -25,7 +25,7 @@ class ProductProvider with ChangeNotifier {
       .toList();
 
   Future<void> fetchProducts() async {
-    if (_isFetched) return; // Prevents multiple fetches
+    if (_isFetched) return;
     await FirebaseFirestore.instance
         .collection('products')
         .get()
@@ -33,8 +33,8 @@ class ProductProvider with ChangeNotifier {
       snapshot.docs.forEach((element) {
         _products.insert(0, ProductModel.fromJson(element.data()));
       });
-      _isFetched = true; // Set flag to true after fetching
-      notifyListeners(); // Notify the listeners about the update
+      _isFetched = true;
+      notifyListeners();
     });
   }
 }
