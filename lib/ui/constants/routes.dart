@@ -62,8 +62,9 @@ class Routes {
         );
 
       case RouteName.categoryScreen:
+        final String categoryName = settings.arguments as String;
         return SlidePageRoute(
-          builder: (BuildContext context) => CategoryScreen(),
+          builder: (BuildContext context) => CategoryScreen(categoryTitle:categoryName),
         );
 
       case RouteName.updateUserInfo:

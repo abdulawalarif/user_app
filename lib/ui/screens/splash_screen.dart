@@ -18,25 +18,12 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    /// TODO will have to move this code to main and populate the data from there..
-
-    fetchingData();
     Timer(const Duration(microseconds: 100), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => BottomBarScreen()),
       );
     });
-  }
-
-  fetchingData() {
-    final _authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _authProvider.signInAnonymously();
-    final productProvider =
-        Provider.of<ProductProvider>(context, listen: false);
-    final cartProvider = Provider.of<CartProvider>(context, listen: false);
-    cartProvider.getData();
-    productProvider.fetchProducts();
   }
 
   @override

@@ -19,18 +19,13 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   final isDarkTheme = await ThemePreferences().getTheme();
-
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp(isDarkTheme: isDarkTheme));
 }
-
 class MyApp extends StatelessWidget {
   final bool isDarkTheme;
-
   const MyApp({super.key, required this.isDarkTheme});
-
   @override
   Widget build(BuildContext context) {
     return Sizer(
@@ -48,12 +43,17 @@ class MyApp extends StatelessWidget {
           ],
           child: Consumer<ThemeChangeProvider>(
             builder: (_, themeChangeProvider, __) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                title: 'Store App',
-                theme: Styles.getThemeData(themeChangeProvider.isDarkTheme),
-                initialRoute: RouteName.mainScreen,
-                onGenerateRoute: Routes.generatedRoute,
+              return Consumer<ProductProvider>(
+                builder:  (_, productProvider, __) {
+                  productProvider.fetchProducts();
+                  return MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    title: 'Store App',
+                    theme: Styles.getThemeData(themeChangeProvider.isDarkTheme),
+                    initialRoute: RouteName.mainScreen,
+                    onGenerateRoute: Routes.generatedRoute,
+                  );
+                },
               );
             },
           ),

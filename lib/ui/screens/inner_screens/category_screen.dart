@@ -4,21 +4,23 @@ import 'package:user_app/core/models/product_model.dart';
 import 'package:user_app/core/providers/product_provider.dart';
 import 'package:user_app/ui/widgets/feeds_product.dart';
 
-
 class CategoryScreen extends StatelessWidget {
+  final String categoryTitle;
+  const CategoryScreen({super.key, required this.categoryTitle});
+
   @override
   Widget build(BuildContext context) {
     final productProvider =
         Provider.of<ProductProvider>(context, listen: false);
-    final _title = ModalRoute.of(context)!.settings.arguments as String;
+
     List<ProductModel> _productList;
-    _title.toLowerCase().contains('popular')
+    categoryTitle.toLowerCase().contains('popular')
         ? _productList = productProvider.popularProducts
-        : _productList = productProvider.findByCategory(_title);
+        : _productList = productProvider.findByCategory(categoryTitle);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _title,
+          categoryTitle,
           style: TextStyle(
             color: Theme.of(context).primaryColor,
           ),
@@ -28,7 +30,7 @@ class CategoryScreen extends StatelessWidget {
       ),
       // body: FeedsProduct(),
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
         child: GridView.count(
           crossAxisCount: 2,
           childAspectRatio: (MediaQuery.of(context).size.width) /

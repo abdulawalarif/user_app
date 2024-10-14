@@ -38,151 +38,153 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     });
     _userData = _userDataProvider.userData;
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverAppBar(
-                expandedHeight: 200,
-                pinned: true,
-                elevation: 0,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: _userData.imageUrl.isNotEmpty && !kIsWeb
-                      ? Image.network(
-                          _userData.imageUrl,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.asset(
-                          ImagePath.profilePlaceholder,
-                          fit: BoxFit.cover,
-                        ),
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: 200,
+                  pinned: true,
+                  elevation: 0,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: _userData.imageUrl.isNotEmpty && !kIsWeb
+                        ? Image.network(
+                            _userData.imageUrl,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset(
+                            ImagePath.profilePlaceholder,
+                            fit: BoxFit.cover,
+                          ),
+                  ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 28.0, horizontal: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //    User bag section
-
-                      _sectionTitle('User Bag'),
-                      Card(
-                        child: Column(
-                          children: [
-                            _userBagListTile(
-                                'Wishlist',
-                                mWishListIcon,
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 28.0, horizontal: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //    User bag section
+      
+                        _sectionTitle('User Bag'),
+                        Card(
+                          child: Column(
+                            children: [
+                              _userBagListTile(
+                                  'Wishlist',
+                                  mWishListIcon,
+                                  mTrailingIcon,
+                                  context,
+                                  () => Navigator.of(context)
+                                      .pushNamed(RouteName.wishlistScreen)),
+                              _userBagListTile(
+                                'Cart',
+                                mCartIcon,
                                 mTrailingIcon,
                                 context,
                                 () => Navigator.of(context)
-                                    .pushNamed(RouteName.wishlistScreen)),
-                            _userBagListTile(
-                              'Cart',
-                              mCartIcon,
-                              mTrailingIcon,
-                              context,
-                              () => Navigator.of(context)
-                                  .pushNamed(RouteName.cartScreen),
-                            ),
-
-                            ///  Navigator.pushReplacement(
-                            //           context,
-                            //           SlidePageRoute(builder: (context) => const LogInScreen(),),
-                            //         );
-                          ],
+                                    .pushNamed(RouteName.cartScreen),
+                              ),
+      
+                              ///  Navigator.pushReplacement(
+                              //           context,
+                              //           SlidePageRoute(builder: (context) => const LogInScreen(),),
+                              //         );
+                            ],
+                          ),
                         ),
-                      ),
-
-                      //    User information section
-                      Row(
-                        children: [
-                          _sectionTitle('User Details'),
-                          const Spacer(),
-                          FloatingActionButton(
-                            mini: true,
-
-                            ///will have to navigate to the update users information page
-
-                            onPressed: () => Navigator.of(context).pushNamed(
-                              RouteName.updateUserInfo,
-                              arguments: _userData,
-                            ),
-                            heroTag: 'btn1',
-                            child: const Icon(mEditIcon),
-                          )
-                        ],
-                      ),
-                      Card(
-                        child: Column(
+      
+                        //    User information section
+                        Row(
                           children: [
-                            _userInformationListTile(
-                              _userData.fullName,
-                              mUserIcon,
-                              context,
-                            ),
-                            _userInformationListTile(
-                              _userData.email,
-                              mEmailIcon,
-                              context,
-                            ),
-                            _userInformationListTile(
-                              _userData.phoneNumber,
-                              mPhoneIcon,
-                              context,
-                            ),
-                            _userInformationListTile(
-                              _userData.address,
-                              mShippingAddress,
-                              context,
-                            ),
-                            _userInformationListTile(
-                              'Joined ${_userData.joinedAt}',
-                              mJoinDateIcon,
-                              context,
-                            ),
+                            _sectionTitle('User Details'),
+                            const Spacer(),
+                            FloatingActionButton(
+                              mini: true,
+      
+                              ///will have to navigate to the update users information page
+      
+                              onPressed: () => Navigator.of(context).pushNamed(
+                                RouteName.updateUserInfo,
+                                arguments: _userData,
+                              ),
+                              heroTag: 'btn1',
+                              child: const Icon(mEditIcon),
+                            )
                           ],
                         ),
-                      ),
-
-                      //    Settings Section
-
-                      _sectionTitle('Settings'),
-                      Card(
-                        child: Column(
-                          children: [
-                            SwitchListTile(
-                              title: const Text('Dark Theme'),
-                              secondary: _customIcon(Icons.dark_mode),
-                              value: _themeChange.isDarkTheme,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  _themeChange.isDarkTheme = value;
-                                });
-                              },
-                            ),
-                            ListTile(
-                                title: Text('Sign Out'),
-                                leading:
-                                    _customIcon(Icons.exit_to_app_outlined),
-                                onTap: () {
-                                  MyAlertDialog.signOut(context);
-                                }),
-                          ],
+                        Card(
+                          child: Column(
+                            children: [
+                              _userInformationListTile(
+                                _userData.fullName,
+                                mUserIcon,
+                                context,
+                              ),
+                              _userInformationListTile(
+                                _userData.email,
+                                mEmailIcon,
+                                context,
+                              ),
+                              _userInformationListTile(
+                                _userData.phoneNumber,
+                                mPhoneIcon,
+                                context,
+                              ),
+                              _userInformationListTile(
+                                _userData.address,
+                                mShippingAddress,
+                                context,
+                              ),
+                              _userInformationListTile(
+                                'Joined ${_userData.joinedAt}',
+                                mJoinDateIcon,
+                                context,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+      
+                        //    Settings Section
+      
+                        _sectionTitle('Settings'),
+                        Card(
+                          child: Column(
+                            children: [
+                              SwitchListTile(
+                                title: const Text('Dark Theme'),
+                                secondary: _customIcon(Icons.dark_mode),
+                                value: _themeChange.isDarkTheme,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    _themeChange.isDarkTheme = value;
+                                  });
+                                },
+                              ),
+                              ListTile(
+                                  title: Text('Sign Out'),
+                                  leading:
+                                      _customIcon(Icons.exit_to_app_outlined),
+                                  onTap: () {
+                                    MyAlertDialog.signOut(context);
+                                  }),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          // Floating Button Appbar to upload profile picture
-          _uploadPictureFab(),
-        ],
+              ],
+            ),
+            // Floating Button Appbar to upload profile picture
+            _uploadPictureFab(),
+          ],
+        ),
       ),
     );
   }
