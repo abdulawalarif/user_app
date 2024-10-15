@@ -138,7 +138,7 @@ class _ImagePickerDialog extends StatefulWidget {
 class _ImagePickerDialogState extends State<_ImagePickerDialog> {
   Future<void> _pickImageCamera() async {
     final pickedImage = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 10);
+        .pickImage(source: ImageSource.camera);
     Navigator.pop(context, pickedImage!.path);
   }
 

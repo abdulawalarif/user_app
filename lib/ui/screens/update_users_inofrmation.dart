@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +66,25 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
       final userDataProvider =
           Provider.of<UserDataProvider>(context, listen: false);
       setState(() => _isLoading = true);
+      if (initialImagePath != widget.userModel.imageUrl) {
 
+        final FirebaseStorage _storage = FirebaseStorage.instance;
+        final reference = _storage.refFromURL(initialImagePath);
+        await reference.delete();
+        // Upload picture to Firebase Storage
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('userimages')
+            .child(widget.userModel.id + '.jpg');
+
+        await ref
+            .putFile(File(widget.userModel.imageUrl))
+            .then((_) async => ref.getDownloadURL())
+            .then((imageUrl) => widget.userModel.imageUrl = imageUrl)
+            .catchError((e) {});
+      } else {
+        widget.userModel.imageUrl = initialImagePath;
+      }
       userDataProvider.updateUserData(widget.userModel).then((_) {
         if (Navigator.canPop(context)) Navigator.pop(context);
       }).catchError((error) {
@@ -92,20 +112,6 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextButton(
-                      onPressed: () {
-                        if (initialImagePath != widget.userModel.imageUrl) {
-                          //image changed will have to go to the storage and upload the image
-                          //delete the prevuious image if exists
-                          //dowload the url
-                          //insert into the model for fireStore
-                          print(
-                              'ImageURLChanged  : ${initialImagePath != widget.userModel.imageUrl}');
-                        } else {
-                          print("sorry can't  recognize");
-                        }
-                      },
-                      child: Text('data')),
                   const Text(
                     'Update Profile',
                     style: TextStyle(fontSize: 22),
@@ -251,6 +257,23 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                               width: 30.w,
                               height: 50,
                               child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Cancel'),
+                                    ]),
+                              ),
+                            ),
+
+                            const Spacer(),
+                            // cancel Update button
+                            SizedBox(
+                              width: 30.w,
+                              height: 50,
+                              child: ElevatedButton(
                                 onPressed: _isLoading
                                     ? () {}
                                     : () {
@@ -266,33 +289,6 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                                             )
                                           : const Text('Update'),
                                     ]),
-                              ),
-                            ),
-                            const Spacer(),
-                            // cancel Update button
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Container(
-                                width: 30.w,
-                                height: 50,
-                                decoration: const BoxDecoration(
-                                  color: Colors.black12,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(4),
-                                  ),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    'Cancel',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
                               ),
                             ),
                           ],
@@ -330,11 +326,14 @@ class _ImageViewerState extends State<ImageViewer> {
       width: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[300]!, width: 2),
+        border: Border.all(
+          color: Colors.grey[300]!,
+          width: 2,
+        ),
         color: Colors.grey[200],
         image: DecorationImage(
           image: _isNetworkImage(widget.imagePath)
-              ? NetworkImage(widget.imagePath!)
+              ? CachedNetworkImageProvider(widget.imagePath!)
               : FileImage(File(widget.imagePath!)),
           fit: BoxFit.cover,
         ),
