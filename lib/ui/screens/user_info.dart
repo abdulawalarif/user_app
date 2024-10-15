@@ -162,6 +162,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     ),
                   ),
                 ),
+
+
+
               ],
             ),
             // Floating Button Appbar to upload profile picture

@@ -2,21 +2,23 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-///TODO https://gist.github.com/abdulawalarif/bb6261e12e19085906ddc35c3b6d942f briging this package into project
-/// Custom widget to show the preview of image from the device memory
+
 
 class ImagePreview extends StatelessWidget {
   final String imagePath;
   final double width;
   final double height;
-  const ImagePreview(
-      {Key? key, this.imagePath = '', this.width = 100, this.height = 100})
-      : super(key: key);
+  const ImagePreview({
+    super.key,
+    this.imagePath = '',
+    this.width = 100,
+    this.height = 100,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       height: height,
       width: width,
       decoration: BoxDecoration(
@@ -25,10 +27,14 @@ class ImagePreview extends StatelessWidget {
         color: Colors.grey[200],
         image: imagePath.isNotEmpty && !kIsWeb
             ? DecorationImage(
-                image: FileImage(File(imagePath)), fit: BoxFit.cover)
+                image: FileImage(File(imagePath)),
+                fit: BoxFit.cover,
+              )
             : imagePath.isNotEmpty && kIsWeb
                 ? DecorationImage(
-                    image: NetworkImage(imagePath), fit: BoxFit.cover)
+                    image: NetworkImage(imagePath),
+                    fit: BoxFit.cover,
+                  )
                 : null,
       ),
     );
