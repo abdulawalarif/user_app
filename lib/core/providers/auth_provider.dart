@@ -19,10 +19,14 @@ class AuthProvider with ChangeNotifier {
     required String password,
     required UserModel userModel,
   }) async {
+    print('Printing ID: ${userModel.id}');
+
     try {
       await _auth.createUserWithEmailAndPassword(
-          email: email, password: password,);
-
+        email: email,
+        password: password,
+      );
+      userModel.id = _auth.currentUser?.uid ?? '';
       // upload user image to firebase storage and get the url
       if (userModel.imageUrl.isNotEmpty) {
         final ref = FirebaseStorage.instance
@@ -78,7 +82,7 @@ class AuthProvider with ChangeNotifier {
           final user = userCredential.user;
 
           if (user != null) {
-            UserModel userModel = new UserModel(
+            UserModel userModel = UserModel(
               id: user.uid,
               email: user.email ?? '',
               fullName: user.displayName ?? '',

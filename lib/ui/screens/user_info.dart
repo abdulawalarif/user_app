@@ -63,13 +63,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 28.0, horizontal: 8),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 28.0, horizontal: 8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         //    User bag section
-      
+
                         _sectionTitle('User Bag'),
                         Card(
                           child: Column(
@@ -89,7 +89,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 () => Navigator.of(context)
                                     .pushNamed(RouteName.cartScreen),
                               ),
-      
+
                               ///  Navigator.pushReplacement(
                               //           context,
                               //           SlidePageRoute(builder: (context) => const LogInScreen(),),
@@ -97,26 +97,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ],
                           ),
                         ),
-      
+
                         //    User information section
-                        Row(
-                          children: [
-                            _sectionTitle('User Details'),
-                            const Spacer(),
-                            FloatingActionButton(
-                              mini: true,
-      
-                              ///will have to navigate to the update users information page
-      
-                              onPressed: () => Navigator.of(context).pushNamed(
-                                RouteName.updateUserInfo,
-                                arguments: _userData,
-                              ),
-                              heroTag: 'btn1',
-                              child: const Icon(mEditIcon),
-                            )
-                          ],
-                        ),
+                        _sectionTitle('User Details'),
                         Card(
                           child: Column(
                             children: [
@@ -148,9 +131,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             ],
                           ),
                         ),
-      
+
                         //    Settings Section
-      
+
                         _sectionTitle('Settings'),
                         Card(
                           child: Column(
@@ -253,17 +236,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
 
     return Positioned(
-        top: _top,
-        right: 16.0,
-        child: Transform(
-          transform: Matrix4.identity()..scale(scale),
-          alignment: Alignment.center,
-          child: FloatingActionButton(
-            mini: true,
-            onPressed: () => MyAlertDialog.imagePicker(context),
-            heroTag: 'btn1',
-            child: Icon(mCameraIcon),
+      top: _top,
+      right: 16.0,
+      child: Transform(
+        transform: Matrix4.identity()..scale(scale),
+        alignment: Alignment.center,
+        child: FloatingActionButton(
+          mini: true,
+          onPressed: () => Navigator.of(context).pushNamed(
+            RouteName.updateUserInfo,
+            arguments: _userData,
           ),
-        ));
+          heroTag: 'btn1',
+          child: const Icon(mEditIcon),
+        ),
+      ),
+    );
   }
 }

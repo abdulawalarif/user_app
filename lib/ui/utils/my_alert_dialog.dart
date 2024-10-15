@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:user_app/core/providers/auth_provider.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 
 class MyAlertDialog {
@@ -78,7 +77,7 @@ class MyAlertDialog {
   /// picked image path.
   static Future<dynamic> imagePicker(BuildContext context) async {
     return showDialog(
-        context: context, builder: (context) => _ImagePickerDialog());
+        context: context, builder: (context) =>const _ImagePickerDialog(),);
   }
 
   ///Show internet connection error dialog
@@ -122,7 +121,7 @@ class MyAlertDialog {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('OK'),
+                  child: const Text('OK'),
                 ),
               ],
             ));
@@ -170,17 +169,17 @@ class _ImagePickerDialogState extends State<_ImagePickerDialog> {
           children: [
             ListTile(
               onTap: _pickImageCamera,
-              leading: Icon(Icons.camera,
+              leading:const Icon(Icons.camera,
                   //color: Theme.of(context).buttonColor
               ),
-              title: Text('Camera'),
+              title:const Text('Camera'),
             ),
             ListTile(
               onTap: _pickImageGallery,
-              leading: Icon(Icons.photo,
+              leading:const Icon(Icons.photo,
                  // color: Theme.of(context).buttonColor
               ),
-              title: Text('Gallery'),
+              title:const Text('Gallery'),
             ),
 
           ],

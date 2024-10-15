@@ -62,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .signUp(
               email: _userModel.email.toLowerCase().trim(),
               password: _password.trim(),
-              userModel: _userModel)
+              userModel: _userModel,)
           .then((_) {
         if (Navigator.canPop(context)) Navigator.pop(context);
       }).catchError((error) {
@@ -117,9 +117,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           onPressed: () async {
                             MyAlertDialog.imagePicker(context)
                                 .then((pickedImagePath) => setState(
-                                    () => _pickedImagePath = pickedImagePath))
+                                    () => _pickedImagePath = pickedImagePath,),)
                                 .then((_) =>
-                                    _userModel.imageUrl = _pickedImagePath);
+                                    _userModel.imageUrl = _pickedImagePath,);
                           },
                           child: const Icon(Icons.add_a_photo,
                               color: Colors.white, size: 14),
