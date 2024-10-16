@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
               return Consumer<ProductProvider>(
                 builder:  (_, productProvider, __) {
                   productProvider.fetchProducts();
+
                   return MaterialApp(
                     debugShowCheckedModeBanner: false,
                     title: 'Store App',

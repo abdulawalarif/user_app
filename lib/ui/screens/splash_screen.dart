@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
+    Provider.of<CartProvider>(context, listen: false).loadCart();
     Timer(const Duration(microseconds: 100), () {
       Navigator.pushReplacement(
         context,

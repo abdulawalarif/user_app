@@ -9,6 +9,7 @@ import 'package:user_app/core/providers/cart_provider.dart';
 
 import 'package:user_app/core/providers/product_provider.dart';
 import 'package:user_app/ui/widgets/category.dart';
+import 'package:user_app/ui/widgets/my_badge.dart';
 import 'package:user_app/ui/widgets/my_carousel.dart';
 import 'package:user_app/ui/widgets/popular_brand.dart';
 import 'package:user_app/ui/widgets/popular_product.dart';
@@ -61,21 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.of(context).pushNamed(RouteName.cartScreen);
                 },
-                child: Center(
-                  child: b.Badge(
-                    showBadge: true,
-                    badgeContent: Consumer<CartProvider>(
-                      builder: (context, value, child) {
-                        return Text(value.getCounter().toString(),
-                            style: const TextStyle(color: Colors.white));
-                      },
-                    ),
-                    child: const Icon(
-                      Icons.shopping_bag_outlined,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
+                child: MyBadge.cart(context),
               ),
               const SizedBox(width: 20.0),
             ],

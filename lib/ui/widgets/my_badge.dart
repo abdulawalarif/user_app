@@ -16,7 +16,7 @@ class MyBadge {
         width: 24,
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
-          borderRadius:const BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             bottomRight: Radius.elliptical(50, 50),
           ),
         ),
@@ -24,7 +24,7 @@ class MyBadge {
           padding: const EdgeInsets.all(2.0),
           child: Text(
             title,
-            style:const TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w800,
               fontSize: 11,
@@ -36,19 +36,26 @@ class MyBadge {
   }
 
   static Widget cart(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+    int uniqueItemCount = cartProvider.totalUniqueItems;
     return InkWell(
-      onTap: (){
+      onTap: () {
         Navigator.of(context).pushNamed(RouteName.cartScreen);
       },
       child: Center(
         child: b.Badge(
           showBadge: true,
           badgeContent: Consumer<CartProvider>(
-            builder: (context, value , child){
-              return Text(value.getCounter().toString(),style: const TextStyle(color: Colors.white));
+            builder: (context, value, child) {
+              ///TODO cart
+              return Text(uniqueItemCount.toString(),
+                  style: const TextStyle(color: Colors.white));
             },
           ),
-          child:const  Icon(Icons.shopping_bag_outlined, color: Colors.black,),
+          child: const Icon(
+            Icons.shopping_bag_outlined,
+            color: Colors.black,
+          ),
         ),
       ),
     );

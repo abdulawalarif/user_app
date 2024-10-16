@@ -1,82 +1,78 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user_app/core/models/cart_model.dart';
-import 'package:user_app/core/services/db_helper_cart.dart';
 
 class CartProvider with ChangeNotifier {
-  DBHelperCart db = DBHelperCart();
-  int _counter = 0;
-  int get counter => _counter;
+  Map<String, CartModel> _cartItems = {};
 
-  double _totalPrice = 0.0;
-  double get totalPrice => _totalPrice;
+  // Getter to retrieve cart items
+  Map<String, CartModel> get getCartItems => _cartItems;
 
-  late Future<List<Cart>> _cart;
-  Future<List<Cart>> get cart => _cart;
-
-  Future<List<Cart>> getData() async {
-    _cart = db.getCartList();
-    return _cart;
+  // Getter to calculate subtotal
+  double get subTotal {
+    var total = 0.0;
+    _cartItems.forEach((key, value) {
+      total += value.price * value.quantity;
+    });
+    return total;
   }
 
- Future<bool> isTheItemOnListOrNot({required String id})async{
-    List<Cart> carts = await getData();
-    for (Cart model in carts) {
-    if(model.productId==id){
-      return true;
-    }else{
-      return false;
+  // Getter for the total number of unique items in the cart
+  int get totalUniqueItems => _cartItems.length;
+
+  // Check if an item is in the cart
+  bool isInCart(id) => _cartItems.containsKey(id);
+
+  // Load cart data from SharedPreferences
+  Future<void> loadCart() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? cartData = prefs.getString('cartItems');
+    if (cartData != null) {
+      Map<String, dynamic> decodedCartData = json.decode(cartData);
+      _cartItems = decodedCartData.map((key, value) => MapEntry(
+          key, CartModel.fromMap(Map<String, dynamic>.from(value))));
+      notifyListeners();
     }
-
-   }
-    return false;
   }
 
-  void _setPrefItems() async {
+  // Save cart data to SharedPreferences
+  Future<void> _saveCart() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('cart_item', _counter);
-    prefs.setDouble('total_price', _totalPrice);
+    Map<String, dynamic> cartData = _cartItems.map((key, value) => MapEntry(
+        key, value.toMap()));
+    await prefs.setString('cartItems', json.encode(cartData));
+  }
+
+  // Add or remove item from the cart
+  void addAndRemoveItem(CartModel cartModel) {
+    if (isInCart(cartModel.id)) {
+      _cartItems.remove(cartModel.id);
+    } else {
+      _cartItems.putIfAbsent(cartModel.id, () => cartModel);
+    }
     notifyListeners();
+    _saveCart();
   }
 
-  void _getPrefItems() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _counter = prefs.getInt('cart_item') ?? 0;
-    _totalPrice = prefs.getDouble('total_price') ?? 0.0;
+  // Update the cart item
+  void updateCart(CartModel cartModel) {
+    _cartItems.update(cartModel.id, (existingCartItem) => cartModel);
     notifyListeners();
+    _saveCart();
   }
 
-  void addTotalPrice(double productPrice) {
-    _totalPrice = _totalPrice + productPrice;
-    _setPrefItems();
+  // Remove item from the cart
+  void removeFromCart(id) {
+    _cartItems.remove(id);
     notifyListeners();
+    _saveCart();
   }
 
-  void removeTotalPrice(double productPrice) {
-    _totalPrice = _totalPrice - productPrice;
-    _setPrefItems();
+  // Remove all items from the cart
+  void removeAll() {
+    _cartItems.clear();
     notifyListeners();
-  }
-
-  double getTotalPrice() {
-    _getPrefItems();
-    return _totalPrice;
-  }
-
-  void addCounter() {
-    _counter++;
-    _setPrefItems();
-    notifyListeners();
-  }
-
-  void removerCounter() {
-    _counter--;
-    _setPrefItems();
-    notifyListeners();
-  }
-
-  int getCounter() {
-    _getPrefItems();
-    return _counter;
+    _saveCart();
   }
 }

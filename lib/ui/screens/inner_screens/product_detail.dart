@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:user_app/core/models/buy_product_model.dart';
 import 'package:user_app/core/models/cart_model.dart';
 import 'package:user_app/core/models/product_model.dart';
 import 'package:user_app/core/models/wishlist_model.dart';
 import 'package:user_app/core/providers/cart_provider.dart';
 import 'package:user_app/core/providers/product_provider.dart';
 import 'package:user_app/core/providers/wishlist_provider.dart';
-import 'package:user_app/core/services/db_helper_cart.dart';
-import 'package:user_app/core/services/db_helper_wish_list.dart';
 import 'package:user_app/ui/constants/app_consntants.dart';
-import 'package:user_app/ui/screens/buy_screen/buy_screen_main.dart';
+import 'package:user_app/ui/utils/my_snackbar.dart';
 import 'package:user_app/ui/widgets/products_images_list_on_details_view.dart';
 import 'package:user_app/ui/widgets/recommendation.dart';
 
@@ -23,14 +20,9 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  DBHelperCart? dbHelper = DBHelperCart();
-  DBHelperWishList? dbHelperWish = DBHelperWishList();
-
   @override
   void initState() {
     super.initState();
-    dbHelper?.initDatabase();
-    dbHelperWish?.initDatabase();
   }
 
   @override
@@ -77,7 +69,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               maxLines: 2,
                               // style: Theme.of(context).textTheme.headline4,
                             ),
-                            const  SizedBox(height: 10),
+                            const SizedBox(height: 10),
 
                             //Product Price
 
@@ -165,17 +157,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           height: MediaQuery.of(context).size.width * 0.45 + 60,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              padding:const EdgeInsets.symmetric(horizontal: 6),
-                              itemCount: _productRecommendation.length,
-                              itemBuilder: (context, index) =>
-                                  ChangeNotifierProvider.value(
-                                    value: _productRecommendation[index],
-                                    child: Container(
-                                        margin:
-                                        const EdgeInsets.symmetric(horizontal: 4),
-                                        child: Recommendation()),
-                                  ),),
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            itemCount: _productRecommendation.length,
+                            itemBuilder: (context, index) =>
+                                ChangeNotifierProvider.value(
+                              value: _productRecommendation[index],
+                              child: Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 4),
+                                  child: Recommendation()),
+                            ),
+                          ),
                         ),
                       ),
 
@@ -220,7 +213,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget _detailsRow(String key, String value) {
     return Container(
-      padding:const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
           Expanded(flex: 1, child: Text(key)),
@@ -231,82 +224,54 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _bottomSheet(ProductModel product) {
-    final cart = Provider.of<CartProvider>(context);
+    final _cartProvider = Provider.of<CartProvider>(context);
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       height: 50,
       child: Row(
         children: [
+          // Add to cart button
           Expanded(
             flex: 1,
             child: Material(
-              child: Consumer<CartProvider>(
-                builder: (_, cartProvider, __) => InkWell(
-                  onTap: () {
-                    dbHelper!
-                        .insert(Cart(
-                            productId: product.id,
-                            productName: product.name,
-                            initialPrice: product.price.toInt(),
-                            productPrice: product.price.toInt(),
-                            quantity: 1,
-                            image: product.imageUrls![0]))
-                        .then((value) {
-                      cart.addTotalPrice(
-                          double.parse(product.price.toString()));
-                      cart.addCounter();
-
-                      const snackBar = SnackBar(
-                        backgroundColor: Colors.green,
-                        content: Text('Product is added to cart'),
-                        duration: Duration(seconds: 1),
-                      );
-
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    }).onError((error, stackTrace) {
-                      const snackBar = SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text('Product is already added in cart'),
-                          duration: Duration(seconds: 1));
-
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    });
-                  },
-                  child: const Center(
-                    child: Icon(mAddCartIcon),
-                  ),
+              color: Theme.of(context).cardColor,
+              child: InkWell(
+                onTap: _cartProvider.isInCart(product.id)
+                    ? () {
+                        _cartProvider.removeFromCart(product.id);
+                        MySnackBar().showSnackBar('Removed from cart', context);
+                      }
+                    : () {
+                        _cartProvider.addAndRemoveItem(
+                          CartModel(
+                            id: product.id,
+                            imageUrl: product.imageUrls![0],
+                            name: product.name,
+                            price: product.price,
+                          ),
+                        );
+                        MySnackBar().showSnackBar('Added to cart', context);
+                      },
+                child: Center(
+                  child: _cartProvider.isInCart(product.id)
+                      ? Icon(mRemoveCartIcon)
+                      : Icon(mAddCartIcon),
                 ),
               ),
             ),
           ),
-          // // Buy button
+
+          // Buy button
           Expanded(
             flex: 1,
             child: Material(
               color: Theme.of(context).primaryColor,
               child: InkWell(
-                  onTap: () {
-                    List<BuyProductModel> singleProductList = [];
-                    singleProductList.add(
-                      BuyProductModel(
-                        imageUrl: product.imageUrls?[0] ?? "",
-                        price: product.price,
-                        title: product.name,
-                        totalItemsOFSingleProduct: 1,
-                      ),
-                    );
-
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            BuyScreen(proDucts: singleProductList),
-                      ),
-                    );
-                  },
+                  onTap: () {},
                   child: Center(
                     child: Text(
                       'Buy Now !'.toUpperCase(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -315,7 +280,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                   )),
             ),
-          ),
+          )
         ],
       ),
     );
