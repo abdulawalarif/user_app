@@ -3,142 +3,161 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:user_app/core/providers/auth_provider.dart';
 
-
 class MyAlertDialog {
   void removeCartItem(context, Function() func) {
     _showDialog(
-        'Remove from cart',
-        'Are you sure you want to remove this product from your cart?',
-        'Remove',
-        func,
-        context);
+      'Remove from cart',
+      'Are you sure you want to remove this product from your cart?',
+      'Remove',
+      func,
+      context,
+    );
   }
 
   void clearCart(context, Function() func) {
-    _showDialog('Clear Cart', 'Are you sure you want to clear your cart?',
-        'Clear', func, context);
+    _showDialog(
+      'Clear Cart',
+      'Are you sure you want to clear your cart?',
+      'Clear',
+      func,
+      context,
+    );
   }
 
-  Future<void> _showDialog(String title, String content, String buttonTitle,
-      Function() func, BuildContext context) async {
+  Future<void> _showDialog(
+    String title,
+    String content,
+    String buttonTitle,
+    Function() func,
+    BuildContext context,
+  ) async {
     showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: Text(
-                title.toUpperCase(),
-              ),
-              content: Text(content),
-              actions: [
-                TextButton(
-                  onPressed: func,
-                  child: Text(buttonTitle.toUpperCase()),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancel'.toUpperCase()),
-                )
-              ],
-            ));
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(
+          title.toUpperCase(),
+        ),
+        content: Text(content),
+        actions: [
+          TextButton(
+            onPressed: func,
+            child: Text(buttonTitle.toUpperCase()),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'.toUpperCase()),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Show sign out dialog
   static Future<void> signOut(context) async {
     showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              title: Text(
-                'Sign Out'.toUpperCase(),
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              content: Text('Do you want to sign out?'),
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('Cancel'.toUpperCase())),
-                Consumer<AuthProvider>(
-                  builder: (_, authProvider, __) => TextButton(
-                      onPressed: () async {
-                        await authProvider.signOut(context);
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(
+          'Sign Out'.toUpperCase(),
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        content: const Text('Do you want to sign out?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'.toUpperCase()),
+          ),
+          Consumer<AuthProvider>(
+            builder: (_, authProvider, __) => TextButton(
+              onPressed: () async {
+                await authProvider.signOut(context);
 
-                        Navigator.pop(context);
-                      },
-                      child: Text('Sign Out'.toUpperCase())),
-                ),
-              ],
-            ));
+                Navigator.pop(context);
+              },
+              child: Text('Sign Out'.toUpperCase()),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Display [AlertDialog] to pick image with [ImagePicker] and return the
   /// picked image path.
   static Future<dynamic> imagePicker(BuildContext context) async {
     return showDialog(
-        context: context, builder: (context) =>const _ImagePickerDialog(),);
+      context: context,
+      builder: (context) => const ImagePickerDialog(),
+    );
   }
 
   ///Show internet connection error dialog
   static Future<void> connectionError(BuildContext context) async {
     showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: Text(
-                'Oops!'.toUpperCase(),
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                ),
-              ),
-              content: const Text(
-                  'It seems there is something wrong with your internet connection. Please connect to internet and try again.'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('OK'),
-                ),
-              ],
-            ));
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(
+          'Oops!'.toUpperCase(),
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.w500,
+            fontSize: 20,
+          ),
+        ),
+        content: const Text(
+          'It seems there is something wrong with your internet connection. Please connect to internet and try again.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   ///Show internet connection error dialog
   static Future<void> error(BuildContext context, String errorText) async {
     showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: Text(
-                'Oops!'.toUpperCase(),
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                ),
-              ),
-              content: Text(errorText),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('OK'),
-                ),
-              ],
-            ));
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(
+          'Oops!'.toUpperCase(),
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.w500,
+            fontSize: 20,
+          ),
+        ),
+        content: Text(errorText),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 }
 
-class _ImagePickerDialog extends StatefulWidget {
-  const _ImagePickerDialog({Key? key}) : super(key: key);
+class ImagePickerDialog extends StatefulWidget {
+  const ImagePickerDialog({super.key});
 
   @override
-  _ImagePickerDialogState createState() => _ImagePickerDialogState();
+  State<ImagePickerDialog> createState() => _ImagePickerDialogState();
 }
 
-class _ImagePickerDialogState extends State<_ImagePickerDialog> {
+class _ImagePickerDialogState extends State<ImagePickerDialog> {
   Future<void> _pickImageCamera() async {
-    final pickedImage = await ImagePicker()
-        .pickImage(source: ImageSource.camera);
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.camera);
     Navigator.pop(context, pickedImage!.path);
   }
 
@@ -169,19 +188,26 @@ class _ImagePickerDialogState extends State<_ImagePickerDialog> {
           children: [
             ListTile(
               onTap: _pickImageCamera,
-              leading:const Icon(Icons.camera,
-                  //color: Theme.of(context).buttonColor
+              leading: Icon(
+                Icons.camera,
+                color: Theme.of(context).colorScheme.tertiary,
               ),
-              title:const Text('Camera'),
+              title: const Text('Camera'),
             ),
             ListTile(
               onTap: _pickImageGallery,
-              leading:const Icon(Icons.photo,
-                 // color: Theme.of(context).buttonColor
+              leading: Icon(
+                Icons.photo,
+                color: Theme.of(context).colorScheme.tertiary,
               ),
-              title:const Text('Gallery'),
+              title: const Text('Gallery'),
             ),
-
+            ListTile(
+              onTap: _removeImage,
+              leading: Icon(Icons.remove_circle,
+                  color: Theme.of(context).colorScheme.tertiary),
+              title: const Text('Remove'),
+            ),
           ],
         ),
       ),

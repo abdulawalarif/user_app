@@ -13,8 +13,10 @@ import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/ui/utils/my_alert_dialog.dart';
 
 class UserInfoScreen extends StatefulWidget {
+  const UserInfoScreen({super.key});
+
   @override
-  _UserInfoScreenState createState() => _UserInfoScreenState();
+  State<UserInfoScreen>  createState() => _UserInfoScreenState();
 }
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
@@ -32,12 +34,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _themeChange = Provider.of<ThemeChangeProvider>(context);
-    final _userDataProvider = Provider.of<UserDataProvider>(context);
+    final themeChange = Provider.of<ThemeChangeProvider>(context);
+    final userDataProvider = Provider.of<UserDataProvider>(context);
     FirebaseAuth.instance.authStateChanges().listen((firebaseUser) {
-      _userDataProvider.fetchUserData();
+      userDataProvider.fetchUserData();
     });
-    _userData = _userDataProvider.userData;
+    _userData = userDataProvider.userData;
 
     return SafeArea(
       child: Scaffold(
@@ -153,10 +155,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               SwitchListTile(
                                 title: const Text('Dark Theme'),
                                 secondary: _customIcon(Icons.dark_mode),
-                                value: _themeChange.isDarkTheme,
+                                value: themeChange.isDarkTheme,
                                 onChanged: (bool value) {
                                   setState(() {
-                                    _themeChange.isDarkTheme = value;
+                                    themeChange.isDarkTheme = value;
                                   });
                                 },
                               ),
@@ -193,11 +195,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   }
 
   Widget _userBagListTile(String title, IconData leadingIcon,
-      IconData trailingIcon, BuildContext context, Function() onTap) {
+      IconData trailingIcon, BuildContext context, Function() onTap,) {
     return ListTile(
-      title: Text(
-        title,
-      ),
+      title: Text(title, style: Theme.of(context).textTheme.titleMedium),
       leading: _customIcon(leadingIcon),
       trailing: _customIcon(trailingIcon),
       onTap: onTap,
@@ -209,6 +209,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       padding: const EdgeInsets.fromLTRB(4, 16, 0, 0),
       child: Text(
         title.toUpperCase(),
+        style: Theme.of(context).textTheme.titleLarge,
       ),
     );
   }
@@ -228,12 +229,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     // pixels from top where scalling should end
     final double scaleEnd = scaleStart / 2;
 
-    double _top = defaultTopMargin;
+    double top = defaultTopMargin;
     double scale = 1.0;
 
     if (_scrollController.hasClients) {
       double offset = _scrollController.offset;
-      _top -= offset;
+      top -= offset;
 
       if (offset < defaultTopMargin - scaleStart) {
         //offset small => don't scale down
@@ -248,7 +249,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
 
     return Positioned(
-      top: _top,
+      top: top,
       right: 16.0,
       child: Transform(
         transform: Matrix4.identity()..scale(scale),

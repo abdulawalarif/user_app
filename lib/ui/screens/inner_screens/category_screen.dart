@@ -13,10 +13,10 @@ class CategoryScreen extends StatelessWidget {
     final productProvider =
         Provider.of<ProductProvider>(context, listen: false);
 
-    List<ProductModel> _productList;
+    List<ProductModel> productList;
     categoryTitle.toLowerCase().contains('popular')
-        ? _productList = productProvider.popularProducts
-        : _productList = productProvider.findByCategory(categoryTitle);
+        ? productList = productProvider.popularProducts
+        : productList = productProvider.findByCategory(categoryTitle);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -37,10 +37,10 @@ class CategoryScreen extends StatelessWidget {
               (MediaQuery.of(context).size.width + 190),
           mainAxisSpacing: 8,
           children: List.generate(
-            _productList.length,
+            productList.length,
             (index) => ChangeNotifierProvider.value(
-              value: _productList[index],
-              child: Center(
+              value: productList[index],
+              child: const Center(
                 child: FeedsProduct(),
               ),
             ),

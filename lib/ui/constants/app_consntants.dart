@@ -26,8 +26,8 @@ const mEditIcon = Icons.edit_note_outlined;
 class MyButtonStyle {
   static ButtonStyle disabledButton = ButtonStyle(
     backgroundColor:
-        MaterialStateProperty.resolveWith((states) => Colors.grey[500]),
+        WidgetStateProperty.resolveWith((states) => Colors.grey[500]),
     foregroundColor:
-        MaterialStateProperty.resolveWith((states) => Colors.black),
+        WidgetStateProperty.resolveWith((states) => Colors.black),
   );
 }

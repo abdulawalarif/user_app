@@ -10,17 +10,17 @@ import 'package:user_app/ui/widgets/my_button.dart';
 
 class FeedsDialog extends StatelessWidget {
   final String productId;
-  const FeedsDialog({Key? key, this.productId = ''}) : super(key: key);
+  const FeedsDialog({super.key, this.productId = ''});
 
   @override
   Widget build(BuildContext context) {
-    final _product = Provider.of<ProductProvider>(context).findById(productId);
+    final product = Provider.of<ProductProvider>(context).findById(productId);
     return Dialog(
       backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 0,
       child: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.9,
           child: Column(
             children: [
@@ -31,8 +31,8 @@ class FeedsDialog extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         image: DecorationImage(
-                            image: NetworkImage(_product.imageUrls![0]),
-                            fit: BoxFit.contain)),
+                            image: NetworkImage(product.imageUrls![0]),
+                            fit: BoxFit.contain,),),
                   ),
                   Positioned(
                     right: 2,
@@ -43,13 +43,13 @@ class FeedsDialog extends StatelessWidget {
                           ? Navigator.pop(context)
                           : null,
                     ),
-                  )
+                  ),
                 ],
               ),
               Container(
                 height: 50,
                 decoration: BoxDecoration(
-                    color: Theme.of(context).scaffoldBackgroundColor),
+                    color: Theme.of(context).scaffoldBackgroundColor,),
                 child: Row(
                   children: [
                     Expanded(
@@ -59,22 +59,22 @@ class FeedsDialog extends StatelessWidget {
                           builder: (_, wishlistProvider, __) => InkWell(
                             onTap: () =>
                                 wishlistProvider.addAndRemoveItem(WishlistModel(
-                              id: _product.id,
-                              imageUrl: _product.imageUrls![0],
-                              name: _product.name,
-                              price: _product.price,
-                            )),
+                              id: product.id,
+                              imageUrl: product.imageUrls![0],
+                              name: product.name,
+                              price: product.price,
+                            ),),
                             child: Center(
                               child: wishlistProvider.isInWishList(productId)
-                                  ? Icon(mWishListIconFill,
-                                      color: Colors.redAccent)
-                                  : Icon(mWishListIcon),
+                                  ? const Icon(mWishListIconFill,
+                                      color: Colors.redAccent,)
+                                  : const Icon(mWishListIcon),
                             ),
                           ),
                         ),
                       ),
                     ),
-                    VerticalDivider(width: 1, thickness: 1),
+                    const VerticalDivider(width: 1, thickness: 1),
                     Expanded(
                       flex: 1,
                       child: Material(
@@ -82,16 +82,16 @@ class FeedsDialog extends StatelessWidget {
                           builder: (_, cartProvider, __) => InkWell(
                             onTap: () =>
                                 cartProvider.addAndRemoveItem(CartModel(
-                              id: _product.id,
-                              imageUrl: _product.imageUrls![0],
-                              name: _product.name,
-                              price: _product.price,
-                            )),
+                              id: product.id,
+                              imageUrl: product.imageUrls![0],
+                              name: product.name,
+                              price: product.price,
+                            ),),
                             child: Center(
                               child: cartProvider.isInCart(productId)
                                   ? Icon(mRemoveCartIcon,
-                                      color: Theme.of(context).primaryColor)
-                                  : Icon(mAddCartIcon),
+                                      color: Theme.of(context).primaryColor,)
+                                  : const Icon(mAddCartIcon),
                             ),
                           ),
                         ),
@@ -99,7 +99,7 @@ class FeedsDialog extends StatelessWidget {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

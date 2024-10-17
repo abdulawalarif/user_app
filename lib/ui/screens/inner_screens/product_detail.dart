@@ -16,7 +16,7 @@ class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({super.key, required this.productId});
 
   @override
-  _ProductDetailScreenState createState() => _ProductDetailScreenState();
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
@@ -27,15 +27,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _productProvider =
+    final productProvider =
         Provider.of<ProductProvider>(context, listen: false);
-    final _product = _productProvider.findById(widget.productId);
+    final product = productProvider.findById(widget.productId);
 
-    List<ProductModel> _productRecommendation =
-        _productProvider.findByCategory(_product.category);
+    List<ProductModel> productRecommendation =
+        productProvider.findByCategory(product.category);
     return SafeArea(
       child: Scaffold(
-        bottomSheet: _bottomSheet(_product),
+        bottomSheet: _bottomSheet(product),
+
+        //original code
+        /// return Scaffold( TODO will have to fix this
+        //       bottomSheet: _bottomSheet(_product),
+        //       body: CustomScrollView(
+        //         slivers: [
+        ///        SliverAppBar(
+        //             expandedHeight: MediaQuery.of(context).size.width,
+        //             pinned: true,
+        //             elevation: 0,
+        //             backgroundColor: Theme.of(context).cardColor,
+        //             flexibleSpace: FlexibleSpaceBar(
+        //                 background: Container(
+        //               color: Colors.white,
+        //               child: Image.network(
+        //                 _product.imageUrl,
+        //                 fit: BoxFit.contain,
+        //               ),
+        //             )),
+        //             actions: [MyBadge.cart(context)],
+        //           ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
@@ -43,7 +64,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ProductImagesListWidget(
-                    productImgList: _product.imageUrls ?? []),
+                    productImgList: product.imageUrls ?? []),
               ),
               const SizedBox(
                 height: 20,
@@ -64,17 +85,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           children: [
                             //Product Name
                             Text(
-                              _product.name,
+                              product.name,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
-                              // style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                             const SizedBox(height: 10),
 
                             //Product Price
 
                             Text(
-                              '\$ ${_product.price}',
+                              '\$ ${product.price}',
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontSize: 16,
@@ -99,14 +120,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                           id: widget.productId,
 
                                           /// TODO edited imageList
-                                          imageUrl: _product.imageUrls![0],
-                                          name: _product.name,
-                                          price: _product.price,
+                                          imageUrl: product.imageUrls![0],
+                                          name: product.name,
+                                          price: product.price,
                                         ),
                                       );
                                     },
                                     icon: wishlistProvider
-                                            .isInWishList(_product.id)
+                                            .isInWishList(product.id)
                                         ? const Icon(
                                             mWishListIconFill,
                                             color: Colors.redAccent,
@@ -130,12 +151,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _detailsRow('Brand', _product.brand),
+                              _detailsRow('Brand', product.brand),
 
-                              _detailsRow('Category', _product.category),
+                              _detailsRow('Category', product.category),
                               _detailsRow(
                                   'Popularity',
-                                  _product.isPopular
+                                  product.isPopular
                                       ? 'Popular'
                                       : 'Not Popular'),
 
@@ -143,7 +164,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                               // Description
 
-                              Text(_product.description),
+                              Text(product.description),
                             ],
                           ),
                         ),
@@ -159,14 +180,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.symmetric(horizontal: 6),
-                            itemCount: _productRecommendation.length,
+                            itemCount: productRecommendation.length,
                             itemBuilder: (context, index) =>
                                 ChangeNotifierProvider.value(
-                              value: _productRecommendation[index],
+                              value: productRecommendation[index],
                               child: Container(
                                   margin:
                                       const EdgeInsets.symmetric(horizontal: 4),
-                                  child: Recommendation()),
+                                  child:const Recommendation()),
                             ),
                           ),
                         ),
@@ -175,10 +196,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       _sectionContainer(
                           'Reviews',
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8),
-                            child: Text('No review yet'),
-                          )),
-                      SizedBox(height: 60),
+                            padding:const EdgeInsets.symmetric(horizontal: 8),
+                            child: const Text('No review yet'),
+                          ),),
+                      const SizedBox(height: 60),
                     ],
                   )),
             ],
@@ -200,7 +221,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             padding: const EdgeInsets.all(8),
             child: Text(
               title.toUpperCase(),
-              //style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
           const SizedBox(height: 10),
@@ -224,7 +245,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _bottomSheet(ProductModel product) {
-    final _cartProvider = Provider.of<CartProvider>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       height: 50,
@@ -236,13 +257,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Material(
               color: Theme.of(context).cardColor,
               child: InkWell(
-                onTap: _cartProvider.isInCart(product.id)
+                onTap: cartProvider.isInCart(product.id)
                     ? () {
-                        _cartProvider.removeFromCart(product.id);
+                        cartProvider.removeFromCart(product.id);
                         MySnackBar().showSnackBar('Removed from cart', context);
                       }
                     : () {
-                        _cartProvider.addAndRemoveItem(
+                        cartProvider.addAndRemoveItem(
                           CartModel(
                             id: product.id,
                             imageUrl: product.imageUrls![0],
@@ -253,9 +274,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         MySnackBar().showSnackBar('Added to cart', context);
                       },
                 child: Center(
-                  child: _cartProvider.isInCart(product.id)
-                      ? Icon(mRemoveCartIcon)
-                      : Icon(mAddCartIcon),
+                  child: cartProvider.isInCart(product.id)
+                      ? const Icon(mRemoveCartIcon)
+                      :const Icon(mAddCartIcon),
                 ),
               ),
             ),
@@ -271,7 +292,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: Center(
                     child: Text(
                       'Buy Now !'.toUpperCase(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,

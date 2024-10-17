@@ -1,17 +1,16 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_app/core/models/user_model.dart';
- import 'package:user_app/core/providers/auth_provider.dart';
+import 'package:user_app/core/providers/auth_provider.dart';
 import 'package:user_app/ui/utils/my_alert_dialog.dart';
 import 'package:user_app/ui/utils/my_border.dart';
 import 'package:user_app/ui/widgets/image_preview.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
@@ -20,7 +19,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late FocusNode _phoneNumberNode;
   late FocusNode _addressNode;
   String _pickedImagePath = '';
-  final _formKey =  GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   bool _passwordIsVisible = false;
   late UserModel _userModel;
   late String _password;
@@ -31,13 +30,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
-    _userModel =   UserModel();
+    _userModel = UserModel();
     _isLoading = false;
     _isEmailValid = true;
-    _passwordNode =   FocusNode();
-    _emailNode =   FocusNode();
-    _phoneNumberNode =   FocusNode();
-    _addressNode =   FocusNode();
+    _passwordNode = FocusNode();
+    _emailNode = FocusNode();
+    _phoneNumberNode = FocusNode();
+    _addressNode = FocusNode();
   }
 
   @override
@@ -60,9 +59,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       authProvider
           .signUp(
-              email: _userModel.email.toLowerCase().trim(),
-              password: _password.trim(),
-              userModel: _userModel,)
+        email: _userModel.email.toLowerCase().trim(),
+        password: _password.trim(),
+        userModel: _userModel,
+      )
           .then((_) {
         if (Navigator.canPop(context)) Navigator.pop(context);
       }).catchError((error) {
@@ -75,7 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         } else {
           MyAlertDialog.error(context, error.message.toString());
         }
-       }).whenComplete(() {
+      }).whenComplete(() {
         _isEmailValid = true;
         setState(() => _isLoading = false);
       });
@@ -94,7 +94,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              const  Text(
+                const Text(
                   'Sign Up',
                   style: TextStyle(fontSize: 22),
                 ),
@@ -116,17 +116,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           shape: const CircleBorder(),
                           onPressed: () async {
                             MyAlertDialog.imagePicker(context)
-                                .then((pickedImagePath) => setState(
-                                    () => _pickedImagePath = pickedImagePath,),)
-                                .then((_) =>
-                                    _userModel.imageUrl = _pickedImagePath,);
+                                .then(
+                                  (pickedImagePath) => setState(
+                                    () => _pickedImagePath = pickedImagePath,
+                                  ),
+                                )
+                                .then(
+                                  (_) => _userModel.imageUrl = _pickedImagePath,
+                                );
                           },
-                          child: const Icon(Icons.add_a_photo,
-                              color: Colors.white, size: 14),
+                          child: const Icon(
+                            Icons.add_a_photo,
+                            color: Colors.white,
+                            size: 14,
+                          ),
                         ),
                       ),
                     ),
-                  ]),
+                  ],),
                 ),
                 Form(
                   key: _formKey,
@@ -136,7 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
-                          key: ValueKey('Full Name'),
+                          key: const ValueKey('Full Name'),
                           textCapitalization: TextCapitalization.words,
                           validator: (value) => value!.isEmpty
                               ? 'Please enter your full name'
@@ -146,7 +153,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           keyboardType: TextInputType.name,
                           decoration: InputDecoration(
                             labelText: 'Full Name',
-                            contentPadding: EdgeInsets.all(12),
+                            contentPadding: const EdgeInsets.all(12),
                             border: const OutlineInputBorder(),
                             enabledBorder: MyBorder.outlineInputBorder(context),
                             filled: true,
@@ -162,7 +169,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
-                          key: ValueKey('Email'),
+                          key: const ValueKey('Email'),
                           validator: (value) {
                             if (!_isEmailValid) {
                               return _emailErrorMessage;
@@ -175,7 +182,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                             labelText: 'Email',
-                            contentPadding: EdgeInsets.all(12),
+                            contentPadding: const EdgeInsets.all(12),
                             border: const OutlineInputBorder(),
                             enabledBorder: MyBorder.outlineInputBorder(context),
                             filled: true,
@@ -191,7 +198,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
-                          key:const ValueKey('Phone Number'),
+                          key: const ValueKey('Phone Number'),
                           validator: (value) => value!.isEmpty
                               ? 'Please enter a valid phone number'
                               : null,
@@ -201,14 +208,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           keyboardType: TextInputType.phone,
                           decoration: InputDecoration(
                             labelText: 'Phone Number',
-                            contentPadding: EdgeInsets.all(12),
+                            contentPadding: const EdgeInsets.all(12),
                             border: const OutlineInputBorder(),
                             enabledBorder: MyBorder.outlineInputBorder(context),
                             filled: true,
                             fillColor: Theme.of(context).cardColor,
                           ),
-                          onEditingComplete: () => FocusScope.of(context)
-                              .requestFocus(_addressNode),
+                          onEditingComplete: () =>
+                              FocusScope.of(context).requestFocus(_addressNode),
                           onSaved: (value) => _userModel.phoneNumber = value!,
                         ),
                       ),
@@ -216,7 +223,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
-                          key:const ValueKey('Address'),
+                          key: const ValueKey('Address'),
                           validator: (value) => value!.isEmpty
                               ? 'Please Enter full address'
                               : null,
@@ -254,7 +261,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           obscureText: !_passwordIsVisible,
                           decoration: InputDecoration(
                             contentPadding:
-                                EdgeInsets.symmetric(horizontal: 12),
+                                const EdgeInsets.symmetric(horizontal: 12),
                             labelText: 'Password',
                             border: const OutlineInputBorder(),
                             enabledBorder: MyBorder.outlineInputBorder(context),
@@ -264,8 +271,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               height: 32,
                               width: 28,
                               child: IconButton(
-                                onPressed: () => setState(() =>
-                                    _passwordIsVisible = !_passwordIsVisible),
+                                onPressed: () => setState(
+                                  () =>
+                                      _passwordIsVisible = !_passwordIsVisible,
+                                ),
                                 splashRadius: 18,
                                 iconSize: 18,
                                 icon: Icon(
@@ -281,7 +290,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
 
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02),
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
 
                       // Sign Up button
                       SizedBox(
@@ -295,14 +305,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   FocusScope.of(context).unfocus();
                                 },
                           child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                _isLoading
-                                    ?const CircularProgressIndicator(
-                                        color: Colors.white,
-                                      )
-                                    : const Text('Sign Up'),
-                              ]),
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : const Text('Sign Up'),
+                            ],
+                          ),
                         ),
                       ),
                     ],

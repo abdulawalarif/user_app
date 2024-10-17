@@ -9,25 +9,25 @@ import 'package:user_app/ui/widgets/my_button.dart';
 
 
 class FullCart extends StatefulWidget {
-  const FullCart({Key? key}) : super(key: key);
+  const FullCart({super.key});
 
   @override
-  _FullCartState createState() => _FullCartState();
+  State<FullCart>  createState() => _FullCartState();
 }
 
 class _FullCartState extends State<FullCart> {
   @override
   Widget build(BuildContext context) {
-    final _cartItem = Provider.of<CartModel>(context, listen: false);
-    final _cartProvider = Provider.of<CartProvider>(context);
+    final cartItem = Provider.of<CartModel>(context, listen: false);
+    final cartProvider = Provider.of<CartProvider>(context);
     return Container(
-      margin: EdgeInsets.fromLTRB(8, 0, 8, 0),
+      margin:const EdgeInsets.fromLTRB(8, 0, 8, 0),
       height: 110,
       child: Card(
         child: InkWell(
           onTap: () => Navigator.pushNamed(
               context, RouteName.productDetailScreen,
-              arguments: _cartItem.id),
+              arguments: cartItem.id,),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -39,8 +39,8 @@ class _FullCartState extends State<FullCart> {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         image: DecorationImage(
-                            image: NetworkImage(_cartItem.imageUrl),
-                            fit: BoxFit.contain)),
+                            image: NetworkImage(cartItem.imageUrl),
+                            fit: BoxFit.contain,),),
                   ),
                   MyButton.smallIcon(
                     context: context,
@@ -48,7 +48,7 @@ class _FullCartState extends State<FullCart> {
                     color: Colors.redAccent,
                     onPressed: () =>
                           MyAlertDialog().removeCartItem(context, () {
-                          _cartProvider.removeFromCart(_cartItem.id);
+                          cartProvider.removeFromCart(cartItem.id);
                           Navigator.pop(context);
                         }),
                   ),
@@ -56,7 +56,7 @@ class _FullCartState extends State<FullCart> {
               ),
               Flexible(
                 child: Container(
-                  margin: EdgeInsets.fromLTRB(10, 5, 5, 5),
+                  margin: const EdgeInsets.fromLTRB(10, 5, 5, 5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -65,28 +65,27 @@ class _FullCartState extends State<FullCart> {
                         children: [
                           Flexible(
                             child: Text(
-                              _cartItem.name,
+                              cartItem.name,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                             // style: Theme.of(context).textTheme.bodyText1,
-                              /// TODO theme fixing here
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Row(
                         children: [
-                          Text(
+                          const  Text(
                             'Price: ',
                           ),
                           Text(
-                            '\$${_cartItem.price}',
-                           // style: Theme.of(context).textTheme.caption,
+                            '\$${cartItem.price}',
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,17 +93,17 @@ class _FullCartState extends State<FullCart> {
                           MyButton.smallIcon(
                             context: context,
                             icon: mIconRemove,
-                            color: _cartItem.quantity > 1
+                            color: cartItem.quantity > 1
                                 ? Colors.redAccent
                                 : Theme.of(context).disabledColor,
-                            onPressed: _cartItem.quantity > 1
+                            onPressed: cartItem.quantity > 1
                                 ? () {
-                              _cartItem.quantity--;
-                              _cartProvider.updateCart(_cartItem);
+                              cartItem.quantity--;
+                              cartProvider.updateCart(cartItem);
                             }
                                 : () {},
                           ),
-                          Container(
+                          SizedBox(
                             width: 40,
                             height: 20,
                             child: TextField(
@@ -117,11 +116,11 @@ class _FullCartState extends State<FullCart> {
                               enabled: false,
                               keyboardType: TextInputType.number,
                               controller: TextEditingController(
-                                  text: _cartItem.quantity.toString()),
+                                  text: cartItem.quantity.toString(),),
                               maxLines: 1,
-                          //    style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.bodyLarge,
                               textAlign: TextAlign.center,
-                              decoration: InputDecoration(
+                              decoration:const InputDecoration(
                                 border: InputBorder.none,
                                 fillColor: Colors.deepPurple,
                                 isDense: true,
@@ -134,8 +133,8 @@ class _FullCartState extends State<FullCart> {
                             icon: mIconAdd,
                             color: Theme.of(context).primaryColor,
                             onPressed: () {
-                              _cartItem.quantity++;
-                              _cartProvider.updateCart(_cartItem);
+                              cartItem.quantity++;
+                              cartProvider.updateCart(cartItem);
                             },
                           ),
                         ],

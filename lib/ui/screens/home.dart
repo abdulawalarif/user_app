@@ -5,8 +5,6 @@ import 'package:user_app/ui/constants/route_name.dart';
 import 'package:user_app/core/models/brand_model.dart';
 import 'package:user_app/core/models/carousel_model.dart';
 import 'package:user_app/core/models/category_model.dart';
-import 'package:user_app/core/providers/cart_provider.dart';
-
 import 'package:user_app/core/providers/product_provider.dart';
 import 'package:user_app/ui/widgets/category.dart';
 import 'package:user_app/ui/widgets/my_badge.dart';
@@ -19,7 +17,7 @@ import 'package:badges/badges.dart' as b;
 
 class HomeScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -51,114 +49,125 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 160,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            pinned: true,
-            actions: [
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pushNamed(RouteName.cartScreen);
-                },
-                child: MyBadge.cart(context),
-              ),
-              const SizedBox(width: 20.0),
-            ],
-            elevation: 0,
-            flexibleSpace: FlexibleSpaceBar(
-              background: MyCarousel(
-                imageList: carouselImages,
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              expandedHeight: 160,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              pinned: true,
+              actions: [
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(RouteName.cartScreen);
+                  },
+                  child: MyBadge.cart(context),
+                ),
+                const SizedBox(width: 20.0),
+              ],
+              elevation: 0,
+              flexibleSpace: FlexibleSpaceBar(
+                background: MyCarousel(
+                  imageList: carouselImages,
+                ),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Categories section
-      
-                  _sectionTitle('CATEGORIES', () {}),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 10.h,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: categories.length,
-                      itemBuilder: (context, index) =>
-                          Category(category: categories[index]),
+            SliverToBoxAdapter(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Categories section
+
+                    _sectionTitle('CATEGORIES', () {}),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 10.h,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) =>
+                            Category(category: categories[index]),
+                      ),
                     ),
-                  ),
-      
-                  // Popular Brands Section
-      
-                  _sectionTitle('POPULAR BRANDS', () {}),
-      
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 220,
-                    child: GridView.count(
-                      scrollDirection: Axis.horizontal,
-                      crossAxisCount: 2,
-                      padding:  const EdgeInsets.symmetric(horizontal: 8),
-                      children: List.generate(
+
+                    // Popular Brands Section
+
+                    _sectionTitle('POPULAR BRANDS', () {}),
+
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 220,
+                      child: GridView.count(
+                        scrollDirection: Axis.horizontal,
+                        crossAxisCount: 2,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        children: List.generate(
                           popularBrands.length,
                           (index) => Center(
-                                  child: PopularBrand(
-                                brand: popularBrands[index],
-                              ),),),
-                    ),
-                  ),
-      
-                  // Popular Product Section
-      
-                  _sectionTitle(
-                      'POPULAR PRODUCTS',
-                      () => Navigator.pushNamed(context, RouteName.categoryScreen,
-                          arguments: 'Popular Products ',),),
-      
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 200,
-                    child: Consumer<ProductProvider>(
-                      builder: (_, consumerProvider, __) => ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        itemCount: consumerProvider.popularProducts.length,
-                        itemBuilder: (context, index) =>
-                            ChangeNotifierProvider.value(
-                          value: consumerProvider.popularProducts[index],
-                          child:  const PopularProduct(),
+                            child: PopularBrand(
+                              brand: popularBrands[index],
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-      
-                  // Recommendations Section
-      
-                  _sectionTitle('RECOMMENDATIONS', () {}),
-                  Consumer<ProductProvider>(
-                    builder: (_, productProvider, __) => Center(
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: productProvider.products
-                            .map((product) => ChangeNotifierProvider.value(
-                                value: product, child: Recommendation(),),)
-                            .toList(),
+
+                    // Popular Product Section
+
+                    _sectionTitle(
+                      'POPULAR PRODUCTS',
+                      () => Navigator.pushNamed(
+                        context,
+                        RouteName.categoryScreen,
+                        arguments: 'Popular Products ',
                       ),
                     ),
-                  ),
-      
-                  const SizedBox(height: 30),
-                ],
+
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 200,
+                      child: Consumer<ProductProvider>(
+                        builder: (_, consumerProvider, __) => ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          itemCount: consumerProvider.popularProducts.length,
+                          itemBuilder: (context, index) =>
+                              ChangeNotifierProvider.value(
+                            value: consumerProvider.popularProducts[index],
+                            child: const PopularProduct(),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Recommendations Section
+
+                    _sectionTitle('RECOMMENDATIONS', () {}),
+                    Consumer<ProductProvider>(
+                      builder: (_, productProvider, __) => Center(
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: productProvider.products
+                              .map(
+                                (product) => ChangeNotifierProvider.value(
+                                  value: product,
+                                  child: const Recommendation(),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),),
+          ],
+        ),
+      ),
     );
   }
 
@@ -170,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             title,
-            //  style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           TextButton(
             onPressed: onPressed,

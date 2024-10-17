@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class EmptyWishlist extends StatefulWidget {
+  const EmptyWishlist({super.key});
+
   @override
-  _EmptyWishlistState createState() => _EmptyWishlistState();
+  State<EmptyWishlist>  createState() => _EmptyWishlistState();
 }
 
 class _EmptyWishlistState extends State<EmptyWishlist> {
@@ -17,7 +19,7 @@ class _EmptyWishlistState extends State<EmptyWishlist> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.3,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/empty_wishlist.png'),
                 ),
@@ -26,13 +28,13 @@ class _EmptyWishlistState extends State<EmptyWishlist> {
             Text(
               'Your Wishlist is Empty',
               textAlign: TextAlign.center,
-            //  style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Text(
               'Looks like you haven\'t added anything to your wishlist yet',
               textAlign: TextAlign.center,
-           //   style: Theme.of(context).textTheme.overline,
+              style: Theme.of(context).textTheme.labelSmall,
             ),
           ],
         ),

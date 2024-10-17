@@ -9,8 +9,10 @@ import 'package:user_app/ui/screens/wishlist.dart';
 import 'package:user_app/ui/widgets/authenticate.dart';
 
 class BottomBarScreen extends StatefulWidget {
+  const BottomBarScreen({super.key});
+
   @override
-  _BottomBarScreenState createState() => _BottomBarScreenState();
+  State<BottomBarScreen> createState() => _BottomBarScreenState();
 }
 
 class _BottomBarScreenState extends State<BottomBarScreen> {
@@ -28,12 +30,12 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     _pages = [
       {'page': HomeScreen(), 'title': 'Home'},
       {'page': FeedsScreen(), 'title': 'Feeds'},
-      {'page': SearchScreen(), 'title': 'Search'},
+      {'page': const SearchScreen(), 'title': 'Search'},
       {
         'page': const Authenticate(child: WishlistScreen()),
         'title': 'Wishlist',
       },
-      {'page': Authenticate(child: UserInfoScreen()), 'title': 'User'},
+      {'page': const Authenticate(child: UserInfoScreen()), 'title': 'User'},
     ];
     _selectedIndex = 0;
   }
@@ -97,7 +99,10 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         },
         elevation: 2,
         splashColor: Theme.of(context).primaryColor.withAlpha(2),
-        child: const Icon(mSearchIcon),
+        child: Icon(
+          mSearchIcon,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
       ),
     );
   }

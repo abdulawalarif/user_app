@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class MyButton {
   static Widget text({
@@ -13,18 +12,19 @@ class MyButton {
       child: Material(
         color: Theme.of(context).primaryColor,
         child: InkWell(
-            onTap: onPressed,
-            child: Center(
-              child: Text(
-                text,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
-                ),
+          onTap: onPressed,
+          child: Center(
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
               ),
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -39,22 +39,24 @@ class MyButton {
       height: height,
       decoration: BoxDecoration(
         border: Border.all(
-            //color: Theme.of(context).buttonColor,
-            width: 1),
+          //color: Theme.of(context).buttonColor,
+          width: 1,
+        ),
       ),
       child: InkWell(
-          onTap: onPressed,
-          child: Center(
-            child: Text(
-              text,
-              style: TextStyle(
-               // color: Theme.of(context).buttonColor,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
-              ),
+        onTap: onPressed,
+        child: Center(
+          child: Text(
+            text,
+            style: const TextStyle(
+              // color: Theme.of(context).buttonColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 
@@ -79,8 +81,11 @@ class MyButton {
     );
   }
 
-  static Widget elevatedButton(
-      {required context, required child, required Function onPressed}) {
+  static Widget elevatedButton({
+    required context,
+    required child,
+    required Function onPressed,
+  }) {
     return const Material(
       child: InkWell(),
     );

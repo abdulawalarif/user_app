@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:user_app/ui/constants/assets_path.dart';
@@ -9,8 +8,10 @@ import 'package:user_app/ui/widgets/feeds_product.dart';
 import 'package:user_app/ui/widgets/my_badge.dart';
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
@@ -39,12 +40,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _productProvider = Provider.of<ProductProvider>(context);
+    final productProvider = Provider.of<ProductProvider>(context);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: _searchBar(_productProvider),
+          title: _searchBar(productProvider),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
           centerTitle: true,
@@ -57,26 +58,26 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         body: Center(
           child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              child: _searchController.text.isEmpty || _searchList.isEmpty
-                  ? SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      child: _searchController.text.isNotEmpty
-                          ? Text(
-                              'No results found :(',
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 24,
-
-                                /// color: Theme.of(context).buttonColor
-                              ),
-                            )
-                          : SvgPicture.asset(
-                              ImagePath.search,
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+            child: _searchController.text.isEmpty || _searchList.isEmpty
+                ? SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: _searchController.text.isNotEmpty
+                        ? Text(
+                            'No results found :(',
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: Theme.of(context).colorScheme.tertiary,
                             ),
-                    )
-                  : _showSearchResults()),
+                          )
+                        : SvgPicture.asset(
+                            ImagePath.search,
+                          ),
+                  )
+                : _showSearchResults(),
+          ),
         ),
       ),
     );
@@ -92,7 +93,7 @@ class _SearchScreenState extends State<SearchScreen> {
         _searchList.length,
         (index) => ChangeNotifierProvider.value(
           value: _searchList[index],
-          child: Center(
+          child: const Center(
             child: FeedsProduct(),
           ),
         ),
@@ -108,7 +109,7 @@ class _SearchScreenState extends State<SearchScreen> {
         autofocus: true,
         controller: _searchController,
         maxLines: 1,
-        //style: Theme.of(context).textTheme.bodyText1,
+        style: Theme.of(context).textTheme.bodyLarge,
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.search,
         textCapitalization: TextCapitalization.sentences,
@@ -118,9 +119,7 @@ class _SearchScreenState extends State<SearchScreen> {
           filled: true,
           isDense: true,
           hintText: 'Search',
-          hintStyle: TextStyle(
-              //color: Theme.of(context).buttonColor
-              ),
+          hintStyle: TextStyle(color: Theme.of(context).colorScheme.tertiary),
           suffixIcon: _searchController.text.isEmpty
               ? null
               : IconButton(
@@ -131,12 +130,12 @@ class _SearchScreenState extends State<SearchScreen> {
                           _focusNode.unfocus();
                         },
                   iconSize: 14,
-                  //  color: Theme.of(context).buttonColor,
-                  icon: Icon(Icons.clear),
+                  color: Theme.of(context).colorScheme.tertiary,
+                  icon: const Icon(Icons.clear),
                   padding: EdgeInsets.zero,
                   splashRadius: 14,
                 ),
-          suffixIconConstraints: BoxConstraints(maxHeight: 14),
+          suffixIconConstraints: const BoxConstraints(maxHeight: 14),
         ),
         onChanged: (value) {
           _searchController.text.toLowerCase();

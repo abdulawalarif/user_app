@@ -1,9 +1,6 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -11,9 +8,6 @@ import 'package:user_app/core/models/user_model.dart';
 import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/ui/utils/my_alert_dialog.dart';
 import 'package:user_app/ui/utils/my_border.dart';
-import 'package:user_app/ui/widgets/image_preview.dart';
-
-import '../constants/assets_path.dart';
 
 class UpdateUsersInformation extends StatefulWidget {
   UserModel userModel;
@@ -67,7 +61,6 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
           Provider.of<UserDataProvider>(context, listen: false);
       setState(() => _isLoading = true);
       if (initialImagePath != widget.userModel.imageUrl) {
-
         final FirebaseStorage _storage = FirebaseStorage.instance;
         final reference = _storage.refFromURL(initialImagePath);
         await reference.delete();
@@ -252,45 +245,64 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
 
                         Row(
                           children: [
-                            // Update button
                             SizedBox(
-                              width: 30.w,
                               height: 50,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text('Cancel'),
-                                    ]),
+                              width: 100,
+                              child: Material(
+                                color: Theme.of(context).primaryColor,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      'Cancel !'.toUpperCase(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
 
+                            // Update button
+
                             const Spacer(),
                             // cancel Update button
+
                             SizedBox(
-                              width: 30.w,
                               height: 50,
-                              child: ElevatedButton(
-                                onPressed: _isLoading
-                                    ? () {}
-                                    : () {
-                                        _submitForm();
-                                        FocusScope.of(context).unfocus();
-                                      },
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      _isLoading
-                                          ? const CircularProgressIndicator(
-                                              color: Colors.white,
-                                            )
-                                          : const Text('Update'),
-                                    ]),
+                              width: 100,
+                              child: Material(
+                                color: Theme.of(context).primaryColor,
+                                child: InkWell(
+                                  onTap: _isLoading
+                                      ? () {}
+                                      : () {
+                                          _submitForm();
+                                          FocusScope.of(context).unfocus();
+                                        },
+                                  child: Center(
+                                    child:!_isLoading? Text(
+                                      'Update !'.toUpperCase(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ):const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
+
                           ],
                         ),
                       ],

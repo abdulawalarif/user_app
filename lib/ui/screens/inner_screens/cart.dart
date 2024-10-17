@@ -8,15 +8,17 @@ import 'package:user_app/ui/widgets/empty_cart.dart';
 import 'package:user_app/ui/widgets/full_cart.dart';
 
 class CartScreen extends StatefulWidget {
+  const CartScreen({super.key});
+
   @override
-  _CartScreenState createState() => _CartScreenState();
+  State<CartScreen>  createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
-    final _cartProvider = Provider.of<CartProvider>(context);
-    final _cartItems = _cartProvider.getCartItems;
+    final cartProvider = Provider.of<CartProvider>(context);
+    final cartItems = cartProvider.getCartItems;
 
     return Authenticate(
       child: Scaffold(
@@ -25,29 +27,29 @@ class _CartScreenState extends State<CartScreen> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
           actions: [
-            if (_cartItems.isNotEmpty)
+            if (cartItems.isNotEmpty)
               IconButton(
                 onPressed: () => MyAlertDialog().clearCart(context, () {
-                  _cartProvider.removeAll();
+                  cartProvider.removeAll();
                   Navigator.pop(context);
                 }),
-                icon: Icon(mTrashIcon),
+                icon: const Icon(mTrashIcon),
                 splashRadius: 18,
               ),
           ],
         ),
         bottomSheet:
-            _cartItems.isNotEmpty ? checkoutSection(_cartProvider) : null,
-        body: _cartItems.isEmpty
-            ? EmptyCart()
+            cartItems.isNotEmpty ? checkoutSection(cartProvider) : null,
+        body: cartItems.isEmpty
+            ? const EmptyCart()
             : Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 margin: EdgeInsets.only(bottom: 60),
                 child: ListView.builder(
-                  itemCount: _cartItems.length,
+                  itemCount: cartItems.length,
                   itemBuilder: (context, index) => ChangeNotifierProvider.value(
-                    value: _cartItems.values.toList()[index],
+                    value: cartItems.values.toList()[index],
                     child: const FullCart(),
                   ),
                 ),
@@ -56,7 +58,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget checkoutSection(CartProvider _cartProvider) {
+  Widget checkoutSection(CartProvider cartProvider) {
     return Container(
       color: Theme.of(context).cardColor,
       height: 60,
@@ -67,15 +69,15 @@ class _CartScreenState extends State<CartScreen> {
           Expanded(
             flex: 2,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 8),
+              padding:const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text('SubTotal '),
-                  //  Text('SubTotal ', style: Theme.of(context).textTheme.caption), TODO fixing theme
+
+                   Text('SubTotal ', style: Theme.of(context).textTheme.bodySmall),
                   Flexible(
                     child: Text(
-                      '\$${_cartProvider.subTotal.toString()}',
+                      '\$${cartProvider.subTotal.toString()}',
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -97,7 +99,7 @@ class _CartScreenState extends State<CartScreen> {
               color: Theme.of(context).primaryColor,
               child: InkWell(
                 onTap: () {},
-                child: Center(
+                child:const Center(
                   child: Text(
                     'Checkout',
                     style: TextStyle(

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:user_app/ui/constants/assets_path.dart';
 import 'package:user_app/ui/constants/route_name.dart';
 import 'package:user_app/core/models/user_model.dart';
- import 'package:user_app/core/providers/auth_provider.dart';
+import 'package:user_app/core/providers/auth_provider.dart';
 import 'package:user_app/ui/utils/my_alert_dialog.dart';
 import 'package:user_app/ui/utils/my_border.dart';
 
@@ -11,14 +11,14 @@ class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
 
   @override
-  _LogInScreenState createState() => _LogInScreenState();
+  State<LogInScreen>  createState() => _LogInScreenState();
 }
 
 class _LogInScreenState extends State<LogInScreen> {
   late FocusNode _passwordNode;
   final _formKey = GlobalKey<FormState>();
   bool _passwordIsVisibile = false;
-  UserModel _user =  UserModel();
+  UserModel _user = UserModel();
   late String _password;
   bool _wrongEmailorPassword = false;
   bool _isLoading = false;
@@ -26,7 +26,7 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   void initState() {
     super.initState();
-    _passwordNode =  FocusNode();
+    _passwordNode = FocusNode();
   }
 
   @override
@@ -77,7 +77,7 @@ class _LogInScreenState extends State<LogInScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         body: Container(
-          margin: EdgeInsets.all(20),
+          margin:const EdgeInsets.all(20),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -90,7 +90,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       size: 32,
                       color: Theme.of(context).primaryColor,
                     ),
-                    Text(
+                    const Text(
                       ' ShopApp',
                       style: TextStyle(fontSize: 22),
                     )
@@ -102,7 +102,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   height: 65,
                   padding: EdgeInsets.only(top: 14),
                   child: _wrongEmailorPassword
-                      ? Text(
+                      ? const Text(
                           'The email or password you entered did not match our records. Please double check and try again',
                           style: TextStyle(color: Colors.redAccent),
                         )
@@ -117,7 +117,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         child: TextFormField(
-                          key: ValueKey('Email'),
+                          key:const ValueKey('Email'),
                           validator: (value) =>
                               value!.isEmpty || !value.contains('@')
                                   ? 'Please enter a valid email address'
@@ -143,7 +143,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 14.0),
                         child: TextFormField(
-                          key: ValueKey('Password'),
+                          key:const ValueKey('Password'),
                           validator: (value) => value!.isEmpty
                               ? 'Please enter a valid password'
                               : null,
@@ -165,7 +165,7 @@ class _LogInScreenState extends State<LogInScreen> {
                               width: 28,
                               child: IconButton(
                                 onPressed: () => setState(() =>
-                                    _passwordIsVisibile = !_passwordIsVisibile),
+                                    _passwordIsVisibile = !_passwordIsVisibile,),
                                 splashRadius: 18,
                                 iconSize: 18,
                                 icon: Icon(
@@ -186,16 +186,16 @@ class _LogInScreenState extends State<LogInScreen> {
                         child: TextButton(
                             onPressed: () {
                               Navigator.pushNamed(
-                                  context, RouteName.forgotPasswordScreen);
+                                  context, RouteName.forgotPasswordScreen,);
                             },
                             child: Text(
                               'Forgot password ?',
                               style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
+                                  color: Theme.of(context).primaryColor,),
                             )),
                       ),
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02),
+                          height: MediaQuery.of(context).size.height * 0.02,),
 
                       // Log in button
                       SizedBox(
@@ -204,14 +204,15 @@ class _LogInScreenState extends State<LogInScreen> {
                         child: ElevatedButton(
                           onPressed: () => _submitForm(),
                           child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                _isLoading
-                                    ? CircularProgressIndicator(
-                                        color: Colors.white,
-                                      )
-                                    : Text('Log In'),
-                              ]),
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : const Text('Log In'),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -223,11 +224,10 @@ class _LogInScreenState extends State<LogInScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Expanded(child: Divider(thickness: 1)),
+                      const Expanded(child: Divider(thickness: 1)),
                       Text('  or   ',
-                      //    style: Theme.of(context).textTheme.subtitle2
-                      ),
-                      Expanded(child: Divider(thickness: 1)),
+                          style: Theme.of(context).textTheme.titleSmall,),
+                      const Expanded(child: Divider(thickness: 1)),
                     ],
                   ),
                 ),
@@ -238,14 +238,13 @@ class _LogInScreenState extends State<LogInScreen> {
                   appLogoUrl: ImagePath.googleLogo,
                   title: 'Log in with Google',
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _loginWithButton(
                   onPressed: () {},
                   appLogoUrl: ImagePath.facebookLogo,
                   title: 'Log in with Facebook',
                 ),
-
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 Row(
@@ -253,15 +252,16 @@ class _LogInScreenState extends State<LogInScreen> {
                   children: [
                     Text(
                       'Don\'t have an account? ',
-                     // style: Theme.of(context).textTheme.subtitle2,
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
                     TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, RouteName.signUpScreen);
-                        },
-                        child: Text('Sign up'))
+                      onPressed: () {
+                        Navigator.pushNamed(context, RouteName.signUpScreen);
+                      },
+                      child: const Text('Sign up'),
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -270,10 +270,11 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-  Widget _loginWithButton(
-      {String title = '',
-      String appLogoUrl = '',
-      required Function() onPressed}) {
+  Widget _loginWithButton({
+    String title = '',
+    String appLogoUrl = '',
+    required Function() onPressed,
+  }) {
     return SizedBox(
       width: double.infinity,
       height: 40,
@@ -281,7 +282,7 @@ class _LogInScreenState extends State<LogInScreen> {
         elevation: 0.6,
         borderRadius: BorderRadius.circular(4),
         color: Theme.of(context).cardColor,
-       // textStyle: Theme.of(context).textTheme.button,
+        textStyle: Theme.of(context).textTheme.labelLarge,
         child: InkWell(
           onTap: onPressed,
           child: Row(
@@ -292,10 +293,10 @@ class _LogInScreenState extends State<LogInScreen> {
                 fit: BoxFit.contain,
                 height: 16,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 title,
-              //  style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ],
           ),

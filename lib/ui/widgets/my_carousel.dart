@@ -5,7 +5,7 @@ import 'package:user_app/core/models/carousel_model.dart';
 class MyCarousel extends StatelessWidget {
   final List<CarouselModel> imageList;
 
-  MyCarousel({required this.imageList});
+  const MyCarousel({super.key, required this.imageList});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class MyCarousel extends StatelessWidget {
         viewportFraction: 1.0,
         enlargeCenterPage: false,
         autoPlay: true,
-        autoPlayInterval: Duration(seconds: 3),
+        autoPlayInterval: const Duration(seconds: 3),
       ),
       items: imageList
           .map(

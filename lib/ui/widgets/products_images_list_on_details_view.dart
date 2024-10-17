@@ -39,8 +39,8 @@ class _ProductImagesListWidgetState extends State<ProductImagesListWidget>
         milliseconds: 300,
       ),
     )..addListener(() {
-      controller.value = animation!.value;
-    });
+        controller.value = animation!.value;
+      });
     scrollController = ScrollController();
   }
 
@@ -97,7 +97,8 @@ class _ProductImagesListWidgetState extends State<ProductImagesListWidget>
                       child: CachedNetworkImage(
                         imageUrl: widget.productImgList[selectedImage],
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => _buildShimmerEffect(), // Shimmer effect as a placeholder
+                        placeholder: (context, url) =>
+                            _buildShimmerEffect(), // Shimmer effect as a placeholder
                         errorWidget: (context, url, error) => const Center(
                           child: Icon(
                             Icons.error,
@@ -119,8 +120,11 @@ class _ProductImagesListWidgetState extends State<ProductImagesListWidget>
                     decoration: BoxDecoration(
                         color: Colors.white70,
                         borderRadius: BorderRadius.circular(50)),
-                    child: const Center(
-                      child: Icon(Icons.arrow_back_ios_rounded),
+                    child: Center(
+                      child: Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
                     ),
                   ),
                   onPressed: _onRightArrowTap,
@@ -137,8 +141,11 @@ class _ProductImagesListWidgetState extends State<ProductImagesListWidget>
                     decoration: BoxDecoration(
                         color: Colors.white70,
                         borderRadius: BorderRadius.circular(50)),
-                    child: const Center(
-                      child: Icon(Icons.arrow_forward_ios_rounded),
+                    child: Center(
+                      child: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
                     ),
                   ),
                   onPressed: _onLeftArrowTap,
@@ -197,7 +204,8 @@ class _ProductImagesListWidgetState extends State<ProductImagesListWidget>
           child: CachedNetworkImage(
             imageUrl: widget.productImgList[index],
             fit: BoxFit.cover,
-            placeholder: (context, url) => _buildShimmerEffect(), // Shimmer effect for the smaller preview images
+            placeholder: (context, url) =>
+                _buildShimmerEffect(), // Shimmer effect for the smaller preview images
             errorWidget: (context, url, error) => const Center(
               child: Icon(
                 Icons.error,

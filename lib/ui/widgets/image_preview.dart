@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 
 class ImagePreview extends StatelessWidget {
   final String imagePath;

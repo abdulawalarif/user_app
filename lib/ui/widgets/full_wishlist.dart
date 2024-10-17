@@ -2,73 +2,75 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_app/ui/constants/route_name.dart';
 import 'package:user_app/core/models/wishlist_model.dart';
- import 'package:user_app/core/providers/wishlist_provider.dart';
+import 'package:user_app/core/providers/wishlist_provider.dart';
 import 'package:user_app/ui/widgets/my_button.dart';
 
 class FullWishlist extends StatelessWidget {
+  const FullWishlist({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final _wishlistItem = Provider.of<WishlistModel>(context, listen: false);
-    final _wishlistProvider = Provider.of<WishlistProvider>(context);
+    final wishlistItem = Provider.of<WishlistModel>(context, listen: false);
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
 
-    double _cardWidth = MediaQuery.of(context).size.width * 0.4;
+    double cardWidth = MediaQuery.of(context).size.width * 0.4;
 
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Material(
         elevation: 0.4,
         color: Theme.of(context).cardColor,
         child: InkWell(
           onTap: () => Navigator.pushNamed(
-              context, RouteName.productDetailScreen,
-              arguments: _wishlistItem.id),
-          child: Container(
-            width: _cardWidth,
+            context,
+            RouteName.productDetailScreen,
+            arguments: wishlistItem.id,
+          ),
+          child: SizedBox(
+            width: cardWidth,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  height: _cardWidth,
+                  height: cardWidth,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     image: DecorationImage(
-                      image: NetworkImage(_wishlistItem.imageUrl),
+                      image: NetworkImage(wishlistItem.imageUrl),
                       fit: BoxFit.contain,
                     ),
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.fromLTRB(4, 0, 4, 4),
+                  margin: const EdgeInsets.fromLTRB(4, 0, 4, 4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _wishlistItem.name,
+                        wishlistItem.name,
                         overflow: TextOverflow.ellipsis,
-                      //  style: Theme.of(context).textTheme.subtitle2,
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
-                      SizedBox(height: 6),
+                      const SizedBox(height: 6),
                       Text(
-                        '\$${_wishlistItem.price.toString()}',
+                        '\$${wishlistItem.price.toString()}',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 18),
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 18,
+                        ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Sales ${_wishlistItem.sales}',
-                            overflow: TextOverflow.ellipsis,
-                          ),
                           MyButton.smallIcon(
-                              context: context,
-                              icon: Icons.favorite,
-                              color: Colors.redAccent,
-                              onPressed: () => _wishlistProvider
-                                  .addAndRemoveItem(_wishlistItem)),
+                            context: context,
+                            icon: Icons.favorite,
+                            color: Colors.redAccent,
+                            onPressed: () =>
+                                wishlistProvider.addAndRemoveItem(wishlistItem),
+                          ),
                         ],
                       ),
                     ],

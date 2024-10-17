@@ -4,7 +4,7 @@ import 'package:user_app/core/models/brand_model.dart';
 class PopularBrand extends StatelessWidget {
   final BrandModel brand;
 
-  PopularBrand({required this.brand});
+  const PopularBrand({super.key,  required this.brand});
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -20,7 +20,7 @@ class PopularBrand extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
+        const Positioned(
           right: 10,
           top: 4,
           child: Icon(
