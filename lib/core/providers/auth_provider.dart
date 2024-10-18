@@ -20,7 +20,6 @@ class AuthProvider with ChangeNotifier {
     required String password,
     required UserModel userModel,
   }) async {
-    print('Printing ID: ${userModel.id}');
 
     try {
       await _auth.createUserWithEmailAndPassword(
@@ -40,8 +39,7 @@ class AuthProvider with ChangeNotifier {
             .then((_) async => ref.getDownloadURL())
             .then((imageUrl) => userModel.imageUrl = imageUrl)
             .catchError((e) {
-          print('Error uploading image: ${e.toString()}');
-        });
+         });
       }
 
       await UserDataProvider().uploadUserData(userModel);
@@ -63,7 +61,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   // Google sign in
-   Future<void> googleSignIn() async {
+  Future<void> googleSignIn() async {
     try {
       final googleAccount = await _googleSignIn.signIn();
       if (googleAccount != null) {
@@ -76,8 +74,7 @@ class AuthProvider with ChangeNotifier {
           final user = userCredential.user;
 
           if (user != null) {
-            // Check if user exists in Firestore before uploading
-            final userDoc = await FirebaseFirestore.instance
+             final userDoc = await FirebaseFirestore.instance
                 .collection('users')
                 .doc(user.uid)
                 .get();
@@ -108,18 +105,12 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-
   //Reset Password
-
-
-
 
   Future<void> resetPassword({required String email}) async {
     try {
       await _auth.sendPasswordResetEmail(email: email.trim().toLowerCase());
-      print('Password reset email sent');
     } catch (e) {
-      print('Failed to send password reset email: $e');
     }
   }
 

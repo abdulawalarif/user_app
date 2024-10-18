@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:user_app/core/models/buy_product_model.dart';
 import 'package:user_app/core/models/user_model.dart';
 import 'package:user_app/ui/constants/route_name.dart';
 import 'package:user_app/ui/screens/buy_screen/buy_screen_main.dart';
@@ -24,28 +25,37 @@ class Routes {
         );
       case RouteName.bottomBarScreen:
         return SlidePageRoute(
-          builder: (BuildContext context) => BottomBarScreen(),
+          builder: (BuildContext context) => const BottomBarScreen(),
         );
       case RouteName.logInScreen:
         return SlidePageRoute(
-          builder: (BuildContext context) => LogInScreen(),
+          builder: (BuildContext context) => const LogInScreen(),
         );
       case RouteName.buyScreen:
+        Map<String, Object>? args = settings.arguments as Map<String, Object>;
+        List<BuyProductModel> products =
+            args['products'] as List<BuyProductModel>;
+        double totalPrice = args['totalPrice'] as double;
         return SlidePageRoute(
-          builder: (BuildContext context) => BuyScreen(),
+          builder: (BuildContext context) => BuyScreen(
+            products: products,
+            totalPrice: totalPrice,
+          ),
         );
       case RouteName.signUpScreen:
         return SlidePageRoute(
-          builder: (BuildContext context) => SignUpScreen(),
+          builder: (BuildContext context) => const SignUpScreen(),
         );
       case RouteName.forgotPasswordScreen:
         return SlidePageRoute(
-          builder: (BuildContext context) => ForgotPasswordScreen(),
+          builder: (BuildContext context) => const ForgotPasswordScreen(),
         );
       case RouteName.productDetailScreen:
         final String productId = settings.arguments as String;
         return SlidePageRoute(
-          builder: (BuildContext context) => ProductDetailScreen(productId: productId,),
+          builder: (BuildContext context) => ProductDetailScreen(
+            productId: productId,
+          ),
         );
       case RouteName.feedsScreen:
         return SlidePageRoute(
@@ -53,18 +63,19 @@ class Routes {
         );
       case RouteName.cartScreen:
         return SlidePageRoute(
-          builder: (BuildContext context) => CartScreen(),
+          builder: (BuildContext context) => const CartScreen(),
         );
 
       case RouteName.wishlistScreen:
         return SlidePageRoute(
-          builder: (BuildContext context) => WishlistScreen(),
+          builder: (BuildContext context) => const WishlistScreen(),
         );
 
       case RouteName.categoryScreen:
         final String categoryName = settings.arguments as String;
         return SlidePageRoute(
-          builder: (BuildContext context) => CategoryScreen(categoryTitle:categoryName),
+          builder: (BuildContext context) =>
+              CategoryScreen(categoryTitle: categoryName),
         );
 
       case RouteName.updateUserInfo:

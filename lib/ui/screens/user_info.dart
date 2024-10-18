@@ -104,10 +104,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                     .pushNamed(RouteName.cartScreen),
                               ),
 
-                              ///  Navigator.pushReplacement(
-                              //           context,
-                              //           SlidePageRoute(builder: (context) => const LogInScreen(),),
-                              //         );
+
                             ],
                           ),
                         ),

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:user_app/core/models/buy_product_model.dart';
 import 'package:user_app/core/providers/cart_provider.dart';
 import 'package:user_app/ui/constants/app_consntants.dart';
 import 'package:user_app/ui/utils/my_alert_dialog.dart';
 import 'package:user_app/ui/widgets/authenticate.dart';
 import 'package:user_app/ui/widgets/empty_cart.dart';
 import 'package:user_app/ui/widgets/full_cart.dart';
+
+import '../../constants/route_name.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -45,7 +48,7 @@ class _CartScreenState extends State<CartScreen> {
             : Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                margin: EdgeInsets.only(bottom: 60),
+                margin: const EdgeInsets.only(bottom: 60),
                 child: ListView.builder(
                   itemCount: cartItems.length,
                   itemBuilder: (context, index) => ChangeNotifierProvider.value(
@@ -98,7 +101,28 @@ class _CartScreenState extends State<CartScreen> {
             child: Material(
               color: Theme.of(context).primaryColor,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+
+                   List<BuyProductModel> products = cartProvider.getCartItems.values.map((cartItem) {
+                    return BuyProductModel(
+                      prodId: cartItem.id,
+                      price: cartItem.price,
+                      title: cartItem.name,
+                      imageUrl: cartItem.imageUrl,
+                      totalItemsOFSingleProduct: cartItem.quantity,
+                    );
+                  }).toList();
+
+                  Navigator.of(context).pushNamed(
+                    RouteName.buyScreen,
+                    arguments: {
+                      'products': products,   // Pass the mapped product list
+                      'totalPrice': cartProvider.subTotal,   // Pass the total price
+                    },
+                  );
+                },
+
+
                 child:const Center(
                   child: Text(
                     'Checkout',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:user_app/core/models/buy_product_model.dart';
 import 'package:user_app/core/models/cart_model.dart';
 import 'package:user_app/core/models/product_model.dart';
 import 'package:user_app/core/models/wishlist_model.dart';
@@ -7,6 +8,7 @@ import 'package:user_app/core/providers/cart_provider.dart';
 import 'package:user_app/core/providers/product_provider.dart';
 import 'package:user_app/core/providers/wishlist_provider.dart';
 import 'package:user_app/ui/constants/app_consntants.dart';
+import 'package:user_app/ui/constants/route_name.dart';
 import 'package:user_app/ui/utils/my_snackbar.dart';
 import 'package:user_app/ui/widgets/products_images_list_on_details_view.dart';
 import 'package:user_app/ui/widgets/recommendation.dart';
@@ -187,18 +189,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               child: Container(
                                   margin:
                                       const EdgeInsets.symmetric(horizontal: 4),
-                                  child:const Recommendation()),
+                                  child: const Recommendation()),
                             ),
                           ),
                         ),
                       ),
 
                       _sectionContainer(
-                          'Reviews',
-                          Container(
-                            padding:const EdgeInsets.symmetric(horizontal: 8),
-                            child: const Text('No review yet'),
-                          ),),
+                        'Reviews',
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: const Text('No review yet'),
+                        ),
+                      ),
                       const SizedBox(height: 60),
                     ],
                   )),
@@ -276,7 +279,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 child: Center(
                   child: cartProvider.isInCart(product.id)
                       ? const Icon(mRemoveCartIcon)
-                      :const Icon(mAddCartIcon),
+                      : const Icon(mAddCartIcon),
                 ),
               ),
             ),
@@ -288,7 +291,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Material(
               color: Theme.of(context).primaryColor,
               child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      RouteName.buyScreen,
+                      arguments: {
+                        'products': [BuyProductModel(
+                          prodId: product.id,
+                          imageUrl: product.imageUrls![0],
+                          title: product.name,
+                          price: product.price,
+                          totalItemsOFSingleProduct: 1,
+                        )],
+                        'totalPrice': product.price,
+                      },
+                    );
+                  },
                   child: Center(
                     child: Text(
                       'Buy Now !'.toUpperCase(),

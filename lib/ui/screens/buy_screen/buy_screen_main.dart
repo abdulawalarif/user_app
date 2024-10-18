@@ -17,9 +17,9 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 /// TODO adding aniamation on page transitioning
 ///
 class BuyScreen extends StatefulWidget {
-  List<BuyProductModel>? proDucts;
+  List<BuyProductModel>? products;
   double totalPrice;
-  BuyScreen({Key? key, this.proDucts, this.totalPrice = 0}) : super(key: key);
+  BuyScreen({super.key, this.products, this.totalPrice = 0});
 
   @override
   State<BuyScreen> createState() => _BuyScreenState();
@@ -37,22 +37,23 @@ class _BuyScreenState extends State<BuyScreen> {
   @override
   void initState() {
     super.initState();
-    priceOfSingleProduct = widget.proDucts?.first.price ?? 0;
+    priceOfSingleProduct = widget.products?.first.price ?? 0;
     _isLoading = false;
   }
 
   @override
   Widget build(BuildContext context) {
     //TODO this prefix is changed and working may occur problem in future
-    final _isLoggedIn = Provider.of<authProvider.AuthProvider>(context).isLoggedIn;
+    final isLoggedIn =
+        Provider.of<authProvider.AuthProvider>(context).isLoggedIn;
 
-    final _userDataProvider = Provider.of<UserDataProvider>(context);
+    final userDataProvider = Provider.of<UserDataProvider>(context);
     FirebaseAuth.instance.authStateChanges().listen((firebaseUser) {
-      _userDataProvider.fetchUserData();
+      userDataProvider.fetchUserData();
     });
-    _userData = _userDataProvider.userData;
+    _userData = userDataProvider.userData;
 
-    if (_isLoggedIn) {
+    if (isLoggedIn) {
       return ModalProgressHUD(
         inAsyncCall: _isLoading,
         dismissible: false,
@@ -71,11 +72,12 @@ class _BuyScreenState extends State<BuyScreen> {
             elevation: 0,
             backgroundColor: Colors.white,
             title: const Text(
-              "Order confirmation",
+              'Order confirmation',
               style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold),
+                color: Colors.black,
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             centerTitle: true,
           ),
@@ -97,7 +99,7 @@ class _BuyScreenState extends State<BuyScreen> {
                       const Padding(
                         padding: EdgeInsets.only(left: 5),
                         child: Text(
-                          "Choose payment option",
+                          'Choose payment option',
                           style: TextStyle(
                               color: Colors.teal,
                               fontSize: 15,
@@ -116,7 +118,7 @@ class _BuyScreenState extends State<BuyScreen> {
                           child: Center(
                             child: RadioListTile(
                               title: Image(
-                                image: AssetImage(
+                                image: const AssetImage(
                                     'assets/images/cash_on_delivery.jpg'),
                                 alignment: Alignment.center,
                                 height: 6.h,
@@ -147,8 +149,6 @@ class _BuyScreenState extends State<BuyScreen> {
                             title: Image(
                               image:
                                   const AssetImage('assets/images/pay_now.jpg'),
-
-                              ///
                               alignment: Alignment.center,
                               height: 6.h,
                               width: double.infinity,
@@ -171,7 +171,7 @@ class _BuyScreenState extends State<BuyScreen> {
               Padding(
                 padding: EdgeInsets.all(1.h),
                 child: const Text(
-                  "Items",
+                  'Items',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
@@ -180,7 +180,7 @@ class _BuyScreenState extends State<BuyScreen> {
               ),
               Flexible(
                 child: ListView.builder(
-                    itemCount: widget.proDucts?.length,
+                    itemCount: widget.products?.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -196,7 +196,7 @@ class _BuyScreenState extends State<BuyScreen> {
                                   color: Colors.white,
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                          widget.proDucts?[index].imageUrl ??
+                                          widget.products?[index].imageUrl ??
                                               ''),
                                       fit: BoxFit.contain)),
                             ),
@@ -217,7 +217,7 @@ class _BuyScreenState extends State<BuyScreen> {
 
                                       /// this data will be fetched from argument
                                       child: Text(
-                                        widget.proDucts?[index].title ?? "",
+                                        widget.products?[index].title ?? "",
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
@@ -234,7 +234,7 @@ class _BuyScreenState extends State<BuyScreen> {
 
                                       /// this data will be fetched from argument
                                       child: Text(
-                                        "\$${widget.proDucts?[index].price}",
+                                        '\$${widget.products?[index].price}',
                                         maxLines: 2,
                                         style: TextStyle(
                                           color: Colors.red[200],
@@ -253,7 +253,7 @@ class _BuyScreenState extends State<BuyScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Item",
+                                    'Item',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.red[300],
@@ -270,7 +270,7 @@ class _BuyScreenState extends State<BuyScreen> {
                                     /// this data will be fetched from argument
                                     child: Center(
                                         child: Text(
-                                      "${widget.proDucts?[index].totalItemsOFSingleProduct}",
+                                      '${widget.products?[index].totalItemsOFSingleProduct}',
                                       style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w400),
@@ -305,7 +305,7 @@ class _BuyScreenState extends State<BuyScreen> {
                       children: [
                         Flexible(
                           child: Text(
-                            "Total: \$${widget.totalPrice == 0 ? priceOfSingleProduct : widget.totalPrice}",
+                            'Total: \$${widget.totalPrice == 0 ? priceOfSingleProduct : widget.totalPrice}',
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -334,16 +334,19 @@ class _BuyScreenState extends State<BuyScreen> {
                               _userData.phoneNumber.isEmpty ||
                               _userData.fullName.isEmpty) {
                             Fluttertoast.showToast(
-                                msg:
-                                    "Please provide your valid information before placing the order",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
+                              msg:
+                                  'Please provide your valid information before placing the order',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0,
+                            );
                             Navigator.of(context)
-                                .pushNamed(RouteName.updateUserInfo);
+                                .pushNamed(RouteName.updateUserInfo,
+                              arguments: _userData,
+                            );
                           } else {
                             // setState(() {
                             //   _isLoading = true;
@@ -367,17 +370,17 @@ class _BuyScreenState extends State<BuyScreen> {
 
                             /// looping through length of data for uploading in database
                             for (int i = 0;
-                                i < (widget.proDucts?.length ?? 0);
+                                i < (widget.products?.length ?? 0);
                                 i++) {
                               ordersModel.thumbnailImageUrl =
-                                  widget.proDucts?[i].imageUrl ?? "";
+                                  widget.products?[i].imageUrl ?? "";
                               ordersModel.nameOfTheProduct =
-                                  widget.proDucts?[i].title ?? "";
+                                  widget.products?[i].title ?? "";
                               ordersModel.totalItemsOrdered = widget
-                                      .proDucts?[i].totalItemsOFSingleProduct ??
+                                      .products?[i].totalItemsOFSingleProduct ??
                                   1;
                               ordersModel.price =
-                                  widget.proDucts?[i].price.toString();
+                                  widget.products?[i].price.toString();
                               ordersProvider
                                   .addOrdersToDatabase(ordersModel: ordersModel)
                                   .then((value) {
