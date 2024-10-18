@@ -21,101 +21,113 @@ class PopularProduct extends StatelessWidget {
     return Card(
       elevation: 0.6,
       child: InkWell(
-        onTap: () => Navigator.pushNamed(context, RouteName.productDetailScreen,
-            arguments: popularProduct.id,),
+        onTap: () => Navigator.pushNamed(
+          context,
+          RouteName.productDetailScreen,
+          arguments: popularProduct.id,
+        ),
         child: SizedBox(
-            width: 120,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      height: 120,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          image: DecorationImage(
-                            image: NetworkImage(popularProduct.imageUrls![0]),
-                            fit: BoxFit.contain,
-                          ),),
-                    ),
-                    MyBadge.quarterCircle('Top', context),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        popularProduct.name,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyLarge,
+          width: 120,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      image: DecorationImage(
+                        image: NetworkImage(popularProduct.imageUrls![0]),
+                        fit: BoxFit.contain,
                       ),
-                      // const Text(
-                      //   //TODO will have to chage this text
-                      //   'Sales {_popularProduct.sales.toString()}',
-                      // ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Consumer<CartProvider>(
-                            builder: (_, cartProvider, __) =>
-                                MyButton.smallIcon(
-                              context: context,
-                              icon: cartProvider.isInCart(popularProduct.id)
-                                  ? mRemoveCartIcon
-                                  : mAddCartIcon,
-                              color: Colors.deepPurple,
-                              onPressed: cartProvider
-                                      .isInCart(popularProduct.id)
-                                  ? () {
-                                      cartProvider
-                                          .removeFromCart(popularProduct.id);
-                                      MySnackBar().showSnackBar(
-                                          'Removed from cart', context,);
-                                    }
-                                  : () {
-                                      cartProvider.addAndRemoveItem(CartModel(
-                                          id: popularProduct.id,
-                                          imageUrl:
-                                              popularProduct.imageUrls![0],
-                                          name: popularProduct.name,
-                                          price: popularProduct.price,),);
-                                      MySnackBar().showSnackBar(
-                                          'Added to cart', context,);
-                                    },
-                            ),
+                    ),
+                  ),
+                  MyBadge.quarterCircle('Top', context),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      popularProduct.name,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    // const Text(
+                    //   //TODO will have to chage this text
+                    //   'Sales {_popularProduct.sales.toString()}',
+                    // ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Consumer<CartProvider>(
+                          builder: (_, cartProvider, __) => MyButton.smallIcon(
+                            context: context,
+                            icon: cartProvider.isInCart(popularProduct.id)
+                                ? mRemoveCartIcon
+                                : mAddCartIcon,
+                            color: Colors.deepPurple,
+                            onPressed: cartProvider.isInCart(popularProduct.id)
+                                ? () {
+                                    cartProvider
+                                        .removeFromCart(popularProduct.id);
+                                    MySnackBar().showSnackBar(
+                                      'Removed from cart',
+                                      context,
+                                    );
+                                  }
+                                : () {
+                                    cartProvider.addAndRemoveItem(
+                                      CartModel(
+                                        id: popularProduct.id,
+                                        imageUrl: popularProduct.imageUrls![0],
+                                        name: popularProduct.name,
+                                        price: popularProduct.price,
+                                      ),
+                                    );
+                                    MySnackBar().showSnackBar(
+                                      'Added to cart',
+                                      context,
+                                    );
+                                  },
                           ),
-                          Consumer<WishlistProvider>(
-                            builder: (_, wishlistProvider, __) =>
-                                MyButton.smallIcon(
-                              context: context,
-                              icon: wishlistProvider
-                                      .isInWishList(popularProduct.id)
-                                  ? mWishListIconFill
-                                  : mWishListIcon,
-                              color: wishlistProvider
-                                      .isInWishList(popularProduct.id)
-                                  ? Colors.redAccent
-                                  : Theme.of(context).unselectedWidgetColor,
-                              onPressed: () {
-                                wishlistProvider.addAndRemoveItem(WishlistModel(
+                        ),
+                        const Spacer(),
+                        Consumer<WishlistProvider>(
+                          builder: (_, wishlistProvider, __) =>
+                              MyButton.smallIcon(
+                            context: context,
+                            icon:
+                                wishlistProvider.isInWishList(popularProduct.id)
+                                    ? mWishListIconFill
+                                    : mWishListIcon,
+                            color:
+                                wishlistProvider.isInWishList(popularProduct.id)
+                                    ? Colors.redAccent
+                                    : Theme.of(context).unselectedWidgetColor,
+                            onPressed: () {
+                              wishlistProvider.addAndRemoveItem(
+                                WishlistModel(
                                   id: popularProduct.id,
                                   imageUrl: popularProduct.imageUrls![0],
                                   name: popularProduct.name,
                                   price: popularProduct.price,
-                                ),);
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
-                        ],
-                      )
-                    ,],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

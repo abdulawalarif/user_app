@@ -14,6 +14,8 @@ import 'package:user_app/ui/constants/route_name.dart';
 import 'package:user_app/ui/widgets/log_in_suggestion.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+import '../../utils/my_snackbar.dart';
+
 /// TODO adding aniamation on page transitioning
 ///
 class BuyScreen extends StatefulWidget {
@@ -333,15 +335,9 @@ class _BuyScreenState extends State<BuyScreen> {
                           if (_userData.address.isEmpty ||
                               _userData.phoneNumber.isEmpty ||
                               _userData.fullName.isEmpty) {
-                            Fluttertoast.showToast(
-                              msg:
-                                  'Please provide your valid information before placing the order',
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 16.0,
+                            MySnackBar().showSnackBar(
+                              'Please fill all the information',
+                              context,
                             );
                             Navigator.of(context)
                                 .pushNamed(RouteName.updateUserInfo,
