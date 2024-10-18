@@ -295,8 +295,9 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                                         fontWeight: FontWeight.w600,
                                         letterSpacing: 0.5,
                                       ),
-                                    ):const CircularProgressIndicator(
-                                      color: Colors.white,
+                                    ):  CircularProgressIndicator(
+                                      color: Theme.of(context).primaryColor,
+
                                     ),
                                   ),
                                 ),

@@ -8,7 +8,7 @@ import 'package:user_app/ui/utils/my_alert_dialog.dart';
 import 'package:user_app/ui/utils/my_border.dart';
 
 class LogInScreen extends StatefulWidget {
-  const LogInScreen({Key? key}) : super(key: key);
+  const LogInScreen({super.key});
 
   @override
   State<LogInScreen>  createState() => _LogInScreenState();
@@ -100,7 +100,7 @@ class _LogInScreenState extends State<LogInScreen> {
                 //Show Log In error message
                 Container(
                   height: 65,
-                  padding: EdgeInsets.only(top: 14),
+                  padding: const EdgeInsets.only(top: 14),
                   child: _wrongEmailorPassword
                       ? const Text(
                           'The email or password you entered did not match our records. Please double check and try again',
@@ -154,7 +154,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           obscureText: !_passwordIsVisibile,
                           decoration: InputDecoration(
                             contentPadding:
-                                EdgeInsets.symmetric(horizontal: 12),
+                               const EdgeInsets.symmetric(horizontal: 12),
                             labelText: 'Password',
                             border: const OutlineInputBorder(),
                             enabledBorder: MyBorder.outlineInputBorder(context),
@@ -207,8 +207,8 @@ class _LogInScreenState extends State<LogInScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               _isLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white,
+                                  ?   CircularProgressIndicator(
+                                      color: Theme.of(context).primaryColor,
                                     )
                                   : const Text('Log In'),
                             ],

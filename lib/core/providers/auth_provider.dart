@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,31 +46,24 @@ class AuthProvider with ChangeNotifier {
 
       await UserDataProvider().uploadUserData(userModel);
       notifyListeners();
-    } catch (e) {
-      print('Error during sign-up: ${e.toString()}');
-    }
+    } catch (e) {}
   }
 
   Future<void> signInAnonymously() async {
-    // if (_auth.currentUser == null)
-    //   await _auth.signInAnonymously().catchError((e) {
-    //     print(e.toString());
-    //   });
+    if (_auth.currentUser == null) {
+      await _auth.signInAnonymously().catchError((e) {});
+    }
   }
 
   Future<void> signIn({required String email, required String password}) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       notifyListeners();
-    } catch (e) {
-      print('Error during sign-in: $e');
-      // You can also handle specific error types or show a message to the user
-      // For example: if (e is FirebaseAuthException) { /* handle specific errors */ }
-    }
+    } catch (e) {}
   }
 
   // Google sign in
-  Future<void> googleSignIn() async {
+   Future<void> googleSignIn() async {
     try {
       final googleAccount = await _googleSignIn.signIn();
       if (googleAccount != null) {
@@ -82,28 +76,44 @@ class AuthProvider with ChangeNotifier {
           final user = userCredential.user;
 
           if (user != null) {
-            UserModel userModel = UserModel(
-              id: user.uid,
-              email: user.email ?? '',
-              fullName: user.displayName ?? '',
-              imageUrl: user.photoURL ?? '',
-              phoneNumber: user.phoneNumber ?? '',
-            );
+            // Check if user exists in Firestore before uploading
+            final userDoc = await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .get();
 
-            await UserDataProvider()
-                .uploadUserData(userModel)
-                .then((_) => print('Done Uploading'));
+            if (!userDoc.exists) {
+              UserModel userModel = UserModel(
+                id: user.uid,
+                email: user.email ?? '',
+                fullName: user.displayName ?? '',
+                imageUrl: user.photoURL ?? '',
+                phoneNumber: user.phoneNumber ?? '',
+              );
+
+              // Upload user data only if the document doesn't exist
+              await UserDataProvider()
+                  .uploadUserData(userModel)
+                  .then((_) => print('Done Uploading'));
+            } else {
+              print('User already exists. No need to upload data.');
+            }
+
             notifyListeners();
           }
         }
       }
     } catch (e) {
-      print('Error during Google Sign-In: $e');
-      // Handle error appropriately
+      print('Error during Google sign in: $e');
     }
   }
 
+
   //Reset Password
+
+
+
+
   Future<void> resetPassword({required String email}) async {
     try {
       await _auth.sendPasswordResetEmail(email: email.trim().toLowerCase());

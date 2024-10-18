@@ -308,9 +308,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               _isLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white,
-                                    )
+                                  ?   CircularProgressIndicator(
+                                color: Theme.of(context).primaryColor,
+
+                              )
                                   : const Text('Sign Up'),
                             ],
                           ),

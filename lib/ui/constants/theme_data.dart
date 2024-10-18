@@ -9,7 +9,7 @@ class Styles {
   static ThemeData lightTheme = ThemeData(
     primarySwatch: _primaryColor,
     primaryColor: _primaryColor,
-    primaryTextTheme: TextTheme(
+    primaryTextTheme: const TextTheme(
       titleLarge: TextStyle(
         color: _primaryColor,
       ),
@@ -19,7 +19,7 @@ class Styles {
       secondary: _primaryColor,
       tertiary: Colors.grey[700],
     ),
-    primaryIconTheme: IconThemeData(color: _primaryColor),
+    primaryIconTheme: const IconThemeData(color: _primaryColor),
     scaffoldBackgroundColor: Colors.grey[50],
     canvasColor: Colors.white,
     unselectedWidgetColor: Colors.grey[600],
@@ -29,7 +29,7 @@ class Styles {
       hintStyle: TextStyle(color: Colors.grey[500]),
     ),
     textTheme: TextTheme(
-      bodyLarge: TextStyle(
+      bodyLarge: const TextStyle(
           fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black),
       bodyMedium: TextStyle(
           fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey[800]),
@@ -38,9 +38,9 @@ class Styles {
           fontSize: 16,
           fontWeight: FontWeight.bold,
           letterSpacing: 0.8),
-      headlineMedium: TextStyle(
+      headlineMedium: const TextStyle(
           color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
-      headlineLarge: TextStyle(
+      headlineLarge: const TextStyle(
           color: _primaryColor, fontWeight: FontWeight.w600),
       titleLarge: TextStyle(color: Colors.grey[700], fontSize: 14),
       titleMedium: TextStyle(color: Colors.grey[700]),
@@ -50,7 +50,7 @@ class Styles {
       TextStyle(fontSize: 12.0, color: Colors.grey[600], letterSpacing: 1),
       bodySmall: TextStyle(fontSize: 12, color: Colors.grey[600]),
     ),
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
         elevation: 0.0, iconTheme: IconThemeData(color: _primaryColor)),
     iconTheme: IconThemeData(color: Colors.grey[700]),
   );
@@ -63,14 +63,14 @@ class Styles {
       secondary: _primaryColor,
       tertiary: Colors.grey[600],
     ),
-    primaryTextTheme: TextTheme(
+    primaryTextTheme: const TextTheme(
       titleLarge: TextStyle(
         color: _primaryColor,
       ),
     ),
     dialogBackgroundColor: Colors.grey[900],
-    primaryIconTheme: IconThemeData(color: _primaryColor),
-    scaffoldBackgroundColor: Color(0xFF151515),
+    primaryIconTheme: const IconThemeData(color: _primaryColor),
+    scaffoldBackgroundColor: const Color(0xFF151515),
     cardColor: Colors.black,
     canvasColor: Colors.black,
     secondaryHeaderColor: Colors.grey[300],
@@ -80,7 +80,7 @@ class Styles {
       hintStyle: TextStyle(color: Colors.grey[500]),
     ),
     textTheme: TextTheme(
-      bodyLarge: TextStyle(
+      bodyLarge: const TextStyle(
           fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
       bodyMedium: TextStyle(
           fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey[400]),
@@ -89,9 +89,9 @@ class Styles {
           fontSize: 16,
           fontWeight: FontWeight.bold,
           letterSpacing: 0.8),
-      headlineMedium: TextStyle(
+      headlineMedium: const TextStyle(
           color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-      headlineLarge: TextStyle(color: _primaryColor, fontWeight: FontWeight.w600),
+      headlineLarge: const TextStyle(color: _primaryColor, fontWeight: FontWeight.w600),
       titleLarge: TextStyle(color: Colors.grey[300], fontSize: 14),
       titleMedium: TextStyle(color: Colors.grey[300]),
       titleSmall:
@@ -100,7 +100,7 @@ class Styles {
       TextStyle(fontSize: 12.0, color: Colors.grey[500], letterSpacing: 1),
       bodySmall: TextStyle(fontSize: 12, color: Colors.grey[400]),
     ),
-    appBarTheme: AppBarTheme(elevation: 0.0),
+    appBarTheme: const AppBarTheme(elevation: 0.0),
     iconTheme: IconThemeData(color: Colors.grey[300]),
   );
 

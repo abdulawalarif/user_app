@@ -47,7 +47,7 @@ class UserDataProvider with ChangeNotifier {
         // Set date
         var date = DateTime.now().toString();
         var dateparse = DateTime.parse(date);
-        var formattedDate = "${dateparse.day}-${dateparse.month}-${dateparse.year}";
+        var formattedDate = '${dateparse.day}-${dateparse.month}-${dateparse.year}';
         userModel.joinedAt = formattedDate;
         userModel.createdAt = Timestamp.now();
 
