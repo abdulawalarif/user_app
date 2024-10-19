@@ -23,6 +23,7 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp(isDarkTheme: isDarkTheme));
 }
+
 class MyApp extends StatelessWidget {
   final bool isDarkTheme;
   const MyApp({super.key, required this.isDarkTheme});
@@ -44,9 +45,8 @@ class MyApp extends StatelessWidget {
           child: Consumer<ThemeChangeProvider>(
             builder: (_, themeChangeProvider, __) {
               return Consumer<ProductProvider>(
-                builder:  (_, productProvider, __) {
+                builder: (_, productProvider, __) {
                   productProvider.fetchProducts();
-
                   return MaterialApp(
                     debugShowCheckedModeBanner: false,
                     title: 'Store App',
@@ -63,5 +63,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

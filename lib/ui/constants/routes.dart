@@ -9,6 +9,7 @@ import 'package:user_app/ui/screens/inner_screens/category_screen.dart';
 import 'package:user_app/ui/screens/inner_screens/forgot_password.dart';
 import 'package:user_app/ui/screens/inner_screens/product_detail.dart';
 import 'package:user_app/ui/screens/log_in.dart';
+import 'package:user_app/ui/screens/my_orders_screen.dart';
 import 'package:user_app/ui/screens/sign_up.dart';
 import 'package:user_app/ui/screens/update_users_inofrmation.dart';
 import 'package:user_app/ui/screens/wishlist.dart';
@@ -69,6 +70,11 @@ class Routes {
       case RouteName.wishlistScreen:
         return SlidePageRoute(
           builder: (BuildContext context) => const WishlistScreen(),
+        );
+
+      case RouteName.ordersScreen:
+        return SlidePageRoute(
+          builder: (BuildContext context) => const MyOrdersScreen(),
         );
 
       case RouteName.categoryScreen:

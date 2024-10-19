@@ -20,7 +20,6 @@ class AuthProvider with ChangeNotifier {
     required String password,
     required UserModel userModel,
   }) async {
-
     try {
       await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -38,13 +37,15 @@ class AuthProvider with ChangeNotifier {
             .putFile(File(userModel.imageUrl))
             .then((_) async => ref.getDownloadURL())
             .then((imageUrl) => userModel.imageUrl = imageUrl)
-            .catchError((e) {
-         });
+            .catchError((e) {});
       }
 
       await UserDataProvider().uploadUserData(userModel);
+
       notifyListeners();
-    } catch (e) {}
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> signInAnonymously() async {
@@ -57,7 +58,9 @@ class AuthProvider with ChangeNotifier {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       notifyListeners();
-    } catch (e) {}
+    } catch (e) {
+      rethrow;
+    }
   }
 
   // Google sign in
@@ -74,7 +77,7 @@ class AuthProvider with ChangeNotifier {
           final user = userCredential.user;
 
           if (user != null) {
-             final userDoc = await FirebaseFirestore.instance
+            final userDoc = await FirebaseFirestore.instance
                 .collection('users')
                 .doc(user.uid)
                 .get();
@@ -93,7 +96,7 @@ class AuthProvider with ChangeNotifier {
                   .uploadUserData(userModel)
                   .then((_) => print('Done Uploading'));
             } else {
-              print('User already exists. No need to upload data.');
+
             }
 
             notifyListeners();
@@ -101,7 +104,7 @@ class AuthProvider with ChangeNotifier {
         }
       }
     } catch (e) {
-      print('Error during Google sign in: $e');
+      rethrow;
     }
   }
 
@@ -111,6 +114,7 @@ class AuthProvider with ChangeNotifier {
     try {
       await _auth.sendPasswordResetEmail(email: email.trim().toLowerCase());
     } catch (e) {
+      rethrow;
     }
   }
 
@@ -128,7 +132,7 @@ class AuthProvider with ChangeNotifier {
         notifyListeners();
       });
     } catch (e) {
-      print(e.toString());
+      rethrow;
     }
   }
 }

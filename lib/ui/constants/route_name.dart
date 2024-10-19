@@ -6,6 +6,7 @@ class RouteName {
   static const String signUpScreen = '/signup';
   static const String forgotPasswordScreen = '/forgot_password';
   static const String wishlistScreen = '/wishlist';
+  static const String ordersScreen = '/ordersScreen';
   static const String cartScreen = '/cart';
   static const String productDetailScreen = '/product_detail';
   static const String categoryScreen = '/category';

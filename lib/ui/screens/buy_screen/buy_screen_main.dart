@@ -339,8 +339,8 @@ class _BuyScreenState extends State<BuyScreen> {
                               'Please fill all the information',
                               context,
                             );
-                            Navigator.of(context)
-                                .pushNamed(RouteName.updateUserInfo,
+                            Navigator.of(context).pushNamed(
+                              RouteName.updateUserInfo,
                               arguments: _userData,
                             );
                           } else {
@@ -351,14 +351,6 @@ class _BuyScreenState extends State<BuyScreen> {
                             final ordersProvider = Provider.of<OrdersProvider>(
                                 context,
                                 listen: false);
-
-                            ///  String id;
-                            //   String customersId;
-                            //   String thumbnailImageUrl;
-                            //   String nameOfTheProduct;
-                            //   String totalItemsOrdered;
-                            //   String orderDate;
-                            //   String? price;
 
                             ordersModel.customersId = _userData.id;
 
@@ -413,7 +405,7 @@ class _BuyScreenState extends State<BuyScreen> {
                         },
                         child: Center(
                           child: Text(
-                            _selectedPayment == 1 ? "Place order" : "Pay",
+                            _selectedPayment == 1 ? 'Place order' : 'Pay',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,

@@ -15,6 +15,7 @@ const mJoinDateIcon = Icons.date_range_rounded;
 const mCloseIcon = Icons.cancel_outlined;
 const mTrailingIcon = Icons.keyboard_arrow_right;
 const mWishListIcon = Icons.favorite_border_outlined;
+const mOrdersListIcon = Icons.shopping_bag_outlined;
 const mWishListIconFill = Icons.favorite;
 const mCameraIcon = Icons.add_photo_alternate;
 const mIconDelete = CupertinoIcons.multiply_square_fill;

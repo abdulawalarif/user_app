@@ -56,7 +56,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     background: _userData.imageUrl.isNotEmpty && !kIsWeb
                         ? CachedNetworkImage(
                             imageUrl: _userData.imageUrl,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.scaleDown,
                             placeholder: (context, url) => Shimmer.fromColors(
                               baseColor: Colors.grey[300]!,
                               highlightColor: Colors.grey[100]!,
@@ -88,6 +88,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         Card(
                           child: Column(
                             children: [
+                              _userBagListTile(
+                                  'My Orders',
+                                  mOrdersListIcon,
+                                  mTrailingIcon,
+                                  context,
+                                  () => Navigator.of(context)
+                                      .pushNamed(RouteName.ordersScreen)),
                               _userBagListTile(
                                   'Wishlist',
                                   mWishListIcon,
