@@ -16,7 +16,7 @@ class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({super.key});
 
   @override
-  State<UserInfoScreen>  createState() => _UserInfoScreenState();
+  State<UserInfoScreen> createState() => _UserInfoScreenState();
 }
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
@@ -56,7 +56,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     background: _userData.imageUrl.isNotEmpty && !kIsWeb
                         ? CachedNetworkImage(
                             imageUrl: _userData.imageUrl,
-                            fit: BoxFit.scaleDown,
+                            fit: BoxFit.cover,
+                            ///TODO fixing the image to be shown fully into the view without cutting it
                             placeholder: (context, url) => Shimmer.fromColors(
                               baseColor: Colors.grey[300]!,
                               highlightColor: Colors.grey[100]!,
@@ -110,8 +111,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 () => Navigator.of(context)
                                     .pushNamed(RouteName.cartScreen),
                               ),
-
-
                             ],
                           ),
                         ),
@@ -167,7 +166,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 },
                               ),
                               ListTile(
-                                  title: Text('Sign Out'),
+                                  title: const Text('Sign Out'),
                                   leading:
                                       _customIcon(Icons.exit_to_app_outlined),
                                   onTap: () {
@@ -198,8 +197,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 
-  Widget _userBagListTile(String title, IconData leadingIcon,
-      IconData trailingIcon, BuildContext context, Function() onTap,) {
+  Widget _userBagListTile(
+    String title,
+    IconData leadingIcon,
+    IconData trailingIcon,
+    BuildContext context,
+    Function() onTap,
+  ) {
     return ListTile(
       title: Text(title, style: Theme.of(context).textTheme.titleMedium),
       leading: _customIcon(leadingIcon),

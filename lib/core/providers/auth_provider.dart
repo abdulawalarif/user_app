@@ -27,6 +27,8 @@ class AuthProvider with ChangeNotifier {
       );
       userModel.id = _auth.currentUser?.uid ?? '';
       // upload user image to firebase storage and get the url
+      notifyListeners();
+
       if (userModel.imageUrl.isNotEmpty) {
         final ref = FirebaseStorage.instance
             .ref()
@@ -48,11 +50,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> signInAnonymously() async {
-    if (_auth.currentUser == null) {
-      await _auth.signInAnonymously().catchError((e) {});
-    }
-  }
+
 
   Future<void> signIn({required String email, required String password}) async {
     try {
@@ -95,9 +93,7 @@ class AuthProvider with ChangeNotifier {
               await UserDataProvider()
                   .uploadUserData(userModel)
                   .then((_) => print('Done Uploading'));
-            } else {
-
-            }
+            } else {}
 
             notifyListeners();
           }
@@ -127,8 +123,8 @@ class AuthProvider with ChangeNotifier {
           await _googleSignIn.disconnect();
         }
       }
-      await _auth.signOut().then((_) {
-        signInAnonymously();
+      await _auth.signOut().then((_) async{
+
         notifyListeners();
       });
     } catch (e) {

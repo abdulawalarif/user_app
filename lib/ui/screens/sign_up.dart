@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_app/core/models/user_model.dart';
-import 'package:user_app/core/providers/auth_provider.dart';
+import 'package:user_app/core/providers/auth_provider.dart'as providersAuth;
+import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/ui/utils/my_alert_dialog.dart';
 import 'package:user_app/ui/utils/my_border.dart';
 import 'package:user_app/ui/widgets/image_preview.dart';
@@ -54,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (isValid) {
       _formKey.currentState!.save();
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authProvider = Provider.of<providersAuth.AuthProvider>(context, listen: false);
       setState(() => _isLoading = true);
 
       authProvider
@@ -64,6 +66,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         userModel: _userModel,
       )
           .then((_) {
+        final userDataProvider = Provider.of<UserDataProvider>(context,  listen: false);
+        FirebaseAuth.instance.authStateChanges().listen((firebaseUser) {
+          userDataProvider.fetchUserData();
+        });
         if (Navigator.canPop(context)) Navigator.pop(context);
       }).catchError((error) {
         if (error.toString().toLowerCase().contains('email')) {
@@ -102,38 +108,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 // Upload Profile Picture
                 Center(
-                  child: Stack(children: [
-                    ImagePreview(imagePath: _pickedImagePath),
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: SizedBox(
-                        height: 26,
-                        width: 26,
-                        child: RawMaterialButton(
-                          elevation: 5,
-                          fillColor: Theme.of(context).primaryColor,
-                          shape: const CircleBorder(),
-                          onPressed: () async {
-                            MyAlertDialog.imagePicker(context)
-                                .then(
-                                  (pickedImagePath) => setState(
-                                    () => _pickedImagePath = pickedImagePath,
-                                  ),
-                                )
-                                .then(
-                                  (_) => _userModel.imageUrl = _pickedImagePath,
-                                );
-                          },
-                          child: const Icon(
-                            Icons.add_a_photo,
-                            color: Colors.white,
-                            size: 14,
+                  child: Stack(
+                    children: [
+                      ImagePreview(imagePath: _pickedImagePath),
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: SizedBox(
+                          height: 26,
+                          width: 26,
+                          child: RawMaterialButton(
+                            elevation: 5,
+                            fillColor: Theme.of(context).primaryColor,
+                            shape: const CircleBorder(),
+                            onPressed: () async {
+                              MyAlertDialog.imagePicker(context)
+                                  .then(
+                                    (pickedImagePath) => setState(
+                                      () => _pickedImagePath = pickedImagePath,
+                                    ),
+                                  )
+                                  .then(
+                                    (_) =>
+                                        _userModel.imageUrl = _pickedImagePath,
+                                  );
+                            },
+                            child: const Icon(
+                              Icons.add_a_photo,
+                              color: Colors.white,
+                              size: 14,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],),
+                    ],
+                  ),
                 ),
                 Form(
                   key: _formKey,
@@ -308,10 +317,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               _isLoading
-                                  ?   CircularProgressIndicator(
-                                color: Theme.of(context).primaryColor,
-
-                              )
+                                  ? CircularProgressIndicator(
+                                      color: Theme.of(context).primaryColor,
+                                    )
                                   : const Text('Sign Up'),
                             ],
                           ),
