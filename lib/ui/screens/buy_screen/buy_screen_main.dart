@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:user_app/core/models/buy_product_model.dart';
@@ -13,11 +12,8 @@ import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/ui/constants/route_name.dart';
 import 'package:user_app/ui/widgets/log_in_suggestion.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-
 import '../../utils/my_snackbar.dart';
 
-/// TODO adding aniamation on page transitioning
-///
 class BuyScreen extends StatefulWidget {
   List<BuyProductModel>? products;
   double totalPrice;
@@ -45,7 +41,6 @@ class _BuyScreenState extends State<BuyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO this prefix is changed and working may occur problem in future
     final isLoggedIn =
         Provider.of<authProvider.AuthProvider>(context).isLoggedIn;
 
@@ -344,19 +339,12 @@ class _BuyScreenState extends State<BuyScreen> {
                               arguments: _userData,
                             );
                           } else {
-                            // setState(() {
-                            //   _isLoading = true;
-                            // });
-
                             final ordersProvider = Provider.of<OrdersProvider>(
-                                context,
-                                listen: false);
+                              context,
+                              listen: false,
+                            );
 
                             ordersModel.customersId = _userData.id;
-
-                            /// this data is processing inside provider
-
-                            /// looping through length of data for uploading in database
                             for (int i = 0;
                                 i < (widget.products?.length ?? 0);
                                 i++) {
@@ -370,37 +358,34 @@ class _BuyScreenState extends State<BuyScreen> {
                               ordersModel.price =
                                   widget.products?[i].price.toString();
                               ordersProvider
-                                  .addOrdersToDatabase(ordersModel: ordersModel)
+                                  .addSingleOrderToDatabase(
+                                      ordersModel: ordersModel)
                                   .then((value) {
                                 showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                          title: Text(
-                                            'Remember'.toUpperCase(),
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                          content: const Text(
-                                              "On the delivery day arrange the amount of cash you orderd!"),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                              child: const Text('OK'),
-                                            ),
-                                          ],
-                                        ));
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                    title: Text(
+                                      'Remember'.toUpperCase(),
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    content: const Text(
+                                      'On the delivery day arrange the amount of cash you orderd!',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
                               });
                             }
-
-                            // setState(() {
-                            //   _isLoading = false;
-                            // });
                           }
                         },
                         child: Center(

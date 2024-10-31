@@ -26,7 +26,6 @@ class AuthProvider with ChangeNotifier {
         password: password,
       );
       userModel.id = _auth.currentUser?.uid ?? '';
-      // upload user image to firebase storage and get the url
       notifyListeners();
 
       if (userModel.imageUrl.isNotEmpty) {

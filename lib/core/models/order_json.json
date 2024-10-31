@@ -1,0 +1,40 @@
+{
+  "orderId": "2024-10-23-001",
+  "customerId": "erfU66Hw93RjQzmS...",
+  "orderDate": "2024-10-23T04:49:17.301464",
+  "totalItemsOrdered": 3,
+  "totalAmount": 1350.0,
+  "paymentStatus": "Paid",
+  "status": "Pending",
+  "createdAt": "23-10-2024",
+  "updatedAt": "23-10-2024",
+  "products": [
+    {
+      "productId": "prod001",
+      "productName": "Galaxy S22+",
+      "quantity": 1,
+      "pricePerUnit": 675.0,
+      "totalPriceForThisItem": 675.0
+    },
+    {
+      "productId": "prod002",
+      "productName": "AirPods Pro",
+      "quantity": 2,
+      "pricePerUnit": 200.0,
+      "totalPriceForThisItem": 400.0
+    }
+  ],
+
+  "shippingAddress": {
+    "addressLine1": "123 Main St",
+    "addressLine2": "Apt 4B",
+    "city": "Springfield",
+    "state": "IL",
+    "postalCode": "62701",
+    "country": "USA",
+    "latitude": 39.7817,
+    "longitude": -89.6501,
+    "formattedAddress": "123 Main St, Apt 4B, Springfield, IL 62701, USA"
+  }
+
+}
