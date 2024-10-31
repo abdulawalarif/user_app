@@ -69,17 +69,11 @@ class _BuyScreenState extends State<BuyScreen> {
           },
         ),
         child: Scaffold(
-          backgroundColor: Colors.white,
           appBar: AppBar(
             elevation: 0,
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title: const Text(
               'Order confirmation',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-              ),
             ),
             centerTitle: true,
           ),
@@ -98,14 +92,11 @@ class _BuyScreenState extends State<BuyScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 5),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
                         child: Text(
                           'Choose payment option',
-                          style: TextStyle(
-                              color: Colors.teal,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ),
                       Padding(
@@ -172,9 +163,9 @@ class _BuyScreenState extends State<BuyScreen> {
               ),
               Padding(
                 padding: EdgeInsets.all(1.h),
-                child: const Text(
+                child: Text(
                   'Items',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
               SizedBox(
@@ -190,7 +181,6 @@ class _BuyScreenState extends State<BuyScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            /// this is image section of the buy product
                             Container(
                               height: 100,
                               width: 100,
@@ -222,27 +212,22 @@ class _BuyScreenState extends State<BuyScreen> {
                                         widget.products?[index].title ?? "",
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                                                      style: Theme.of(context).textTheme.bodyLarge,
+
                                       ),
                                     )),
                                 SizedBox(
                                     width: 100,
                                     child: Padding(
-                                      padding: EdgeInsets.all(4),
+                                      padding: const EdgeInsets.all(4),
 
                                       /// this data will be fetched from argument
                                       child: Text(
                                         '\$${widget.products?[index].price}',
                                         maxLines: 2,
-                                        style: TextStyle(
-                                          color: Colors.red[200],
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
                                       ),
                                     )),
                               ],
@@ -256,28 +241,15 @@ class _BuyScreenState extends State<BuyScreen> {
                                 children: [
                                   Text(
                                     'Item',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red[300],
-                                        fontSize: 10),
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    width: 20,
-                                    decoration: BoxDecoration(
-                                        color: Colors.red[300],
-                                        borderRadius:
-                                            BorderRadius.circular(30)),
+                                                                  style: Theme.of(context).textTheme.bodyLarge,
 
-                                    /// this data will be fetched from argument
-                                    child: Center(
+                                  ),
+                                   Center(
                                         child: Text(
                                       '${widget.products?[index].totalItemsOFSingleProduct}',
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w400),
-                                    )),
-                                  ),
+                                                                    style: Theme.of(context).textTheme.bodyLarge,
+
+                                    ))
                                 ],
                               ),
                             )
@@ -339,8 +311,8 @@ class _BuyScreenState extends State<BuyScreen> {
                               'Please fill all the information',
                               context,
                             );
-                            Navigator.of(context)
-                                .pushNamed(RouteName.updateUserInfo,
+                            Navigator.of(context).pushNamed(
+                              RouteName.updateUserInfo,
                               arguments: _userData,
                             );
                           } else {
