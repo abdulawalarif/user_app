@@ -5,7 +5,9 @@ import 'package:user_app/core/models/cart_model.dart';
 
 class CartProvider with ChangeNotifier {
   Map<String, CartModel> _cartItems = {};
-
+  CartProvider() {
+    loadCart();
+  }
   // Getter to retrieve cart items
   Map<String, CartModel> get getCartItems => _cartItems;
 
@@ -30,8 +32,8 @@ class CartProvider with ChangeNotifier {
     String? cartData = prefs.getString('cartItems');
     if (cartData != null) {
       Map<String, dynamic> decodedCartData = json.decode(cartData);
-      _cartItems = decodedCartData.map((key, value) => MapEntry(
-          key, CartModel.fromMap(Map<String, dynamic>.from(value))));
+      _cartItems = decodedCartData.map((key, value) =>
+          MapEntry(key, CartModel.fromMap(Map<String, dynamic>.from(value))));
       notifyListeners();
     }
   }
@@ -39,8 +41,8 @@ class CartProvider with ChangeNotifier {
   // Save cart data to SharedPreferences
   Future<void> _saveCart() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> cartData = _cartItems.map((key, value) => MapEntry(
-        key, value.toMap()));
+    Map<String, dynamic> cartData =
+        _cartItems.map((key, value) => MapEntry(key, value.toMap()));
     await prefs.setString('cartItems', json.encode(cartData));
   }
 
