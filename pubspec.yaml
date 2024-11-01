@@ -16,7 +16,6 @@ dependencies:
   get_it: ^8.0.0
   flutter_launcher_icons: ^0.14.1
   uuid: ^4.5.1
-  json_serializable: ^6.8.0
   firebase_storage: ^12.3.3
   cloud_firestore: ^5.4.4
   google_sign_in: ^6.2.1
@@ -31,12 +30,16 @@ dependencies:
   shared_preferences: ^2.3.2
   provider: ^6.1.2
   shimmer: ^3.0.0
-
+  json_annotation: ^4.9.0
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  freezed: ^2.5.7
+  build_runner: ^2.4.13
+  json_serializable: ^6.8.0
+  freezer: ^0.6.1
 
 
  

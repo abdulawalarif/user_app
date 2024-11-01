@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:user_app/core/models/buy_product_model.dart';
-import 'package:user_app/core/models/orders_model.dart';
 import 'package:user_app/core/models/user_model.dart';
 import 'package:user_app/core/providers/auth_provider.dart' as authProvider;
 import 'package:user_app/core/providers/orders_provider.dart';
@@ -13,39 +11,33 @@ import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/ui/constants/route_name.dart';
 import 'package:user_app/ui/widgets/log_in_suggestion.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-
 import '../../utils/my_snackbar.dart';
 
-/// TODO adding aniamation on page transitioning
-///
 class BuyScreen extends StatefulWidget {
-  List<BuyProductModel>? products;
-  double totalPrice;
-  BuyScreen({super.key, this.products, this.totalPrice = 0});
+  final List<BuyProductModel> products;
+  final double totalPrice;
+  BuyScreen({super.key, required this.products, required this.totalPrice});
 
   @override
   State<BuyScreen> createState() => _BuyScreenState();
 }
 
-///  details calculation with specifics
 class _BuyScreenState extends State<BuyScreen> {
-  /// userr info
   UserModel _userData = UserModel();
-  double priceOfSingleProduct = 0;
   int _selectedPayment = 1;
   bool _isLoading = false;
-  OrdersModel ordersModel = OrdersModel();
 
   @override
   void initState() {
     super.initState();
-    priceOfSingleProduct = widget.products?.first.price ?? 0;
     _isLoading = false;
+    addDummyData();
   }
+
+  void submitData() {}
 
   @override
   Widget build(BuildContext context) {
-    //TODO this prefix is changed and working may occur problem in future
     final isLoggedIn =
         Provider.of<authProvider.AuthProvider>(context).isLoggedIn;
 
@@ -87,7 +79,7 @@ class _BuyScreenState extends State<BuyScreen> {
                   decoration: BoxDecoration(
                       border: Border.all(),
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.white),
+                      color:Theme.of(context).scaffoldBackgroundColor,),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -101,23 +93,19 @@ class _BuyScreenState extends State<BuyScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         child: Container(
                           height: 7.h,
                           decoration: BoxDecoration(
                               border: Border.all(),
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.white),
+                              color:  Theme.of(context).scaffoldBackgroundColor,
+                              ),
                           child: Center(
                             child: RadioListTile(
-                              title: Image(
-                                image: const AssetImage(
-                                    'assets/images/cash_on_delivery.jpg'),
-                                alignment: Alignment.center,
-                                height: 6.h,
-                                width: double.infinity,
-                                fit: BoxFit.fill,
-                              ),
+                              title: const Text('Cash on Delivery'),
                               value: 1,
                               groupValue: _selectedPayment,
                               onChanged: (value) {
@@ -137,16 +125,9 @@ class _BuyScreenState extends State<BuyScreen> {
                           decoration: BoxDecoration(
                               border: Border.all(),
                               borderRadius: BorderRadius.circular(10),
-                              color: const Color(0xFFF4F4F4)),
+                               color:  Theme.of(context).scaffoldBackgroundColor,),
                           child: RadioListTile(
-                            title: Image(
-                              image:
-                                  const AssetImage('assets/images/pay_now.jpg'),
-                              alignment: Alignment.center,
-                              height: 6.h,
-                              width: double.infinity,
-                              fit: BoxFit.fill,
-                            ),
+                            title: const Text('Choose other paymebnt options'),
                             value: 2,
                             groupValue: _selectedPayment,
                             onChanged: (value) {
@@ -173,7 +154,7 @@ class _BuyScreenState extends State<BuyScreen> {
               ),
               Flexible(
                 child: ListView.builder(
-                    itemCount: widget.products?.length,
+                    itemCount: widget.products.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -188,8 +169,7 @@ class _BuyScreenState extends State<BuyScreen> {
                                   color: Colors.white,
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                          widget.products?[index].imageUrl ??
-                                              ''),
+                                          widget.products[index].imageUrl),
                                       fit: BoxFit.contain)),
                             ),
 
@@ -209,11 +189,12 @@ class _BuyScreenState extends State<BuyScreen> {
 
                                       /// this data will be fetched from argument
                                       child: Text(
-                                        widget.products?[index].title ?? "",
+                                        widget.products[index].title,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
-                                                                      style: Theme.of(context).textTheme.bodyLarge,
-
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
                                       ),
                                     )),
                                 SizedBox(
@@ -223,7 +204,7 @@ class _BuyScreenState extends State<BuyScreen> {
 
                                       /// this data will be fetched from argument
                                       child: Text(
-                                        '\$${widget.products?[index].price}',
+                                        '\$${widget.products[index].price * widget.products[index].totalItemsOFSingleProduct}',
                                         maxLines: 2,
                                         style: Theme.of(context)
                                             .textTheme
@@ -241,15 +222,15 @@ class _BuyScreenState extends State<BuyScreen> {
                                 children: [
                                   Text(
                                     'Item',
-                                                                  style: Theme.of(context).textTheme.bodyLarge,
-
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
-                                   Center(
-                                        child: Text(
-                                      '${widget.products?[index].totalItemsOFSingleProduct}',
-                                                                    style: Theme.of(context).textTheme.bodyLarge,
-
-                                    ))
+                                  Center(
+                                      child: Text(
+                                    '${widget.products[index].totalItemsOFSingleProduct}',
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  ))
                                 ],
                               ),
                             )
@@ -279,7 +260,8 @@ class _BuyScreenState extends State<BuyScreen> {
                       children: [
                         Flexible(
                           child: Text(
-                            'Total: \$${widget.totalPrice == 0 ? priceOfSingleProduct : widget.totalPrice}',
+                            //TODO chanaged this logic of multiple product and a single product so ther can be error  here if i come back from a single product datails page
+                            'Total: \$${widget.totalPrice}',
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -303,89 +285,78 @@ class _BuyScreenState extends State<BuyScreen> {
                     child: Material(
                       color: Theme.of(context).primaryColor,
                       child: InkWell(
-                        onTap: () async {
-                          if (_userData.address.isEmpty ||
-                              _userData.phoneNumber.isEmpty ||
-                              _userData.fullName.isEmpty) {
-                            MySnackBar().showSnackBar(
-                              'Please fill all the information',
-                              context,
-                            );
-                            Navigator.of(context).pushNamed(
-                              RouteName.updateUserInfo,
-                              arguments: _userData,
-                            );
-                          } else {
-                            // setState(() {
-                            //   _isLoading = true;
-                            // });
+                        onTap: _selectedPayment == 1
+                            ? () async {
+                                final ordersProvider =
+                                    Provider.of<OrdersProvider>(context,
+                                        listen: false);
+                                await ordersProvider.addOrdersToDatabase();
+                                if (_userData.address.isEmpty ||
+                                    _userData.phoneNumber.isEmpty ||
+                                    _userData.fullName.isEmpty) {
+                                  MySnackBar().showSnackBar(
+                                    'Please fill all the information',
+                                    context,
+                                  );
+                                  Navigator.of(context).pushNamed(
+                                    RouteName.updateUserInfo,
+                                    arguments: _userData,
+                                  );
+                                } else {
+                                  final ordersProvider =
+                                      Provider.of<OrdersProvider>(context,
+                                          listen: false);
+                                  ordersProvider.addOrdersToDatabase();
+                                  // ordersModel.customersId = _userData.id;
 
-                            final ordersProvider = Provider.of<OrdersProvider>(
-                                context,
-                                listen: false);
-
-                            ///  String id;
-                            //   String customersId;
-                            //   String thumbnailImageUrl;
-                            //   String nameOfTheProduct;
-                            //   String totalItemsOrdered;
-                            //   String orderDate;
-                            //   String? price;
-
-                            ordersModel.customersId = _userData.id;
-
-                            /// this data is processing inside provider
-
-                            /// looping through length of data for uploading in database
-                            for (int i = 0;
-                                i < (widget.products?.length ?? 0);
-                                i++) {
-                              ordersModel.thumbnailImageUrl =
-                                  widget.products?[i].imageUrl ?? "";
-                              ordersModel.nameOfTheProduct =
-                                  widget.products?[i].title ?? "";
-                              ordersModel.totalItemsOrdered = widget
-                                      .products?[i].totalItemsOFSingleProduct ??
-                                  1;
-                              ordersModel.price =
-                                  widget.products?[i].price.toString();
-                              ordersProvider
-                                  .addOrdersToDatabase(ordersModel: ordersModel)
-                                  .then((value) {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                          title: Text(
-                                            'Remember'.toUpperCase(),
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                          content: const Text(
-                                              "On the delivery day arrange the amount of cash you orderd!"),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                              child: const Text('OK'),
-                                            ),
-                                          ],
-                                        ));
-                              });
-                            }
-
-                            // setState(() {
-                            //   _isLoading = false;
-                            // });
-                          }
-                        },
+                                  // for (int i = 0;
+                                  //     i < (widget.products.length);
+                                  //     i++) {
+                                  //   ordersModel.thumbnailImageUrl =
+                                  //       widget.products[i].imageUrl;
+                                  //   ordersModel.nameOfTheProduct =
+                                  //       widget.products[i].title;
+                                  //   ordersModel.totalItemsOrdered = widget
+                                  //       .products[i].totalItemsOFSingleProduct;
+                                  //   ordersModel.price =
+                                  //       widget.products[i].price.toString();
+                                  //   ordersProvider
+                                  //       .addOrdersToDatabase(
+                                  //           ordersModel: ordersModel)
+                                  //       .then((value) {
+                                  //     showDialog(
+                                  //         context: context,
+                                  //         builder: (BuildContext context) =>
+                                  //             AlertDialog(
+                                  //               title: Text(
+                                  //                 'Remember'.toUpperCase(),
+                                  //                 style: TextStyle(
+                                  //                   color: Theme.of(context)
+                                  //                       .primaryColor,
+                                  //                   fontWeight: FontWeight.w500,
+                                  //                   fontSize: 20,
+                                  //                 ),
+                                  //               ),
+                                  //               content: const Text(
+                                  //                   "On the delivery day arrange the amount of cash you orderd!"),
+                                  //               actions: [
+                                  //                 TextButton(
+                                  //                   onPressed: () =>
+                                  //                       Navigator.pop(context),
+                                  //                   child: const Text('OK'),
+                                  //                 ),
+                                  //               ],
+                                  //             ));
+                                  //   });
+                                  // }
+                                }
+                              }
+                            : () {},
                         child: Center(
                           child: Text(
-                            _selectedPayment == 1 ? "Place order" : "Pay",
+                            _selectedPayment == 1
+                                ? "Place order"
+                                : "Open Gateway",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,

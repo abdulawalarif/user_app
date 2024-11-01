@@ -1,28 +1,84 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:user_app/core/models/orders_model.dart';
+ import 'package:flutter/material.dart';
+import 'package:user_app/core/models/orders_model/orders_model.dart';
 
 class OrdersProvider with ChangeNotifier {
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-
-  Future<void> addOrdersToDatabase({ required OrdersModel ordersModel}) async{
-    // set user id
-    final user = _auth.currentUser;
-
-    //set date
-    var date = DateTime.now().toString();
-    var dateparse = DateTime.parse(date);
-    var formattedDate = "${dateparse.day}-${dateparse.month}-${dateparse.year}";
-    ordersModel.orderDate = formattedDate;
-
-    // Upload user data to firebase firestore
-    await FirebaseFirestore.instance
-        .collection('orders')
-        .doc(date+user!.uid)
-        .set(ordersModel.toJson());
+  Future<void> addOrdersToDatabase( ) async {
+  
     notifyListeners();
   }
+}
+
+ 
+Future<void> addOrder(OrdersModel order) async {
+  try {
+    // Convert the entire order to JSON format.
+    final jsonOrderData = order.toJson();
+
+    // Manually convert each product to JSON.
+    jsonOrderData['products'] = order.products.map((product) => product.toJson()).toList();
+
+    // Convert the shipping address to JSON.
+    jsonOrderData['shippingAddress'] = order.shippingAddress.toJson();
+
+    // Now, save to Firestore
+    await FirebaseFirestore.instance.collection('orders').add(jsonOrderData);
+    print("Order added successfully!");
+  } catch (e) {
+    print("Failed to add order: $e");
+  }
+}
+
+
+
+
+ void addDummyData() {
+
+  final dummyOrder = OrdersModel(
+    orderId: "ORD123457",
+    customerId: "CUST78910",
+    orderDate: DateTime.now(),
+    totalItemsOrdered: 3,
+    totalAmount: 299.99,
+    paymentStatus: "Paid",
+    status: "Shipped",
+    createdAt: DateTime.now().toIso8601String(),
+    updatedAt: DateTime.now().toIso8601String(),
+    products: [
+      Product(
+        productId: "PROD1",
+        productName: "Wireless Earbuds",
+        quantity: 1,
+        pricePerUnit: 99.99,
+        totalPriceForThisItem: 99.99,
+      ),
+      Product(
+        productId: "PROD2",
+        productName: "Smart Watch",
+        quantity: 1,
+        pricePerUnit: 149.99,
+        totalPriceForThisItem: 149.99,
+      ),
+      Product(
+        productId: "PROD3",
+        productName: "Phone Case",
+        quantity: 1,
+        pricePerUnit: 49.99,
+        totalPriceForThisItem: 49.99,
+      ),
+    ],
+    shippingAddress: ShippingAddress(
+      addressLine1: "123 Elm Street",
+      addressLine2: "Apt 4B",
+      city: "Los Angeles",
+      state: "CA",
+      postalCode: "90001",
+      country: "USA",
+      latitude: 34.0522,
+      longitude: -118.2437,
+      formattedAddress: "123 Elm Street, Apt 4B, Los Angeles, CA 90001, USA",
+    ),
+  );
+
+  addOrder(dummyOrder);
 }

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// product images list widget
+/// 
 class ProductImagesListWidget extends StatefulWidget {
-  ProductImagesListWidget({
+
+    ProductImagesListWidget({
     super.key,
     required this.productImgList,
   });

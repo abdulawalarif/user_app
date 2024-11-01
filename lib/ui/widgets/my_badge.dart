@@ -25,8 +25,8 @@ class MyBadge {
           padding: const EdgeInsets.all(2.0),
           child: Text(
             title,
-            style: const TextStyle(
-              color: Colors.white,
+            style:   TextStyle(
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.w800,
               fontSize: 11,
             ),
@@ -39,14 +39,14 @@ class MyBadge {
   static Widget cart(BuildContext context) {
     return Consumer<CartProvider>(
       builder: (_, cartProvider, __) => badges.Badge(
-        //badgeStyle: Theme.of(context).primaryColor,
+        
         position: badges.BadgePosition.topEnd(top: 5, end: 5),
-        //  animationType: badges.BadgeAnimationType.slide,
+      
         badgeContent: Text(
           cartProvider.getCartItems.length.toString(),
-          style: const TextStyle(color: Colors.white),
+          style:   TextStyle(color: Theme.of(context).primaryColor,),
         ),
-        // shape: badges.BadgeShape.circle,
+       
         showBadge: cartProvider.getCartItems.isEmpty ? false : true,
         child: IconButton(
             onPressed: () =>
