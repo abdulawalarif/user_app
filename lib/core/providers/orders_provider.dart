@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
  import 'package:flutter/material.dart';
 import 'package:user_app/core/models/orders_model/orders_model.dart';
+import 'package:dartz/dartz.dart';
 
+typedef EitherError<T> = Future<Either<String,T>>;
 class OrdersProvider with ChangeNotifier {
   Future<void> addOrdersToDatabase( ) async {
   
@@ -12,16 +14,9 @@ class OrdersProvider with ChangeNotifier {
  
 Future<void> addOrder(OrdersModel order) async {
   try {
-    // Convert the entire order to JSON format.
     final jsonOrderData = order.toJson();
-
-    // Manually convert each product to JSON.
     jsonOrderData['products'] = order.products.map((product) => product.toJson()).toList();
-
-    // Convert the shipping address to JSON.
     jsonOrderData['shippingAddress'] = order.shippingAddress.toJson();
-
-    // Now, save to Firestore
     await FirebaseFirestore.instance.collection('orders').add(jsonOrderData);
     print("Order added successfully!");
   } catch (e) {

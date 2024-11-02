@@ -145,7 +145,7 @@ class _BuyScreenState extends State<BuyScreen> {
               Padding(
                 padding: EdgeInsets.all(1.h),
                 child: Text(
-                  'Items',
+                  'Product details and price',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
