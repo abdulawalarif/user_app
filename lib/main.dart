@@ -15,6 +15,7 @@ import 'ui/constants/route_name.dart';
 import 'ui/constants/routes.dart';
 import 'ui/constants/theme_data.dart';
 import 'package:flutter/services.dart';
+import 'dart:developer' as devtools show log;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,3 +66,6 @@ class MyApp extends StatelessWidget {
 }
 
 
+extension Log on Object {
+  void log() => devtools.log(toString());
+}

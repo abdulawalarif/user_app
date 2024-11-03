@@ -25,6 +25,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   @override
   void initState() {
+
     super.initState();
     _pages = [
       {'page': HomeScreen(), 'title': 'Home'},
@@ -44,13 +45,11 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     return WillPopScope(
       onWillPop: () async {
         if (_selectedIndex != 0) {
-          // If the user is not on the Home screen, navigate to the Home screen
           setState(() {
             _selectedIndex = 0;
           });
-          return false; // Prevents exiting the app
+          return false; 
         } else {
-          // Allows the app to exit
           return true;
         }
       },

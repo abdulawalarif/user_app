@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:user_app/main.dart';
  
-class MyOrdersScreen extends StatefulWidget {
-  const MyOrdersScreen({super.key});
+class StepperForEcom extends StatefulWidget {
+  const StepperForEcom({super.key});
 
   @override
-  State<MyOrdersScreen> createState() => _MyOrdersScreenState();
+  State<StepperForEcom> createState() => _StepperForEcomState();
 }
 
-class _MyOrdersScreenState extends State<MyOrdersScreen> {
+class _StepperForEcomState extends State<StepperForEcom> {
   int currentStep = 0;
   bool isCompleted = false;
   late TextEditingController firstNameController;
@@ -231,8 +231,6 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
           ),
         ),
       ];
-
-
 }
 
 class Button extends StatelessWidget {

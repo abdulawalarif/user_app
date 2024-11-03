@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sizer/sizer.dart';
 import 'package:user_app/core/models/user_model.dart';
 import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/ui/utils/my_alert_dialog.dart';
