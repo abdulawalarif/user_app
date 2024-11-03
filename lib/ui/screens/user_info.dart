@@ -88,6 +88,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         Card(
                           child: Column(
                             children: [
+                                         _userBagListTile(
+                                  'My Orders',
+                                  mOrdersListIcon,
+                                  mTrailingIcon,
+                                  context,
+                                  () => Navigator.of(context)
+                                      .pushNamed(RouteName.ordersScreen)),
+
+
+
                               _userBagListTile(
                                   'Wishlist',
                                   mWishListIcon,

@@ -17,7 +17,6 @@ class BottomBarScreen extends StatefulWidget {
 
 class _BottomBarScreenState extends State<BottomBarScreen> {
   late List<Map> _pages;
-
   late int _selectedIndex;
 
   void _selectedPages(int index) {
@@ -42,66 +41,80 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: _pages[_selectedIndex]['page'],
-      bottomNavigationBar: SizedBox(
-        height: 11.h,
-        child: BottomAppBar(
-          elevation: 10,
-          notchMargin: 6,
-          clipBehavior: Clip.antiAlias,
-          shape: const CircularNotchedRectangle(),
-          child: BottomNavigationBar(
-            unselectedItemColor: Theme.of(context).unselectedWidgetColor,
-            selectedItemColor: Theme.of(context).primaryColor,
-            onTap: _selectedPages,
-            currentIndex: _selectedIndex,
-            type: BottomNavigationBarType.fixed,
-            showUnselectedLabels: false,
-            showSelectedLabels: false,
-            backgroundColor: Theme.of(context).cardColor,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(mHomeIcon),
-                label: 'Home',
-                tooltip: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(mFeedsIcon),
-                label: 'Feeds',
-                tooltip: 'Feeds',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(null),
-                label: 'Search',
-                tooltip: 'Search',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(mWishListIcon),
-                label: 'Wishlist',
-                tooltip: 'Wishlist',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(mUserIcon),
-                label: 'User',
-                tooltip: 'User',
-              ),
-            ],
+    return WillPopScope(
+      onWillPop: () async {
+        if (_selectedIndex != 0) {
+          // If the user is not on the Home screen, navigate to the Home screen
+          setState(() {
+            _selectedIndex = 0;
+          });
+          return false; // Prevents exiting the app
+        } else {
+          // Allows the app to exit
+          return true;
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: _pages[_selectedIndex]['page'],
+        bottomNavigationBar: SizedBox(
+          height: 11.h,
+          child: BottomAppBar(
+            elevation: 10,
+            notchMargin: 6,
+            clipBehavior: Clip.antiAlias,
+            shape: const CircularNotchedRectangle(),
+            child: BottomNavigationBar(
+              unselectedItemColor: Theme.of(context).unselectedWidgetColor,
+              selectedItemColor: Theme.of(context).primaryColor,
+              onTap: _selectedPages,
+              currentIndex: _selectedIndex,
+              type: BottomNavigationBarType.fixed,
+              showUnselectedLabels: false,
+              showSelectedLabels: false,
+              backgroundColor: Theme.of(context).cardColor,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(mHomeIcon),
+                  label: 'Home',
+                  tooltip: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(mFeedsIcon),
+                  label: 'Feeds',
+                  tooltip: 'Feeds',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(null),
+                  label: 'Search',
+                  tooltip: 'Search',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(mWishListIcon),
+                  label: 'Wishlist',
+                  tooltip: 'Wishlist',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(mUserIcon),
+                  label: 'User',
+                  tooltip: 'User',
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _selectedPages(2);
-        },
-        elevation: 2,
-        splashColor: Theme.of(context).primaryColor.withAlpha(2),
-        child: Icon(
-          mSearchIcon,
-          color: Theme.of(context).colorScheme.onPrimary,
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _selectedPages(2);
+          },
+          elevation: 2,
+          splashColor: Theme.of(context).primaryColor.withAlpha(2),
+          child: Icon(
+            mSearchIcon,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
         ),
       ),
     );
