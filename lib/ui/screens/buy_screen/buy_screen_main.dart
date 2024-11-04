@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:user_app/core/models/buy_product_model.dart';
- import 'package:user_app/main.dart';
+import 'package:user_app/main.dart';
 
 class BuyScreen extends StatefulWidget {
   final List<BuyProductModel> products;
@@ -27,6 +27,7 @@ class _BuyScreenState extends State<BuyScreen> {
   @override
   void initState() {
     super.initState();
+
     firstNameController = TextEditingController();
     lastNameController = TextEditingController();
     addressController = TextEditingController();
@@ -42,84 +43,92 @@ class _BuyScreenState extends State<BuyScreen> {
     postCodeController.dispose();
   }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      elevation: 0,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      title: const Text('Order confirmation'),
-      centerTitle: true,
-    ),
-    body: Column(
-      children: [
-        Expanded(
-          child: isCompleted ? buildCompleted() : Stepper(
-            type: StepperType.horizontal,
-            steps: getStepps(),
-            currentStep: currentStep,
-            onStepTapped: (step) => setState(() => currentStep = step),
-            onStepContinue: () {
-              final isLastStep = currentStep == getStepps().length - 1;
-              if (isLastStep) {
-                'Sending data to the server'.log();
-                firstNameController.clear();
-                lastNameController.clear();
-                addressController.clear();
-                postCodeController.clear();
-                setState(() {
-                  isCompleted = true;
-                });
-              } else {
-                setState(() => currentStep += 1);
-              }
-            },
-            onStepCancel: () {
-              currentStep == 0 ? null : setState(() => currentStep -= 1);
-            },
-            controlsBuilder: (BuildContext context, ControlsDetails details) {
-              final isLastStep = currentStep == getStepps().length - 1;
-              return const SizedBox(); // Disable inline controls
-            },
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: const Text('Order confirmation'),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: isCompleted
+                ? buildCompleted()
+                : Stepper(
+                    type: StepperType.horizontal,
+                    steps: getStepps(),
+                    currentStep: currentStep,
+                    onStepTapped: (step) => setState(() => currentStep = step),
+                    onStepContinue: () {
+                      final isLastStep = currentStep == getStepps().length - 1;
+                      if (isLastStep) {
+                        'Sending data to the server'.log();
+                        firstNameController.clear();
+                        lastNameController.clear();
+                        addressController.clear();
+                        postCodeController.clear();
+                        setState(() {
+                          isCompleted = true;
+                        });
+                      } else {
+                        setState(() => currentStep += 1);
+                      }
+                    },
+                    onStepCancel: () {
+                      currentStep == 0
+                          ? null
+                          : setState(() => currentStep -= 1);
+                    },
+                    controlsBuilder:
+                        (BuildContext context, ControlsDetails details) {
+                      final isLastStep = currentStep == getStepps().length - 1;
+                      return const SizedBox(); // Disable inline controls
+                    },
+                  ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (currentStep != 0)
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (currentStep != 0)
+                  Button(
+                    onPressed: () {
+                      setState(() => currentStep -= 1);
+                    },
+                    text: 'Back',
+                  ),
                 Button(
                   onPressed: () {
-                    setState(() => currentStep -= 1);
+                    final isLastStep = currentStep == getStepps().length - 1;
+                    if (isLastStep) {
+                      'Sending data to the server'.log();
+                      firstNameController.clear();
+                      lastNameController.clear();
+                      addressController.clear();
+                      postCodeController.clear();
+                      setState(() {
+                        isCompleted = true;
+                      });
+                    } else {
+                      setState(() => currentStep += 1);
+                    }
                   },
-                  text: 'Back',
+                  text: currentStep == getStepps().length - 1
+                      ? 'Confirm'
+                      : 'Next',
                 ),
-              Button(
-                onPressed: () {
-                  final isLastStep = currentStep == getStepps().length - 1;
-                  if (isLastStep) {
-                    'Sending data to the server'.log();
-                    firstNameController.clear();
-                    lastNameController.clear();
-                    addressController.clear();
-                    postCodeController.clear();
-                    setState(() {
-                      isCompleted = true;
-                    });
-                  } else {
-                    setState(() => currentStep += 1);
-                  }
-                },
-                text: currentStep == getStepps().length - 1 ? 'Confirm' : 'Next',
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
   Widget buildCompleted() {
     return Center(
@@ -146,93 +155,7 @@ Widget build(BuildContext context) {
   }
 
   List<Step> getStepps() => [
-        Step(
-          state: currentStep > 0 ? StepState.complete : StepState.indexed,
-          isActive: currentStep >= 0,
-          title: const Text('Order Details'),
-          content: ListView.builder(
-            itemCount: widget.products.length,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 10.h,
-                      width: 20.w,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        image: DecorationImage(
-                          image: NetworkImage(widget.products[index].imageUrl),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(
-                      width: 1.w,
-                    ),
-
-                    /// this is price and title section of the buy product
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 54.w,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Text(
-                              widget.products[index].title,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 100,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Text(
-                              '\$${widget.products[index].price * widget.products[index].totalItemsOFSingleProduct}',
-                              maxLines: 2,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    /// this is total item of same product section of the buy product
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Item',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          Center(
-                            child: Text(
-                              '${widget.products[index].totalItemsOFSingleProduct}',
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
+        orderedItems(),
         Step(
           state: currentStep > 1 ? StepState.complete : StepState.indexed,
           isActive: currentStep >= 1,
@@ -332,6 +255,96 @@ Widget build(BuildContext context) {
           ),
         ),
       ];
+
+  Step orderedItems() {
+    return Step(
+        state: currentStep > 0 ? StepState.complete : StepState.indexed,
+        isActive: currentStep >= 0,
+        title: const Text('Order Details'),
+        content: ListView.builder(
+          itemCount: widget.products.length,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 10.h,
+                    width: 20.w,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      image: DecorationImage(
+                        image: NetworkImage(widget.products[index].imageUrl),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(
+                    width: 1.w,
+                  ),
+
+                  /// this is price and title section of the buy product
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 45.w,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Text(
+                            widget.products[index].title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Text(
+                            '\$${widget.products[index].price * widget.products[index].totalItemsOFSingleProduct}',
+                            maxLines: 2,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  /// this is total item of same product section of the buy product
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Quantity',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        Center(
+                          child: Text(
+                            '${widget.products[index].totalItemsOFSingleProduct}',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+  }
 }
 
 class Button extends StatelessWidget {
@@ -341,22 +354,23 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       height: 5.h,
-      width: 20.w,
-      child: Material(
+      width: 24.w,
+      decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
-        child: InkWell(
-          onTap: onPressed,
-          child: Center(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
-              ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: InkWell(
+        onTap: onPressed,
+        child: Center(
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
             ),
           ),
         ),
