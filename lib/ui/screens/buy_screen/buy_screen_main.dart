@@ -162,6 +162,8 @@ class _BuyScreenState extends State<BuyScreen> {
                     },
                   ),
           ),
+
+          /// TODO making the buttons not openning up or showing on top of the keybord when user is typing their addr/informations
           Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),

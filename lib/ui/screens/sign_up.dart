@@ -64,8 +64,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         userModel: _userModel,
       )
           .then((_) {
-        if (Navigator.canPop(context)) Navigator.pop(context);
+        //if (Navigator.canPop(context)) Navigator.pop(context);
       }).catchError((error) {
+        print("inside the signup");
+
         if (error.toString().toLowerCase().contains('email')) {
           _isEmailValid = false;
           _emailErrorMessage = error.message.toString();
@@ -166,6 +168,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
 
                       // Email TextFormField
+
+                      ///TODO fixing duplicate email error problem on auth return appropriate error message 
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(

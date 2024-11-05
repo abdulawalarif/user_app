@@ -21,7 +21,7 @@ class AuthProvider with ChangeNotifier {
     required UserModel userModel,
   }) async {
 
-    try {
+
       await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -44,7 +44,7 @@ class AuthProvider with ChangeNotifier {
 
       await UserDataProvider().uploadUserData(userModel);
       notifyListeners();
-    } catch (e) {}
+
   }
 
   Future<void> signInAnonymously() async {
