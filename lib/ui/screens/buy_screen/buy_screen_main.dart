@@ -115,6 +115,16 @@ class _BuyScreenState extends State<BuyScreen> {
     latitudeController.dispose();
     longitudeController.dispose();
     formattedAddressController.dispose();
+
+    addressLine1FocusNode.dispose();
+    addressLine2FocusNode.dispose();
+    cityFocusNode.dispose();
+    stateFocusNode.dispose();
+    postalCodeFocusNode.dispose();
+    countryFocusNode.dispose();
+    latitudeFocusNode.dispose();
+    longitudeFocusNode.dispose();
+    formattedAddressFocusNode.dispose();
   }
 
   @override
@@ -205,23 +215,25 @@ class _BuyScreenState extends State<BuyScreen> {
                                 buyProduct.totalItemsOFSingleProduct,
                           );
                         }).toList(),
-                        shippingAddress: ShippingAddress(
-                          addressLine1: addressLine1Controller.text.toString(),
-                          addressLine2: addressLine2Controller.text.toString(),
-                          city: cityController.text.toString(),
-                          state: stateController.text.toString(),
-                          postalCode: postalCodeController.text.toString(),
-                          country: countryController.text.toString(),
-                          latitude:
-                              double.tryParse(latitudeController.text) ?? 0.0,
-                          longitude:
-                              double.tryParse(longitudeController.text) ?? 0.0,
-                          formattedAddress:
-                              formattedAddressController.text.toString(),
-                        ),
+
                       );
 
-                      orderProcessing.addOrder(orderData).then((data) {
+                      var shippingAddress =  ShippingAddress(
+                    addressLine1: addressLine1Controller.text.toString(),
+                    addressLine2: addressLine2Controller.text.toString(),
+                    city: cityController.text.toString(),
+                    state: stateController.text.toString(),
+                    postalCode: postalCodeController.text.toString(),
+                    country: countryController.text.toString(),
+                    latitude:
+                    double.tryParse(latitudeController.text) ?? 0.0,
+                    longitude:
+                    double.tryParse(longitudeController.text) ?? 0.0,
+                    formattedAddress:
+                    formattedAddressController.text.toString(),
+                    );
+
+                      orderProcessing.addOrder(order:orderData,shippingAddress:shippingAddress).then((data) {
                         setState(() {
                         isCompleted = true;
                       });
@@ -594,6 +606,7 @@ class _BuyScreenState extends State<BuyScreen> {
                         fillColor: Theme.of(context).cardColor,
                       ),
                       onEditingComplete: () => FocusScope.of(context).unfocus(),
+                      //TODO on editing complete will move to the next screen for details view and data submisstion
                     );
                   },
                 ),

@@ -12,17 +12,28 @@ class OrdersProvider with ChangeNotifier {
 
 
    
-Future<void> addOrder(OrdersModel order) async {
+Future<void> addOrder({required OrdersModel order, required ShippingAddress shippingAddress}) async {
   try {
     final jsonOrderData = order.toJson();
     jsonOrderData['products'] = order.products.map((product) => product.toJson()).toList();
-    jsonOrderData['shippingAddress'] = order.shippingAddress.toJson();
     await FirebaseFirestore.instance.collection('orders').add(jsonOrderData);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(order.customerId)
+        .set(
+      {'shippingAddress': shippingAddress.toJson()}, // Store as a field directly in the user document
+      SetOptions(merge: true), // Only updates fields that are different
+    );
+
+
+
     print("Order added successfully!");
   } catch (e) {
     print("Failed to add order: $e");
   }
 }
+
+
 }
 
 

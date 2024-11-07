@@ -66,7 +66,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .then((_) {
         //if (Navigator.canPop(context)) Navigator.pop(context);
       }).catchError((error) {
-        print("inside the signup");
 
         if (error.toString().toLowerCase().contains('email')) {
           _isEmailValid = false;

@@ -11,7 +11,6 @@ class OrdersModel {
   final String createdAt;
   final String updatedAt;
   final List<Product> products;
-  final ShippingAddress shippingAddress;
 
   OrdersModel({
     required this.orderId,
@@ -24,7 +23,6 @@ class OrdersModel {
     required this.createdAt,
     required this.updatedAt,
     required this.products,
-    required this.shippingAddress,
   });
 
   // Convert JSON to OrdersModel
@@ -42,7 +40,6 @@ class OrdersModel {
       products: (json['products'] as List)
           .map((item) => Product.fromJson(item))
           .toList(),
-      shippingAddress: ShippingAddress.fromJson(json['shippingAddress']),
     );
   }
 
@@ -59,7 +56,6 @@ class OrdersModel {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'products': products.map((item) => item.toJson()).toList(),
-      'shippingAddress': shippingAddress.toJson(),
     };
   }
 }

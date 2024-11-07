@@ -29,9 +29,7 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-.pubspec.lock
 /build/
-.firebase.json
 # Symbolication related
 app.*.symbols
 
@@ -44,3 +42,6 @@ app.*.map.json
 /android/app/release
 /android/app/google-services.json
 /lib/firebase_options.dart
+/build/
+/pubspec.lock
+/firebase.json
