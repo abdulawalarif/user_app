@@ -262,7 +262,11 @@ class _BuyScreenState extends State<BuyScreen> {
                           print("Error: $error");
                         });
                       } else if (isAddressStep) {
-                        _formKey.currentState!.validate();
+                        final isValid = _formKey.currentState!.validate();
+                        if (isValid) {
+                          _formKey.currentState!.save();
+                          setState(() => currentStep += 1);
+                        }
 
                         //if form is not validated will not show the tick mark here and will move to the next button though
                       } else {
@@ -553,8 +557,6 @@ class _BuyScreenState extends State<BuyScreen> {
                   controller: latitudeController,
                   focusNode: latitudeFocusNode,
                   key: const ValueKey('latitude'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter your latitude' : null,
                   maxLines: 1,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
@@ -578,8 +580,6 @@ class _BuyScreenState extends State<BuyScreen> {
                   controller: longitudeController,
                   focusNode: longitudeFocusNode,
                   key: const ValueKey('longitude'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter your longitude' : null,
                   maxLines: 1,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
