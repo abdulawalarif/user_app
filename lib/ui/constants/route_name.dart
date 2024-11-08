@@ -14,4 +14,6 @@ class RouteName {
   static const String uploadProductScreen = '/upload_product';
   static const String buyScreen = '/buyScreen';
   static const String updateUserInfo = '/UpdateUsersInformation';
+ 
+  
 }

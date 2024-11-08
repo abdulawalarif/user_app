@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,19 +9,15 @@ class UserDataProvider with ChangeNotifier {
   UserModel _userData = UserModel();
   UserModel get userData => _userData;
 
+  ShippingAddress? _shippingAddress;
 
- late ShippingAddress _shippingAddress;
-
-  ShippingAddress get shippingAddress => _shippingAddress;
-
-
+  ShippingAddress? get shippingAddress => _shippingAddress;
 
   set userData(UserModel value) {
     _userData = value;
     notifyListeners();
   }
 
-////userimages
   Future<UserModel> fetchUserData() async {
     try {
       final user = _auth.currentUser;
@@ -34,16 +28,13 @@ class UserDataProvider with ChangeNotifier {
               .collection('users')
               .doc(uid)
               .get();
-             
+
           _userData = UserModel.fromJson(snapshot.data()!);
-            final data = snapshot.data();
-            if (data != null) {
-              
+          final data = snapshot.data();
+          if (data != null && data['shippingAddress']!=null) {
             final shippingAddress = data['shippingAddress'];
-            
-             _shippingAddress = ShippingAddress.fromJson(shippingAddress);
-              print(_shippingAddress.city);
-            }
+            _shippingAddress = ShippingAddress.fromJson(shippingAddress);
+          }
         }
         notifyListeners();
         return _userData;
@@ -55,7 +46,6 @@ class UserDataProvider with ChangeNotifier {
     }
   }
 
-
   Future<void> uploadUserData(UserModel userModel) async {
     try {
       // Set user id
@@ -66,7 +56,8 @@ class UserDataProvider with ChangeNotifier {
         // Set date
         var date = DateTime.now().toString();
         var dateparse = DateTime.parse(date);
-        var formattedDate = '${dateparse.day}-${dateparse.month}-${dateparse.year}';
+        var formattedDate =
+            '${dateparse.day}-${dateparse.month}-${dateparse.year}';
         userModel.joinedAt = formattedDate;
         userModel.createdAt = Timestamp.now();
 
@@ -84,7 +75,6 @@ class UserDataProvider with ChangeNotifier {
       // Optionally, you can handle the error further, e.g., showing a message to the user
     }
   }
-
 
   Future<void> updateUserData(UserModel userModel) async {
     try {
@@ -104,5 +94,4 @@ class UserDataProvider with ChangeNotifier {
       print('Failed to update user data: $e');
     }
   }
-
 }

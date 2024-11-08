@@ -4,7 +4,9 @@ import 'package:sizer/sizer.dart';
 import 'package:user_app/core/models/buy_product_model.dart';
 import 'package:user_app/core/providers/orders_provider.dart';
 import 'package:user_app/main.dart';
+import 'package:user_app/ui/widgets/log_in_suggestion.dart';
 import '../../../core/models/orders_model.dart';
+import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/user_data_provider.dart';
 import '../../utils/my_border.dart';
 
@@ -53,7 +55,6 @@ class _BuyScreenState extends State<BuyScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UserDataProvider>(context, listen: false).fetchUserData();
 
     //user address for sending data to ordered list
     addressLine1Controller = TextEditingController();
@@ -83,6 +84,22 @@ class _BuyScreenState extends State<BuyScreen> {
     stateController.addListener(updateFormattedAddress);
     postalCodeController.addListener(updateFormattedAddress);
     countryController.addListener(updateFormattedAddress);
+
+    Provider.of<UserDataProvider>(context, listen: false)
+        .fetchUserData()
+        .then((_) {
+      var userAddressData =
+          Provider.of<UserDataProvider>(context, listen: false).shippingAddress;
+
+      addressLine1Controller.text = userAddressData?.addressLine1 ?? '';
+      addressLine2Controller.text = userAddressData?.addressLine2 ?? '';
+      cityController.text = userAddressData?.city ?? '';
+      stateController.text = userAddressData?.state ?? '';
+      postalCodeController.text = userAddressData?.postalCode ?? '';
+      countryController.text = userAddressData?.country ?? '';
+      latitudeController.text = userAddressData?.latitude ?? '';
+      longitudeController.text = userAddressData?.longitude ?? '';
+    });
   }
 
   void updateFormattedAddress() {
@@ -130,145 +147,140 @@ class _BuyScreenState extends State<BuyScreen> {
   @override
   Widget build(BuildContext context) {
     var userData = Provider.of<UserDataProvider>(context).userData;
-    var userAddressData =
-        Provider.of<UserDataProvider>(context).shippingAddress;
+    final orderProcessing = Provider.of<OrdersProvider>(context);
 
-    final orderProcessing = Provider.of<OrdersProvider>(context, listen: false);
+    final isLoggedIn = Provider.of<AuthProvider>(context).isLoggedIn;
+    if (isLoggedIn) {
+      return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: const Text('Order confirmation'),
+          centerTitle: true,
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: isCompleted
+                  ? buildCompleted()
+                  : Stepper(
+                      type: StepperType.horizontal,
+                      steps: getStepps(),
+                      currentStep: currentStep,
+                      onStepTapped: (step) =>
+                          setState(() => currentStep = step),
+                      onStepContinue: () {
+                        final isLastStep =
+                            currentStep == getStepps().length - 1;
+                        if (isLastStep) {
+                          setState(() {
+                            isCompleted = true;
+                          });
+                        } else {
+                          setState(() => currentStep += 1);
+                        }
+                      },
+                      onStepCancel: () {
+                        currentStep == 0
+                            ? null
+                            : setState(() => currentStep -= 1);
+                      },
+                      controlsBuilder:
+                          (BuildContext context, ControlsDetails details) {
+                        return const SizedBox(); // Disable inline controls
+                      },
+                    ),
+            ),
 
-    addressLine1Controller.text = userAddressData.addressLine1;
-    addressLine2Controller.text = userAddressData.addressLine2;
-    cityController.text = userAddressData.city;
-    stateController.text = userAddressData.state;
-    postalCodeController.text = userAddressData.postalCode;
-    countryController.text = userAddressData.country;
-     latitudeController.text = userAddressData.latitude;
-     longitudeController.text = userAddressData.longitude;
-
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: const Text('Order confirmation'),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: isCompleted
-                ? buildCompleted()
-                : Stepper(
-                    type: StepperType.horizontal,
-                    steps: getStepps(),
-                    currentStep: currentStep,
-                    onStepTapped: (step) => setState(() => currentStep = step),
-                    onStepContinue: () {
+            /// TODO making the buttons not openning up or showing on top of the keybord when user is typing their addr/informations
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (currentStep != 0)
+                    Button(
+                      onPressed: () {
+                        setState(() => currentStep -= 1);
+                      },
+                      text: 'Back',
+                    ),
+                  Button(
+                    onPressed: () {
                       final isLastStep = currentStep == getStepps().length - 1;
+                      final isAddressStep =
+                          currentStep == getStepps().length - 2;
+
                       if (isLastStep) {
-                        setState(() {
-                          isCompleted = true;
+                        'Sending data to the server'.log();
+
+                        var orderData = OrdersModel(
+                          orderId: "ORD123457",
+                          customerId: userData.id,
+                          orderDate: DateTime.now(),
+                          totalItemsOrdered: widget.products.length,
+                          totalAmount: widget.totalPrice,
+                          paymentStatus: "Paid",
+                          status: "Shipped",
+                          createdAt: DateTime.now().toIso8601String(),
+                          updatedAt: DateTime.now().toIso8601String(),
+                          products: widget.products.map((buyProduct) {
+                            return Product(
+                              productId: buyProduct.prodId,
+                              productName: buyProduct.title,
+                              quantity: buyProduct.totalItemsOFSingleProduct,
+                              pricePerUnit: buyProduct.price,
+                              totalPriceForThisItem: buyProduct.price *
+                                  buyProduct.totalItemsOFSingleProduct,
+                            );
+                          }).toList(),
+                        );
+
+                        var shippingAddress = ShippingAddress(
+                          addressLine1: addressLine1Controller.text.toString(),
+                          addressLine2: addressLine2Controller.text.toString(),
+                          city: cityController.text.toString(),
+                          state: stateController.text.toString(),
+                          postalCode: postalCodeController.text.toString(),
+                          country: countryController.text.toString(),
+                          latitude: latitudeController.text.toString(),
+                          longitude: longitudeController.text.toString(),
+                          formattedAddress:
+                              formattedAddressController.text.toString(),
+                        );
+
+                        orderProcessing
+                            .addOrder(
+                                order: orderData,
+                                shippingAddress: shippingAddress)
+                            .then((data) {
+                          setState(() {
+                            isCompleted = true;
+                          });
+                        }).catchError((error) {
+                          print("Error: $error");
                         });
+                      } else if (isAddressStep) {
+                        _formKey.currentState!.validate();
+
+                        //if form is not validated will not show the tick mark here and will move to the next button though
                       } else {
                         setState(() => currentStep += 1);
                       }
                     },
-                    onStepCancel: () {
-                      currentStep == 0
-                          ? null
-                          : setState(() => currentStep -= 1);
-                    },
-                    controlsBuilder:
-                        (BuildContext context, ControlsDetails details) {
-                      return const SizedBox(); // Disable inline controls
-                    },
+                    text: currentStep == getStepps().length - 1
+                        ? 'Confirm'
+                        : 'Next',
                   ),
-          ),
-
-          /// TODO making the buttons not openning up or showing on top of the keybord when user is typing their addr/informations
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (currentStep != 0)
-                  Button(
-                    onPressed: () {
-                      setState(() => currentStep -= 1);
-                    },
-                    text: 'Back',
-                  ),
-                Button(
-                  onPressed: () {
-                    final isLastStep = currentStep == getStepps().length - 1;
-                    final isAddressStep = currentStep == getStepps().length - 2;
-
-                    if (isLastStep) {
-                      'Sending data to the server'.log();
-
-                      var orderData = OrdersModel(
-                        orderId: "ORD123457",
-                        customerId: userData.id,
-                        orderDate: DateTime.now(),
-                        totalItemsOrdered: widget.products.length,
-                        totalAmount: widget.totalPrice,
-                        paymentStatus: "Paid",
-                        status: "Shipped",
-                        createdAt: DateTime.now().toIso8601String(),
-                        updatedAt: DateTime.now().toIso8601String(),
-                        products: widget.products.map((buyProduct) {
-                          return Product(
-                            productId: buyProduct.prodId,
-                            productName: buyProduct.title,
-                            quantity: buyProduct.totalItemsOFSingleProduct,
-                            pricePerUnit: buyProduct.price,
-                            totalPriceForThisItem: buyProduct.price *
-                                buyProduct.totalItemsOFSingleProduct,
-                          );
-                        }).toList(),
-                      );
-
-                      var shippingAddress = ShippingAddress(
-                        addressLine1: addressLine1Controller.text.toString(),
-                        addressLine2: addressLine2Controller.text.toString(),
-                        city: cityController.text.toString(),
-                        state: stateController.text.toString(),
-                        postalCode: postalCodeController.text.toString(),
-                        country: countryController.text.toString(),
-                        latitude: latitudeController.text.toString(),
-                        longitude: longitudeController.text.toString(),
-                        formattedAddress:
-                            formattedAddressController.text.toString(),
-                      );
-
-                      orderProcessing
-                          .addOrder(
-                              order: orderData,
-                              shippingAddress: shippingAddress)
-                          .then((data) {
-                        setState(() {
-                          isCompleted = true;
-                        });
-                      }).catchError((error) {
-                        print("Error: $error");
-                      });
-                    } else if (isAddressStep) {
-                      _formKey.currentState!.validate();
-
-                      //if form is not validated will not show the tick mark here and will move to the next button though
-                    } else {
-                      setState(() => currentStep += 1);
-                    }
-                  },
-                  text: currentStep == getStepps().length - 1
-                      ? 'Confirm'
-                      : 'Next',
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
+    return const Scaffold(body: LogInSuggestion());
   }
 
   Widget buildCompleted() {

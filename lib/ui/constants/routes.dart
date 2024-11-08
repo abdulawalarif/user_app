@@ -16,7 +16,7 @@ import '../screens/bottom_bar.dart';
 import '../screens/my_orders_screen.dart';
 import '../screens/splash_screen.dart';
 import '../utils/transition_animation.dart';
-
+ 
 class Routes {
   static Route<dynamic> generatedRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -62,6 +62,7 @@ class Routes {
         return SlidePageRoute(
           builder: (BuildContext context) => FeedsScreen(),
         );
+         
       case RouteName.cartScreen:
         return SlidePageRoute(
           builder: (BuildContext context) => const CartScreen(),
