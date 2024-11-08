@@ -130,9 +130,19 @@ class _BuyScreenState extends State<BuyScreen> {
   @override
   Widget build(BuildContext context) {
     var userData = Provider.of<UserDataProvider>(context).userData;
+    var userAddressData =
+        Provider.of<UserDataProvider>(context).shippingAddress;
+
     final orderProcessing = Provider.of<OrdersProvider>(context, listen: false);
-    userData.id.log();
-    print('Something is here');
+
+    addressLine1Controller.text = userAddressData.addressLine1;
+    addressLine2Controller.text = userAddressData.addressLine2;
+    cityController.text = userAddressData.city;
+    stateController.text = userAddressData.state;
+    postalCodeController.text = userAddressData.postalCode;
+    countryController.text = userAddressData.country;
+     latitudeController.text = userAddressData.latitude;
+     longitudeController.text = userAddressData.longitude;
 
     return Scaffold(
       appBar: AppBar(
@@ -215,28 +225,29 @@ class _BuyScreenState extends State<BuyScreen> {
                                 buyProduct.totalItemsOFSingleProduct,
                           );
                         }).toList(),
-
                       );
 
-                      var shippingAddress =  ShippingAddress(
-                    addressLine1: addressLine1Controller.text.toString(),
-                    addressLine2: addressLine2Controller.text.toString(),
-                    city: cityController.text.toString(),
-                    state: stateController.text.toString(),
-                    postalCode: postalCodeController.text.toString(),
-                    country: countryController.text.toString(),
-                    latitude:
-                    double.tryParse(latitudeController.text) ?? 0.0,
-                    longitude:
-                    double.tryParse(longitudeController.text) ?? 0.0,
-                    formattedAddress:
-                    formattedAddressController.text.toString(),
-                    );
+                      var shippingAddress = ShippingAddress(
+                        addressLine1: addressLine1Controller.text.toString(),
+                        addressLine2: addressLine2Controller.text.toString(),
+                        city: cityController.text.toString(),
+                        state: stateController.text.toString(),
+                        postalCode: postalCodeController.text.toString(),
+                        country: countryController.text.toString(),
+                        latitude: latitudeController.text.toString(),
+                        longitude: longitudeController.text.toString(),
+                        formattedAddress:
+                            formattedAddressController.text.toString(),
+                      );
 
-                      orderProcessing.addOrder(order:orderData,shippingAddress:shippingAddress).then((data) {
+                      orderProcessing
+                          .addOrder(
+                              order: orderData,
+                              shippingAddress: shippingAddress)
+                          .then((data) {
                         setState(() {
-                        isCompleted = true;
-                      });
+                          isCompleted = true;
+                        });
                       }).catchError((error) {
                         print("Error: $error");
                       });
@@ -595,6 +606,7 @@ class _BuyScreenState extends State<BuyScreen> {
                       maxLines: 1,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.text,
+                      readOnly: true,
                       decoration: InputDecoration(
                         labelText: 'Formatted Address',
                         hintText:

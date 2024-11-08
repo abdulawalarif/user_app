@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:flutter/material.dart';
 
 class OrdersModel {
   final String orderId;
@@ -98,16 +98,16 @@ class Product {
   }
 }
 
-class ShippingAddress {
-  final String addressLine1;
-  final String addressLine2;
-  final String city;
-  final String state;
-  final String postalCode;
-  final String country;
-  final double latitude;
-  final double longitude;
-  final String formattedAddress;
+class ShippingAddress with ChangeNotifier {
+  String addressLine1 = '';
+  String addressLine2 = '';
+  String city = '';
+  String state = '';
+  String postalCode = '';
+  String country = '';
+  String latitude = '';
+  String longitude = '';
+  String formattedAddress = '';
 
   ShippingAddress({
     required this.addressLine1,
@@ -130,8 +130,8 @@ class ShippingAddress {
       state: json['state'],
       postalCode: json['postalCode'],
       country: json['country'],
-      latitude: json['latitude'].toDouble(),
-      longitude: json['longitude'].toDouble(),
+      latitude: json['latitude'].toString(),
+      longitude: json['longitude'].toString(),
       formattedAddress: json['formattedAddress'],
     );
   }

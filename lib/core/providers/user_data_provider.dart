@@ -1,12 +1,22 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:user_app/core/models/orders_model.dart';
 import 'package:user_app/core/models/user_model.dart';
 
 class UserDataProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   UserModel _userData = UserModel();
   UserModel get userData => _userData;
+
+
+ late ShippingAddress _shippingAddress;
+
+  ShippingAddress get shippingAddress => _shippingAddress;
+
+
 
   set userData(UserModel value) {
     _userData = value;
@@ -24,7 +34,16 @@ class UserDataProvider with ChangeNotifier {
               .collection('users')
               .doc(uid)
               .get();
+             
           _userData = UserModel.fromJson(snapshot.data()!);
+            final data = snapshot.data();
+            if (data != null) {
+              
+            final shippingAddress = data['shippingAddress'];
+            
+             _shippingAddress = ShippingAddress.fromJson(shippingAddress);
+              print(_shippingAddress.city);
+            }
         }
         notifyListeners();
         return _userData;

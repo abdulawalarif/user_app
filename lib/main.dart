@@ -10,8 +10,7 @@ import 'package:user_app/core/providers/product_provider.dart';
 import 'package:user_app/core/providers/theme_change_provider.dart';
 import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/core/providers/wishlist_provider.dart';
-import 'package:user_app/firebase_options.dart';
-import 'ui/constants/route_name.dart';
+ import 'ui/constants/route_name.dart';
 import 'ui/constants/routes.dart';
 import 'ui/constants/theme_data.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +18,7 @@ import 'dart:developer' as devtools show log;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
   final isDarkTheme = await ThemePreferences().getTheme();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp(isDarkTheme: isDarkTheme));
