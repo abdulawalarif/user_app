@@ -37,10 +37,12 @@ class Routes {
         List<BuyProductModel> products =
             args['products'] as List<BuyProductModel>;
         double totalPrice = args['totalPrice'] as double;
+        bool fromCart = args['fromCart'] as bool;
         return SlidePageRoute(
           builder: (BuildContext context) => BuyScreen(
             products: products,
             totalPrice: totalPrice,
+            fromCart: fromCart,
           ),
         );
       case RouteName.signUpScreen:

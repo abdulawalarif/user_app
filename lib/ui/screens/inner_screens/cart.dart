@@ -14,7 +14,7 @@ class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
   @override
-  State<CartScreen>  createState() => _CartScreenState();
+  State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
@@ -26,7 +26,7 @@ class _CartScreenState extends State<CartScreen> {
     return Authenticate(
       child: Scaffold(
         appBar: AppBar(
-          title:const Text('Cart'),
+          title: const Text('Cart'),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
           actions: [
@@ -72,12 +72,12 @@ class _CartScreenState extends State<CartScreen> {
           Expanded(
             flex: 2,
             child: Container(
-              padding:const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-
-                   Text('SubTotal ', style: Theme.of(context).textTheme.bodySmall),
+                  Text('SubTotal ',
+                      style: Theme.of(context).textTheme.bodySmall),
                   Flexible(
                     child: Text(
                       '\$${cartProvider.subTotal.toString()}',
@@ -102,8 +102,8 @@ class _CartScreenState extends State<CartScreen> {
               color: Theme.of(context).primaryColor,
               child: InkWell(
                 onTap: () {
-
-                   List<BuyProductModel> products = cartProvider.getCartItems.values.map((cartItem) {
+                  List<BuyProductModel> products =
+                      cartProvider.getCartItems.values.map((cartItem) {
                     return BuyProductModel(
                       prodId: cartItem.id,
                       price: cartItem.price,
@@ -116,14 +116,14 @@ class _CartScreenState extends State<CartScreen> {
                   Navigator.of(context).pushNamed(
                     RouteName.buyScreen,
                     arguments: {
-                      'products': products,   // Pass the mapped product list
-                      'totalPrice': cartProvider.subTotal,   // Pass the total price
+                      'products': products,
+                      'totalPrice':
+                          cartProvider.subTotal, 
+                      'fromCart': true,
                     },
                   );
                 },
-
-
-                child:const Center(
+                child: const Center(
                   child: Text(
                     'Checkout',
                     style: TextStyle(

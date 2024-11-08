@@ -295,14 +295,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Navigator.of(context).pushNamed(
                       RouteName.buyScreen,
                       arguments: {
-                        'products': [BuyProductModel(
-                          prodId: product.id,
-                          imageUrl: product.imageUrls![0],
-                          title: product.name,
-                          price: product.price,
-                          totalItemsOFSingleProduct: 1,
-                        )],
+                        'products': [
+                          BuyProductModel(
+                            prodId: product.id,
+                            imageUrl: product.imageUrls![0],
+                            title: product.name,
+                            price: product.price,
+                            totalItemsOFSingleProduct: 1,
+                          )
+                        ],
                         'totalPrice': product.price,
+                        'fromCart': false,
                       },
                     );
                   },
