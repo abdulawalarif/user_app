@@ -14,9 +14,10 @@ class OrdersProvider with ChangeNotifier {
    
 Future<void> addOrder({required OrdersModel order, required ShippingAddress shippingAddress}) async {
   try {
+    final orderId = order.orderId;
     final jsonOrderData = order.toJson();
     jsonOrderData['products'] = order.products.map((product) => product.toJson()).toList();
-    await FirebaseFirestore.instance.collection('orders').add(jsonOrderData);
+    await FirebaseFirestore.instance.collection('orders').doc(orderId).set(jsonOrderData);
     await FirebaseFirestore.instance
         .collection('users')
         .doc(order.customerId)

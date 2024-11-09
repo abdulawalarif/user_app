@@ -50,12 +50,18 @@ class _CartScreenState extends State<CartScreen> {
                 height: MediaQuery.of(context).size.height,
                 margin: const EdgeInsets.only(bottom: 60),
                 child: ListView.builder(
-                  itemCount: cartItems.length,
-                  itemBuilder: (context, index) => ChangeNotifierProvider.value(
-                    value: cartItems.values.toList()[index],
-                    child: const FullCart(),
-                  ),
-                ),
+                    itemCount: cartItems.length,
+                    itemBuilder: (context, index) {
+                      bool isLastItem = index == cartItems.length - 1;
+                      return Padding(
+                        padding:
+                            EdgeInsets.only(bottom: isLastItem ? 20.0 : 0.0),
+                        child: ChangeNotifierProvider.value(
+                          value: cartItems.values.toList()[index],
+                          child: const FullCart(),
+                        ),
+                      );
+                    }),
               ),
       ),
     );
@@ -117,8 +123,7 @@ class _CartScreenState extends State<CartScreen> {
                     RouteName.buyScreen,
                     arguments: {
                       'products': products,
-                      'totalPrice':
-                          cartProvider.subTotal, 
+                      'totalPrice': cartProvider.subTotal,
                       'fromCart': true,
                     },
                   );

@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:user_app/core/models/buy_product_model.dart';
 import 'package:user_app/core/providers/orders_provider.dart';
-import 'package:user_app/main.dart';
-import 'package:user_app/ui/widgets/log_in_suggestion.dart';
+ import 'package:user_app/ui/widgets/log_in_suggestion.dart';
 import '../../../core/models/orders_model.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/cart_provider.dart';
@@ -12,6 +11,7 @@ import '../../../core/providers/user_data_provider.dart';
 import '../../constants/route_name.dart';
 import '../../utils/my_border.dart';
 import '../../utils/my_snackbar.dart';
+import 'package:uuid/uuid.dart';
 
 class BuyScreen extends StatefulWidget {
   final List<BuyProductModel> products;
@@ -57,6 +57,7 @@ class _BuyScreenState extends State<BuyScreen> {
   late FocusNode latitudeFocusNode;
   late FocusNode longitudeFocusNode;
   late FocusNode formattedAddressFocusNode;
+     var uuid = const Uuid();
 
   @override
   void initState() {
@@ -107,6 +108,7 @@ class _BuyScreenState extends State<BuyScreen> {
       latitudeController.text = userAddressData?.latitude ?? '';
       longitudeController.text = userAddressData?.longitude ?? '';
       formattedAddressController.text = userAddressData?.formattedAddress ?? '';
+   
     });
   }
 
@@ -222,14 +224,16 @@ class _BuyScreenState extends State<BuyScreen> {
                               //checking for null address data.. to be 100% confirm that user didn't missed any data point for delivery
                               if (_selectedPayment == 1) {
                                 //fixing order id
+
+                                 var orderId = uuid.v6();
                                 var orderData = OrdersModel(
-                                  orderId: "ORD123457",
+                                  orderId: orderId,
                                   customerId: userData.id,
                                   orderDate: DateTime.now(),
                                   totalItemsOrdered: widget.products.length,
                                   totalAmount: widget.totalPrice,
-                                  paymentStatus: "Paid",
-                                  status: "Shipped",
+                                  paymentStatus: 'Pending',
+                                  status: 'Pending',
                                   createdAt: DateTime.now().toIso8601String(),
                                   updatedAt: DateTime.now().toIso8601String(),
                                   products: widget.products.map((buyProduct) {
