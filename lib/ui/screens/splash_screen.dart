@@ -2,15 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sizer/sizer.dart';
-import 'package:provider/provider.dart';
-import 'package:user_app/core/providers/auth_provider.dart';
-import 'package:user_app/core/providers/cart_provider.dart';
-import 'package:user_app/core/providers/product_provider.dart';
-import 'package:user_app/ui/screens/bottom_bar.dart';
+ import 'package:user_app/ui/screens/bottom_bar.dart';
+
+ 
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+    State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(microseconds: 100), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => BottomBarScreen()),
+        MaterialPageRoute(builder: (context) => const BottomBarScreen()),
       );
     });
   }
@@ -33,6 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
         backgroundColor: Colors.white,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               width: 100,

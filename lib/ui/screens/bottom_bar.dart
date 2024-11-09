@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:user_app/ui/constants/app_consntants.dart';
-import 'package:user_app/ui/constants/route_name.dart';
 import 'package:user_app/ui/screens/feeds.dart';
 import 'package:user_app/ui/screens/home.dart';
 import 'package:user_app/ui/screens/search.dart';
