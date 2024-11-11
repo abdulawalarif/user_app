@@ -5,11 +5,7 @@ import 'package:dartz/dartz.dart';
 
 typedef EitherError<T> = Future<Either<String,T>>;
 class OrdersProvider with ChangeNotifier {
-  Future<void> addOrdersToDatabase( ) async {
   
-    notifyListeners();
-  }
-
 
    
 Future<void> addOrder({required OrdersModel order, required ShippingAddress shippingAddress}) async {
@@ -34,6 +30,13 @@ Future<void> addOrder({required OrdersModel order, required ShippingAddress ship
   }
 }
 
+
+
+
+
+Future<void> myOrders() async {
+
+}
 
 }
 

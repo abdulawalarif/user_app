@@ -13,8 +13,8 @@ import 'package:user_app/ui/screens/sign_up.dart';
 import 'package:user_app/ui/screens/update_users_inofrmation.dart';
 import 'package:user_app/ui/screens/wishlist.dart';
 import '../screens/bottom_bar.dart';
-import '../screens/my_orders_screen.dart';
-import '../screens/splash_screen.dart';
+import '../screens/buy_screen/my_orders_screen.dart';
+ import '../screens/splash_screen.dart';
 import '../utils/transition_animation.dart';
  
 class Routes {

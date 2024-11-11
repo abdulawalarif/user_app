@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => CartProvider()),
             ChangeNotifierProvider(create: (_) => WishlistProvider()),
             ChangeNotifierProvider(create: (_) => OrdersProvider()),
+            
             ChangeNotifierProvider(
                 create: (_) => ThemeChangeProvider(isDarkTheme)),
           ],

@@ -13,9 +13,10 @@ import 'package:user_app/ui/widgets/popular_brand.dart';
 import 'package:user_app/ui/widgets/popular_product.dart';
 import 'package:user_app/ui/widgets/recommendation.dart';
 
-import 'package:badges/badges.dart' as b;
-
+ 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -94,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     _sectionTitle('POPULAR BRANDS', () {}),
 
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: 220,
                       child: GridView.count(
