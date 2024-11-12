@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../widgets/order_status_setup.dart';
 
 class MyOrdersScreen extends StatefulWidget {
@@ -7,26 +6,33 @@ class MyOrdersScreen extends StatefulWidget {
   final String orderdDate;
   final String confirmedDate;
 
-  const MyOrdersScreen(
-      {super.key,
-      required this.status,
-      required this.orderdDate,
-      required this.confirmedDate,});
+  const MyOrdersScreen({
+    super.key,
+    required this.status,
+    required this.orderdDate,
+    required this.confirmedDate,
+  });
 
   @override
   State<MyOrdersScreen> createState() => _MyOrdersScreenState();
 }
 
 class _MyOrdersScreenState extends State<MyOrdersScreen> {
-  final bool isReceived = true;
-      bool isOnTheWay = false;
-        bool isDelivered = false;
+  bool isPending = true;
+  bool isReceived = false;
+  bool isOnTheWay = false;
+  bool isDelivered = false;
 
   @override
   void initState() {
     super.initState();
-      isOnTheWay = widget.status == 'Confirmed' ||widget.status == 'Delivered';
-      isDelivered = widget.status == 'Delivered';
+    isPending = widget.status == 'Pending';
+    isReceived = widget.status == 'Received' ||
+        widget.status == 'Confirmed' ||
+        widget.status == 'Delivered';
+    ;
+    isOnTheWay = widget.status == 'Confirmed' || widget.status == 'Delivered';
+    isDelivered = widget.status == 'Delivered';
   }
 
   @override
@@ -38,89 +44,105 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
       appBar: AppBar(
         title: Text('Order Status', style: theme.textTheme.titleSmall),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: 100,
-              width: double.infinity,
-              child: ColorFiltered(
-                colorFilter: isDarkTheme
-                    ? const ColorFilter.mode(Colors.black54, BlendMode.darken)
-                    : const ColorFilter.mode(
-                        Colors.transparent, BlendMode.multiply),
-                child: Image.asset(
-                  'assets/order.png',
-                  fit: BoxFit.cover,
-                ),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 100,
+            width: double.infinity,
+            child: ColorFiltered(
+              colorFilter: isDarkTheme
+                  ? const ColorFilter.mode(Colors.black54, BlendMode.darken)
+                  : const ColorFilter.mode(
+                      Colors.transparent, BlendMode.multiply),
+              child: Image.asset(
+                'assets/order.png',
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 4),
-            const SizedBox(height: 16),
-              OrderStatusStep(
-              title: 'Order Received',
-              time: widget.orderdDate,
-              isCompleted: isReceived,
-            ),
-              OrderStatusStep(
-              title: 'On The Way',
-              time:  widget.confirmedDate,
-              isCompleted: isOnTheWay,
-              showTracking: !isDelivered&&isOnTheWay,
-            ),
-            OrderStatusStep(
-              title: 'Delivered',
-              isCompleted: isDelivered,
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              height: 50,
-              width: 200,
-              child: Material(
-                color: theme.primaryColor,
-                child: InkWell(
-                  onTap: isDelivered
-                      ? () {}
-                      : () {
-                          // sending received status to database for this order
-                        },
-                  child: Center(
-                    child: Text(
-                      'Confirm Delivery',
-                      style: theme.textTheme.titleSmall!.copyWith(
-                        color: isDelivered
-                            ? Colors.white
-                            : theme.unselectedWidgetColor,
-                      ),
+          ),
+          isPending
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 100),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 30),
+                          child: SizedBox(
+                              width: 350,
+                              child: Center(
+                                  child: Text(
+                                'WAIT FOR CONFIRMATION PLEASE',
+                                style: Theme.of(context).textTheme.headlineSmall,
+                              ))),
+                        ),
+                        SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: Image.asset(
+                            'assets/orderPending.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 4),
+                      const SizedBox(height: 16),
+                      OrderStatusStep(
+                        title: 'Order Received',
+                        time: widget.orderdDate,
+                        isCompleted: isReceived,
+                      ),
+                      OrderStatusStep(
+                        title: 'On The Way',
+                        time: widget.status == 'Pending'
+                            ? ''
+                            : widget.confirmedDate,
+                        isCompleted: isOnTheWay,
+                        showTracking: !isDelivered && isOnTheWay,
+                      ),
+                      OrderStatusStep(
+                        title: 'Delivered',
+                        isCompleted: isDelivered,
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 50,
+                        width: 200,
+                        child: Material(
+                          color: theme.primaryColor,
+                          child: InkWell(
+                            onTap: isDelivered
+                                ? () {}
+                                : () {
+                                    // sending received status to database for this order
+                                  },
+                            child: Center(
+                              child: Text(
+                                'Confirm Delivery',
+                                style: theme.textTheme.titleSmall!.copyWith(
+                                  color: isDelivered
+                                      ? Colors.white
+                                      : theme.unselectedWidgetColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
+        ],
       ),
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

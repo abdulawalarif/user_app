@@ -30,7 +30,14 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     super.initState();
     _pages = [
       //{'page': HomeScreen(), 'title': 'Home'},
-        {'page': const MyOrdersScreen(status: 'Delivered', confirmedDate: '8:30 am,  Nov 12, 2024', orderdDate: '8:30 am,  Nov 12, 2024',), 'title': 'Home'},
+      {
+        'page': const MyOrdersScreen(
+          status: 'Pending',
+          confirmedDate: '8:30 am,  Nov 12, 2024',
+          orderdDate: '8:30 am,  Nov 12, 2024',
+        ),
+        'title': 'Home'
+      },
       {'page': FeedsScreen(), 'title': 'Feeds'},
       {'page': const SearchScreen(), 'title': 'Search'},
       {
@@ -121,5 +128,3 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
     );
   }
 }
-
- 
