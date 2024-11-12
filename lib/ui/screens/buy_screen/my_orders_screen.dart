@@ -1,19 +1,38 @@
 import 'package:flutter/material.dart';
 
+import '../../widgets/order_status_setup.dart';
+
 class MyOrdersScreen extends StatefulWidget {
-  const MyOrdersScreen({super.key});
+  final String status;
+  final String orderdDate;
+  final String confirmedDate;
+
+  const MyOrdersScreen(
+      {super.key,
+      required this.status,
+      required this.orderdDate,
+      required this.confirmedDate,});
 
   @override
   State<MyOrdersScreen> createState() => _MyOrdersScreenState();
 }
 
 class _MyOrdersScreenState extends State<MyOrdersScreen> {
-  final bool isDelivered = false;
+  final bool isReceived = true;
+      bool isOnTheWay = false;
+        bool isDelivered = false;
+
+  @override
+  void initState() {
+    super.initState();
+      isOnTheWay = widget.status == 'Confirmed' ||widget.status == 'Delivered';
+      isDelivered = widget.status == 'Delivered';
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context); // Access theme
-        final bool isDarkTheme = theme.brightness == Brightness.dark;
+    final bool isDarkTheme = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -24,20 +43,32 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('ORDER STATUS', style: theme.textTheme.titleLarge),
-            const SizedBox(height: 4),
-            Divider(color: theme.dividerColor, thickness: 2),
-            const SizedBox(height: 16),
-            const OrderStatusStep(
-              title: 'Order Received',
-              time: '8:30 am, Jan 31, 2017',
-              isCompleted: true,
+            SizedBox(
+              height: 100,
+              width: double.infinity,
+              child: ColorFiltered(
+                colorFilter: isDarkTheme
+                    ? const ColorFilter.mode(Colors.black54, BlendMode.darken)
+                    : const ColorFilter.mode(
+                        Colors.transparent, BlendMode.multiply),
+                child: Image.asset(
+                  'assets/order.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-            const OrderStatusStep(
+            const SizedBox(height: 4),
+            const SizedBox(height: 16),
+              OrderStatusStep(
+              title: 'Order Received',
+              time: widget.orderdDate,
+              isCompleted: isReceived,
+            ),
+              OrderStatusStep(
               title: 'On The Way',
-              time: '10:23 am, Jan 31, 2017',
-              isCompleted: true,
-              showTracking: true,
+              time:  widget.confirmedDate,
+              isCompleted: isOnTheWay,
+              showTracking: !isDelivered&&isOnTheWay,
             ),
             OrderStatusStep(
               title: 'Delivered',
@@ -59,7 +90,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                     child: Text(
                       'Confirm Delivery',
                       style: theme.textTheme.titleSmall!.copyWith(
-                        color: theme.colorScheme.onPrimary,
+                        color: isDelivered
+                            ? Colors.white
+                            : theme.unselectedWidgetColor,
                       ),
                     ),
                   ),
@@ -67,21 +100,6 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
               ),
             ),
             const SizedBox(height: 20),
-              SizedBox(
-              height: 100,
-              width: double.infinity,
-              child: ColorFiltered(
-                colorFilter: isDarkTheme
-                    ? const ColorFilter.mode(
-                        Colors.black54, BlendMode.darken)
-                    : const ColorFilter.mode(
-                        Colors.transparent, BlendMode.multiply),
-                child: Image.asset(
-                  'assets/order.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -89,78 +107,20 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
   }
 }
 
-class OrderStatusStep extends StatelessWidget {
-  final String title;
-  final String? time;
-  final bool isCompleted;
-  final bool showTracking;
 
-  const OrderStatusStep({
-    super.key,
-    required this.title,
-    this.time,
-    required this.isCompleted,
-    this.showTracking = false,
-  });
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(
-          isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
-          color: isCompleted ? theme.primaryColor : theme.unselectedWidgetColor,
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: theme.textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: isCompleted
-                      ? theme.textTheme.bodyLarge!.color
-                      : theme.unselectedWidgetColor,
-                ),
-              ),
-              if (time != null) ...[
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      time!,
-                      style: theme.textTheme.bodySmall!
-                          .copyWith(color: theme.colorScheme.tertiary),
-                    ),
-                    if (showTracking)
-                      Container(
-                        margin: const EdgeInsets.only(left: 8),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.secondary,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          'Tracking',
-                          style: theme.textTheme.labelSmall!.copyWith(
-                            color: theme.colorScheme.onSecondary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ],
-              const SizedBox(height: 16),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
