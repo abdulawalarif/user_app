@@ -18,6 +18,8 @@ class MyOrdersScreen extends StatefulWidget {
 }
 
 class _MyOrdersScreenState extends State<MyOrdersScreen> {
+
+  //Here I have implemented 4 conditions for that will be comming from the backend and based on this i have configured my widgets
   bool isPending = true;
   bool isReceived = false;
   bool isOnTheWay = false;
@@ -73,8 +75,10 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                               width: 350,
                               child: Center(
                                   child: Text(
-                                'WAIT FOR CONFIRMATION PLEASE',
-                                style: Theme.of(context).textTheme.headlineSmall,
+                                'YOUR ORDER IS PENDING! PLEASE WAIT FOR THE CONFIRMATION...',
+                                textAlign: TextAlign.center, 
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
                               ))),
                         ),
                         SizedBox(

@@ -43,9 +43,7 @@ class _BuyScreenState extends State<BuyScreen> {
   late TextEditingController countryController;
   late TextEditingController latitudeController;
   late TextEditingController longitudeController;
-  late TextEditingController formattedAddressController;
-  final ValueNotifier<String> formattedAddressNotifier =
-      ValueNotifier<String>("");
+ 
 
   //user address  FocusNode
   late FocusNode addressLine1FocusNode;
@@ -56,7 +54,7 @@ class _BuyScreenState extends State<BuyScreen> {
   late FocusNode countryFocusNode;
   late FocusNode latitudeFocusNode;
   late FocusNode longitudeFocusNode;
-  late FocusNode formattedAddressFocusNode;
+ 
      var uuid = const Uuid();
 
   @override
@@ -73,7 +71,7 @@ class _BuyScreenState extends State<BuyScreen> {
     //Fetching lat and lon from google api
     latitudeController = TextEditingController();
     longitudeController = TextEditingController();
-    formattedAddressController = TextEditingController();
+   
     //user address  FocusNode
     addressLine1FocusNode = FocusNode();
     addressLine2FocusNode = FocusNode();
@@ -83,15 +81,8 @@ class _BuyScreenState extends State<BuyScreen> {
     countryFocusNode = FocusNode();
     latitudeFocusNode = FocusNode();
     longitudeFocusNode = FocusNode();
-    formattedAddressFocusNode = FocusNode();
-
-    // Listen to each text field and update the formatted address in real time
-    addressLine1Controller.addListener(updateFormattedAddress);
-    addressLine2Controller.addListener(updateFormattedAddress);
-    cityController.addListener(updateFormattedAddress);
-    stateController.addListener(updateFormattedAddress);
-    postalCodeController.addListener(updateFormattedAddress);
-    countryController.addListener(updateFormattedAddress);
+ 
+ 
 
     Provider.of<UserDataProvider>(context, listen: false)
         .fetchUserData()
@@ -107,27 +98,14 @@ class _BuyScreenState extends State<BuyScreen> {
       countryController.text = userAddressData?.country ?? '';
       latitudeController.text = userAddressData?.latitude ?? '';
       longitudeController.text = userAddressData?.longitude ?? '';
-      formattedAddressController.text = userAddressData?.formattedAddress ?? '';
+    
    
     });
   }
 
-  void updateFormattedAddress() {
-    // Format the address based on current text in each field
-    String formattedAddress = formatAddress();
-    formattedAddressNotifier.value = formattedAddress;
-  }
+ 
 
-  String formatAddress() {
-    String addressLine1 = addressLine1Controller.text;
-    String addressLine2 = addressLine2Controller.text;
-    String city = cityController.text;
-    String state = stateController.text;
-    String postalCode = postalCodeController.text;
-    String country = countryController.text;
-
-    return "$addressLine1, $addressLine2, $city, $state $postalCode, $country";
-  }
+  
 
   @override
   void dispose() {
@@ -141,7 +119,7 @@ class _BuyScreenState extends State<BuyScreen> {
     countryController.dispose();
     latitudeController.dispose();
     longitudeController.dispose();
-    formattedAddressController.dispose();
+  
 
     addressLine1FocusNode.dispose();
     addressLine2FocusNode.dispose();
@@ -151,7 +129,7 @@ class _BuyScreenState extends State<BuyScreen> {
     countryFocusNode.dispose();
     latitudeFocusNode.dispose();
     longitudeFocusNode.dispose();
-    formattedAddressFocusNode.dispose();
+ 
   }
 
   @override
@@ -262,9 +240,7 @@ class _BuyScreenState extends State<BuyScreen> {
                                   latitude: latitudeController.text.toString(),
                                   longitude:
                                       longitudeController.text.toString(),
-                                  formattedAddress: formattedAddressController
-                                      .text
-                                      .toString(),
+                                  formattedAddress: '${addressLine1Controller.text.toString()}, ${addressLine2Controller.text.toString()}, ${cityController.text.toString()}, ${stateController.text.toString()} ${postalCodeController.text.toString()}, ${countryController.text.toString()}'
                                 );
 
                                 orderProcessing
@@ -681,49 +657,11 @@ class _BuyScreenState extends State<BuyScreen> {
                 filled: true,
                 fillColor: Theme.of(context).cardColor,
               ),
-              onEditingComplete: () => FocusScope.of(context)
-                  .requestFocus(formattedAddressFocusNode),
+              //TODO on editing complete will move to the next screen for details view and data submisstion
             ),
           ),
 
-          //TODO will have to attach the whole address and automatically put the address of user have give on the respective places
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: ValueListenableBuilder<String>(
-              valueListenable: formattedAddressNotifier,
-              builder: (context, formattedAddress, child) {
-                if (formattedAddressController.text != formattedAddress) {
-                  formattedAddressController.text = formattedAddress;
-                }
-
-                return TextFormField(
-                  controller: formattedAddressController,
-                  focusNode: formattedAddressFocusNode,
-                  key: const ValueKey('formattedAddress'),
-                  textCapitalization: TextCapitalization.words,
-                  validator: (value) => value!.isEmpty
-                      ? 'Please enter your formattedAddress'
-                      : null,
-                  maxLines: 1,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.text,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    labelText: 'Formatted Address',
-                    hintText:
-                        '123 Elm Street, Apt 4B, Los Angeles, CA 90001, USA',
-                    contentPadding: const EdgeInsets.all(12),
-                    border: const OutlineInputBorder(),
-                    enabledBorder: MyBorder.outlineInputBorder(context),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                  ),
-                  onEditingComplete: () => FocusScope.of(context).unfocus(),
-                  //TODO on editing complete will move to the next screen for details view and data submisstion
-                );
-              },
-            ),
-          ),
+          
         ],
       ),
     );
