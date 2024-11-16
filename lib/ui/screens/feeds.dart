@@ -15,7 +15,7 @@ class _FeedsScreenState extends State<FeedsScreen> {
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
-    List<ProductModel> _productList = productProvider.products;
+    List<ProductModel> productList = productProvider.products;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -39,9 +39,9 @@ class _FeedsScreenState extends State<FeedsScreen> {
               (MediaQuery.of(context).size.width + 184),
           mainAxisSpacing: 8,
           children: List.generate(
-            _productList.length,
+            productList.length,
             (index) => ChangeNotifierProvider.value(
-              value: _productList[index],
+              value: productList[index],
               child: Center(
                 child: FeedsProduct(),
               ),

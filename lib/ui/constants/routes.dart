@@ -13,7 +13,8 @@ import 'package:user_app/ui/screens/sign_up.dart';
 import 'package:user_app/ui/screens/update_users_inofrmation.dart';
 import 'package:user_app/ui/screens/wishlist.dart';
 import '../screens/bottom_bar.dart';
-import '../screens/buy_screen/my_orders_screen.dart';
+import '../screens/buy_screen/my_orders_status_screen.dart';
+import '../screens/buy_screen/orders_screen.dart';
 import '../screens/splash_screen.dart';
 import '../utils/transition_animation.dart';
 
@@ -69,12 +70,23 @@ class Routes {
         return SlidePageRoute(
           builder: (BuildContext context) => const CartScreen(),
         );
-      case RouteName.ordersScreen:
+         case RouteName.ordersScreen:
+               Map<String, Object>? args = settings.arguments as Map<String, Object>;
+        String userId = args['userId'] as String;
         return SlidePageRoute(
-          builder: (BuildContext context) => const MyOrdersScreen(
-            status: 'pending',
-            confirmedDate: '8:30 am,  Nov 12, 2024',
-            orderdDate: '8:30 am,  Nov 12, 2024',
+          builder: (BuildContext context) =>   OrdersScreen(userId: userId,),
+        );
+      case RouteName.ordersStatusScreen:
+        Map<String, Object>? args = settings.arguments as Map<String, Object>;
+        String status = args['status'] as String;
+        String confirmedDate = args['confirmedDate'] as String;
+        String orderdDate = args['orderdDate'] as String;
+
+        return SlidePageRoute(
+          builder: (BuildContext context) => MyOrdersStatusScreen(
+            status: status,
+            confirmedDate: confirmedDate,
+            orderdDate: orderdDate,
           ),
         );
 

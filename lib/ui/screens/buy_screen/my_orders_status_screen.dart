@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../widgets/order_status_setup.dart';
 
-class MyOrdersScreen extends StatefulWidget {
+class MyOrdersStatusScreen extends StatefulWidget {
   final String status;
   final String orderdDate;
   final String confirmedDate;
 
-  const MyOrdersScreen({
+  const MyOrdersStatusScreen({
     super.key,
     required this.status,
     required this.orderdDate,
@@ -14,11 +14,10 @@ class MyOrdersScreen extends StatefulWidget {
   });
 
   @override
-  State<MyOrdersScreen> createState() => _MyOrdersScreenState();
+  State<MyOrdersStatusScreen> createState() => _MyOrdersStatusScreenState();
 }
 
-class _MyOrdersScreenState extends State<MyOrdersScreen> {
-
+class _MyOrdersStatusScreenState extends State<MyOrdersStatusScreen> {
   //Here I have implemented 4 conditions for that will be comming from the backend and based on this i have configured my widgets
   bool isPending = true;
   bool isReceived = false;
@@ -76,7 +75,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                               child: Center(
                                   child: Text(
                                 'YOUR ORDER IS PENDING! PLEASE WAIT FOR THE CONFIRMATION...',
-                                textAlign: TextAlign.center, 
+                                textAlign: TextAlign.center,
                                 style:
                                     Theme.of(context).textTheme.headlineSmall,
                               ))),
@@ -106,7 +105,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                       ),
                       OrderStatusStep(
                         title: 'On The Way',
-                        time: widget.status == 'Pending'
+                        time: widget.status == 'Received'
                             ? ''
                             : widget.confirmedDate,
                         isCompleted: isOnTheWay,

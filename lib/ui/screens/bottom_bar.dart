@@ -8,7 +8,7 @@ import 'package:user_app/ui/screens/user_info.dart';
 import 'package:user_app/ui/screens/wishlist.dart';
 import 'package:user_app/ui/widgets/authenticate.dart';
 
-import 'buy_screen/my_orders_screen.dart';
+import 'buy_screen/my_orders_status_screen.dart';
 
 class BottomBarScreen extends StatefulWidget {
   const BottomBarScreen({super.key});
@@ -29,15 +29,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   void initState() {
     super.initState();
     _pages = [
-      //{'page': HomeScreen(), 'title': 'Home'},
-      {
-        'page': const MyOrdersScreen(
-          status: 'Pending',
-          confirmedDate: '8:30 am,  Nov 12, 2024',
-          orderdDate: '8:30 am,  Nov 12, 2024',
-        ),
-        'title': 'Home'
-      },
+      {'page': const HomeScreen(), 'title': 'Home'},
       {'page': FeedsScreen(), 'title': 'Feeds'},
       {'page': const SearchScreen(), 'title': 'Search'},
       {

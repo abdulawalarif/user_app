@@ -16,7 +16,7 @@ class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({super.key});
 
   @override
-  State<UserInfoScreen>  createState() => _UserInfoScreenState();
+  State<UserInfoScreen> createState() => _UserInfoScreenState();
 }
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
@@ -88,16 +88,17 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         Card(
                           child: Column(
                             children: [
-                                         _userBagListTile(
+                              _userBagListTile(
                                   'My Orders',
                                   mOrdersListIcon,
                                   mTrailingIcon,
                                   context,
-                                  () => Navigator.of(context)
-                                      .pushNamed(RouteName.ordersScreen)),
-
-
-
+                                  () => Navigator.of(context).pushNamed(
+                                        RouteName.ordersScreen,
+                                        arguments: {
+                                             'userId': _userData.id,
+                                        }
+                                      ),),
                               _userBagListTile(
                                   'Wishlist',
                                   mWishListIcon,
@@ -113,8 +114,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 () => Navigator.of(context)
                                     .pushNamed(RouteName.cartScreen),
                               ),
-
-
                             ],
                           ),
                         ),
@@ -201,8 +200,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 
-  Widget _userBagListTile(String title, IconData leadingIcon,
-      IconData trailingIcon, BuildContext context, Function() onTap,) {
+  Widget _userBagListTile(
+    String title,
+    IconData leadingIcon,
+    IconData trailingIcon,
+    BuildContext context,
+    Function() onTap,
+  ) {
     return ListTile(
       title: Text(title, style: Theme.of(context).textTheme.titleMedium),
       leading: _customIcon(leadingIcon),
