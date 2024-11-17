@@ -8,11 +8,11 @@ class RouteName {
   static const String wishlistScreen = '/wishlist';
   static const String cartScreen = '/cart';
   static const String ordersStatusScreen = '/ordersStatusScreen';
-  static const String ordersScreen = '/ordersScreen';
+  static const String myOrdersScreen = '/myOrdersScreen';
   static const String productDetailScreen = '/product_detail';
   static const String categoryScreen = '/category';
   static const String feedsScreen = '/feeds';
   static const String uploadProductScreen = '/upload_product';
-  static const String buyScreen = '/buyScreen';
+  static const String productPurchaseScreen = '/productPurchaseScreen';
   static const String updateUserInfo = '/UpdateUsersInformation';
 }

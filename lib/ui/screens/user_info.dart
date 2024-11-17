@@ -94,7 +94,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                   mTrailingIcon,
                                   context,
                                   () => Navigator.of(context).pushNamed(
-                                        RouteName.ordersScreen,
+                                        RouteName.myOrdersScreen,
                                         arguments: {
                                              'userId': _userData.id,
                                         }

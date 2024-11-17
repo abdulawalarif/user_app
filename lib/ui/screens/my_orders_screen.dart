@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart';
-import '../../../core/providers/orders_provider.dart';
-import '../../constants/app_consntants.dart';
-import '../../constants/route_name.dart';
-import '../../widgets/empty_order.dart';
+import '../../core/providers/orders_provider.dart';
+import '../constants/app_consntants.dart';
+import '../constants/route_name.dart';
+import '../widgets/empty_order.dart';
 
-class OrdersScreen extends StatelessWidget {
+class MyOrdersScreen extends StatelessWidget {
   final String userId;
-  const OrdersScreen({
+  const MyOrdersScreen({
     super.key,
     required this.userId,
   });

@@ -8,7 +8,7 @@ import 'package:user_app/ui/screens/user_info.dart';
 import 'package:user_app/ui/screens/wishlist.dart';
 import 'package:user_app/ui/widgets/authenticate.dart';
 
-import 'buy_screen/my_orders_status_screen.dart';
+import 'inner_screens/my_orders_status_screen.dart';
 
 class BottomBarScreen extends StatefulWidget {
   const BottomBarScreen({super.key});

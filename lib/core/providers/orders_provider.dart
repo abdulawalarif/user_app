@@ -8,6 +8,7 @@ import 'firebase_service.dart';
 typedef EitherError<T> = Future<Either<String, T>>;
 class OrdersProvider with ChangeNotifier {
   final FirebaseFirestore _fireStore = FireStoreService().instance;
+
   List<OrdersModel> _orderList = [];
   bool _isFetched = false;
   bool _isLoading = false;

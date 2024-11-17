@@ -120,7 +120,7 @@ class _CartScreenState extends State<CartScreen> {
                   }).toList();
 
                   Navigator.of(context).pushNamed(
-                    RouteName.buyScreen,
+                    RouteName.productPurchaseScreen,
                     arguments: {
                       'products': products,
                       'totalPrice': cartProvider.subTotal,

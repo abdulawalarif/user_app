@@ -20,8 +20,7 @@ class AuthProvider with ChangeNotifier {
     required String password,
     required UserModel userModel,
   }) async {
-
-
+    try {
       await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -39,17 +38,22 @@ class AuthProvider with ChangeNotifier {
             .then((_) async => ref.getDownloadURL())
             .then((imageUrl) => userModel.imageUrl = imageUrl)
             .catchError((e) {
-         });
+          throw Exception(e.toString());
+        });
       }
 
       await UserDataProvider().uploadUserData(userModel);
       notifyListeners();
-
+    } finally {
+      notifyListeners();
+    }
   }
 
   Future<void> signInAnonymously() async {
     if (_auth.currentUser == null) {
-      await _auth.signInAnonymously().catchError((e) {});
+      await _auth.signInAnonymously().catchError((e) {
+        throw Exception(e.toString());
+      });
     }
   }
 
@@ -57,7 +61,11 @@ class AuthProvider with ChangeNotifier {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       notifyListeners();
-    } catch (e) {}
+    } catch (e) {
+      throw Exception(e.toString());
+    } finally {
+      notifyListeners();
+    }
   }
 
   // Google sign in
@@ -74,7 +82,7 @@ class AuthProvider with ChangeNotifier {
           final user = userCredential.user;
 
           if (user != null) {
-             final userDoc = await FirebaseFirestore.instance
+            final userDoc = await FirebaseFirestore.instance
                 .collection('users')
                 .doc(user.uid)
                 .get();
@@ -101,7 +109,9 @@ class AuthProvider with ChangeNotifier {
         }
       }
     } catch (e) {
-      print('Error during Google sign in: $e');
+      throw Exception(e.toString());
+    } finally {
+      notifyListeners();
     }
   }
 
@@ -111,6 +121,9 @@ class AuthProvider with ChangeNotifier {
     try {
       await _auth.sendPasswordResetEmail(email: email.trim().toLowerCase());
     } catch (e) {
+      throw Exception(e.toString());
+    } finally {
+      notifyListeners();
     }
   }
 
@@ -128,7 +141,9 @@ class AuthProvider with ChangeNotifier {
         notifyListeners();
       });
     } catch (e) {
-      print(e.toString());
+      throw Exception(e.toString());
+    } finally {
+      notifyListeners();
     }
   }
 }

@@ -3,21 +3,23 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:user_app/core/models/buy_product_model.dart';
 import 'package:user_app/core/providers/orders_provider.dart';
- import 'package:user_app/ui/widgets/log_in_suggestion.dart';
-import '../../../core/models/orders_model.dart';
-import '../../../core/providers/auth_provider.dart';
-import '../../../core/providers/cart_provider.dart';
-import '../../../core/providers/user_data_provider.dart';
-import '../../constants/route_name.dart';
-import '../../utils/my_border.dart';
-import '../../utils/my_snackbar.dart';
+import 'package:user_app/ui/widgets/log_in_suggestion.dart';
+import '../../core/models/orders_model.dart';
+import '../../core/providers/auth_provider.dart';
+import '../../core/providers/cart_provider.dart';
+import '../../core/providers/user_data_provider.dart';
+import '../constants/route_name.dart';
+import '../utils/my_border.dart';
+import '../utils/my_snackbar.dart';
 import 'package:uuid/uuid.dart';
 
-class BuyScreen extends StatefulWidget {
+import '../widgets/text_field_for_address.dart';
+
+class ProductPurchaseScreen extends StatefulWidget {
   final List<BuyProductModel> products;
   final double totalPrice;
   final bool fromCart;
-  const BuyScreen({
+  const ProductPurchaseScreen({
     super.key,
     required this.products,
     required this.totalPrice,
@@ -25,10 +27,10 @@ class BuyScreen extends StatefulWidget {
   });
 
   @override
-  State<BuyScreen> createState() => _BuyScreenState();
+  State<ProductPurchaseScreen> createState() => _ProductPurchaseScreenState();
 }
 
-class _BuyScreenState extends State<BuyScreen> {
+class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
   int currentStep = 0;
   bool isCompleted = false;
   final _formKey = GlobalKey<FormState>();
@@ -43,7 +45,6 @@ class _BuyScreenState extends State<BuyScreen> {
   late TextEditingController countryController;
   late TextEditingController latitudeController;
   late TextEditingController longitudeController;
- 
 
   //user address  FocusNode
   late FocusNode addressLine1FocusNode;
@@ -54,8 +55,8 @@ class _BuyScreenState extends State<BuyScreen> {
   late FocusNode countryFocusNode;
   late FocusNode latitudeFocusNode;
   late FocusNode longitudeFocusNode;
- 
-     var uuid = const Uuid();
+
+  var uuid = const Uuid();
 
   @override
   void initState() {
@@ -71,7 +72,7 @@ class _BuyScreenState extends State<BuyScreen> {
     //Fetching lat and lon from google api
     latitudeController = TextEditingController();
     longitudeController = TextEditingController();
-   
+
     //user address  FocusNode
     addressLine1FocusNode = FocusNode();
     addressLine2FocusNode = FocusNode();
@@ -81,8 +82,6 @@ class _BuyScreenState extends State<BuyScreen> {
     countryFocusNode = FocusNode();
     latitudeFocusNode = FocusNode();
     longitudeFocusNode = FocusNode();
- 
- 
 
     Provider.of<UserDataProvider>(context, listen: false)
         .fetchUserData()
@@ -98,14 +97,8 @@ class _BuyScreenState extends State<BuyScreen> {
       countryController.text = userAddressData?.country ?? '';
       latitudeController.text = userAddressData?.latitude ?? '';
       longitudeController.text = userAddressData?.longitude ?? '';
-    
-   
     });
   }
-
- 
-
-  
 
   @override
   void dispose() {
@@ -119,7 +112,6 @@ class _BuyScreenState extends State<BuyScreen> {
     countryController.dispose();
     latitudeController.dispose();
     longitudeController.dispose();
-  
 
     addressLine1FocusNode.dispose();
     addressLine2FocusNode.dispose();
@@ -129,7 +121,6 @@ class _BuyScreenState extends State<BuyScreen> {
     countryFocusNode.dispose();
     latitudeFocusNode.dispose();
     longitudeFocusNode.dispose();
- 
   }
 
   @override
@@ -203,7 +194,7 @@ class _BuyScreenState extends State<BuyScreen> {
                               if (_selectedPayment == 1) {
                                 //fixing order id
 
-                                 var orderId = uuid.v6();
+                                var orderId = uuid.v6();
                                 var orderData = OrdersModel(
                                   orderId: orderId,
                                   customerId: userData.id,
@@ -228,20 +219,21 @@ class _BuyScreenState extends State<BuyScreen> {
                                 );
 
                                 var shippingAddress = ShippingAddress(
-                                  addressLine1:
-                                      addressLine1Controller.text.toString(),
-                                  addressLine2:
-                                      addressLine2Controller.text.toString(),
-                                  city: cityController.text.toString(),
-                                  state: stateController.text.toString(),
-                                  postalCode:
-                                      postalCodeController.text.toString(),
-                                  country: countryController.text.toString(),
-                                  latitude: latitudeController.text.toString(),
-                                  longitude:
-                                      longitudeController.text.toString(),
-                                  formattedAddress: '${addressLine1Controller.text.toString()}, ${addressLine2Controller.text.toString()}, ${cityController.text.toString()}, ${stateController.text.toString()} ${postalCodeController.text.toString()}, ${countryController.text.toString()}'
-                                );
+                                    addressLine1:
+                                        addressLine1Controller.text.toString(),
+                                    addressLine2:
+                                        addressLine2Controller.text.toString(),
+                                    city: cityController.text.toString(),
+                                    state: stateController.text.toString(),
+                                    postalCode:
+                                        postalCodeController.text.toString(),
+                                    country: countryController.text.toString(),
+                                    latitude:
+                                        latitudeController.text.toString(),
+                                    longitude:
+                                        longitudeController.text.toString(),
+                                    formattedAddress:
+                                        '${addressLine1Controller.text.toString()}, ${addressLine2Controller.text.toString()}, ${cityController.text.toString()}, ${stateController.text.toString()} ${postalCodeController.text.toString()}, ${countryController.text.toString()}');
 
                                 orderProcessing
                                     .addOrder(
@@ -262,15 +254,11 @@ class _BuyScreenState extends State<BuyScreen> {
                                 });
                               } else {
                                 MySnackBar().showSnackBar(
-                                    'Paymentmethod is not integrated yet',
+                                    'Payment method is not integrated yet',
                                     context);
                               }
                             } else if (isAddressStep) {
-                              final isValid = _formKey.currentState!.validate();
-                              if (isValid) {
-                                _formKey.currentState!.save();
-                                setState(() => currentStep += 1);
-                              }
+                              navigateToNextIfEverythingIsOkay();
                             } else {
                               setState(() => currentStep += 1);
                             }
@@ -288,6 +276,14 @@ class _BuyScreenState extends State<BuyScreen> {
           : orderPlaced();
     }
     return const Scaffold(body: LogInSuggestion());
+  }
+
+    void navigateToNextIfEverythingIsOkay() {
+    final isValid = _formKey.currentState!.validate();
+    if (isValid) {
+      _formKey.currentState!.save();
+      setState(() => currentStep += 1);
+    }
   }
 
   Widget orderPlaced() {
@@ -460,208 +456,97 @@ class _BuyScreenState extends State<BuyScreen> {
       key: _formKey,
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: TextFormField(
-              controller: addressLine1Controller,
-              focusNode: addressLine1FocusNode,
-              key: const ValueKey('addressLine1'),
-              textCapitalization: TextCapitalization.words,
-              validator: (value) =>
-                  value!.isEmpty ? 'Please fill your AddressLine1' : null,
-              maxLines: 1,
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                labelText: 'AddressLine1',
-                hintText: '123 Elm Street',
-                contentPadding: const EdgeInsets.all(12),
-                border: const OutlineInputBorder(),
-                enabledBorder: MyBorder.outlineInputBorder(context),
-                filled: true,
-                fillColor: Theme.of(context).cardColor,
-              ),
-              onEditingComplete: () =>
-                  FocusScope.of(context).requestFocus(addressLine2FocusNode),
-            ),
+          TextFieldForAddress(
+            controller: addressLine1Controller,
+            focusNode: addressLine1FocusNode,
+            valueKey: 'addressLine1',
+            textCapitalization: TextCapitalization.words,
+            validator: (value) =>
+                value!.isEmpty ? 'Please fill your AddressLine1' : null,
+            labelText: 'AddressLine1',
+            hintText: '23 Elm Street',
+            onEditingComplete: () =>
+                FocusScope.of(context).requestFocus(addressLine2FocusNode),
+          ),
+          TextFieldForAddress(
+            controller: addressLine2Controller,
+            focusNode: addressLine2FocusNode,
+            valueKey: 'addressLine2',
+            validator: (value) =>
+                value!.isEmpty ? 'Please fill your AddressLine2' : null,
+            labelText: 'AddressLine2',
+            hintText: 'Apt 4B',
+            onEditingComplete: () =>
+                FocusScope.of(context).requestFocus(cityFocusNode),
+          ),
+          TextFieldForAddress(
+            controller: cityController,
+            focusNode: cityFocusNode,
+            valueKey: 'City',
+            validator: (value) =>
+                value!.isEmpty ? 'Please enter your City' : null,
+            labelText: 'City',
+            hintText: 'Los Angeles',
+            onEditingComplete: () =>
+                FocusScope.of(context).requestFocus(stateFocusNode),
+          ),
+          TextFieldForAddress(
+            controller: stateController,
+            focusNode: stateFocusNode,
+            valueKey: 'State',
+            validator: (value) =>
+                value!.isEmpty ? 'Please enter your State' : null,
+            labelText: 'State',
+            hintText: 'CA',
+            onEditingComplete: () =>
+                FocusScope.of(context).requestFocus(postalCodeFocusNode),
+          ),
+          TextFieldForAddress(
+            controller: postalCodeController,
+            focusNode: postalCodeFocusNode,
+            valueKey: 'postalCode',
+            validator: (value) =>
+                value!.isEmpty ? 'Please enter your postal code' : null,
+            keyboardType: TextInputType.number,
+            labelText: 'Postal Code',
+            hintText: '90001',
+            onEditingComplete: () =>
+                FocusScope.of(context).requestFocus(countryFocusNode),
+          ),
+          TextFieldForAddress(
+            controller: countryController,
+            focusNode: countryFocusNode,
+            valueKey: 'country',
+            validator: (value) =>
+                value!.isEmpty ? 'Please enter your country' : null,
+            labelText: 'country',
+            hintText: 'USA',
+            onEditingComplete: () =>
+                FocusScope.of(context).requestFocus(latitudeFocusNode),
+          ),
+          TextFieldForAddress(
+            controller: latitudeController,
+            focusNode: latitudeFocusNode,
+            keyboardType: TextInputType.number,
+            valueKey: 'latitude',
+            labelText: 'latitude',
+            hintText: '-118.2437',
+            onEditingComplete: () =>
+                FocusScope.of(context).requestFocus(longitudeFocusNode),
           ),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: TextFormField(
-              controller: addressLine2Controller,
-              focusNode: addressLine2FocusNode,
-              key: const ValueKey('addressLine2'),
-              textCapitalization: TextCapitalization.words,
-              validator: (value) =>
-                  value!.isEmpty ? 'Please fill your AddressLine2' : null,
-              maxLines: 1,
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                labelText: 'AddressLine2',
-                hintText: 'Apt 4B',
-                contentPadding: const EdgeInsets.all(12),
-                border: const OutlineInputBorder(),
-                enabledBorder: MyBorder.outlineInputBorder(context),
-                filled: true,
-                fillColor: Theme.of(context).cardColor,
-              ),
-              onEditingComplete: () =>
-                  FocusScope.of(context).requestFocus(cityFocusNode),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: TextFormField(
-              controller: cityController,
-              focusNode: cityFocusNode,
-              key: const ValueKey('City'),
-              textCapitalization: TextCapitalization.words,
-              validator: (value) =>
-                  value!.isEmpty ? 'Please enter your City' : null,
-              maxLines: 1,
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                labelText: 'City',
-                hintText: 'Los Angeles',
-                contentPadding: const EdgeInsets.all(12),
-                border: const OutlineInputBorder(),
-                enabledBorder: MyBorder.outlineInputBorder(context),
-                filled: true,
-                fillColor: Theme.of(context).cardColor,
-              ),
-              onEditingComplete: () =>
-                  FocusScope.of(context).requestFocus(stateFocusNode),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: TextFormField(
-              controller: stateController,
-              focusNode: stateFocusNode,
-              key: const ValueKey('State'),
-              textCapitalization: TextCapitalization.words,
-              validator: (value) =>
-                  value!.isEmpty ? 'Please enter your State' : null,
-              maxLines: 1,
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                labelText: 'State',
-                hintText: 'CA',
-                contentPadding: const EdgeInsets.all(12),
-                border: const OutlineInputBorder(),
-                enabledBorder: MyBorder.outlineInputBorder(context),
-                filled: true,
-                fillColor: Theme.of(context).cardColor,
-              ),
-              onEditingComplete: () =>
-                  FocusScope.of(context).requestFocus(postalCodeFocusNode),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: TextFormField(
-              controller: postalCodeController,
-              focusNode: postalCodeFocusNode,
-              key: const ValueKey('postalCode'),
-              textCapitalization: TextCapitalization.words,
-              validator: (value) =>
-                  value!.isEmpty ? 'Please enter your postal code' : null,
-              maxLines: 1,
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                labelText: 'Postal Code',
-                hintText: '90001',
-                contentPadding: const EdgeInsets.all(12),
-                border: const OutlineInputBorder(),
-                enabledBorder: MyBorder.outlineInputBorder(context),
-                filled: true,
-                fillColor: Theme.of(context).cardColor,
-              ),
-              onEditingComplete: () =>
-                  FocusScope.of(context).requestFocus(countryFocusNode),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: TextFormField(
-              controller: countryController,
-              focusNode: countryFocusNode,
-              key: const ValueKey('country'),
-              textCapitalization: TextCapitalization.words,
-              validator: (value) =>
-                  value!.isEmpty ? 'Please enter your country' : null,
-              maxLines: 1,
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                labelText: 'country',
-                hintText: 'USA',
-                contentPadding: const EdgeInsets.all(12),
-                border: const OutlineInputBorder(),
-                enabledBorder: MyBorder.outlineInputBorder(context),
-                filled: true,
-                fillColor: Theme.of(context).cardColor,
-              ),
-              onEditingComplete: () =>
-                  FocusScope.of(context).requestFocus(latitudeFocusNode),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: TextFormField(
-              controller: latitudeController,
-              focusNode: latitudeFocusNode,
-              key: const ValueKey('latitude'),
-              maxLines: 1,
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'latitude',
-                hintText: '-118.2437',
-                contentPadding: const EdgeInsets.all(12),
-                border: const OutlineInputBorder(),
-                enabledBorder: MyBorder.outlineInputBorder(context),
-                filled: true,
-                fillColor: Theme.of(context).cardColor,
-              ),
-              onEditingComplete: () =>
-                  FocusScope.of(context).requestFocus(longitudeFocusNode),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: TextFormField(
+          TextFieldForAddress(
               controller: longitudeController,
               focusNode: longitudeFocusNode,
-              key: const ValueKey('longitude'),
-              maxLines: 1,
-              textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'longitude',
-                hintText: '-118.2437',
-                contentPadding: const EdgeInsets.all(12),
-                border: const OutlineInputBorder(),
-                enabledBorder: MyBorder.outlineInputBorder(context),
-                filled: true,
-                fillColor: Theme.of(context).cardColor,
-              ),
-              //TODO on editing complete will move to the next screen for details view and data submisstion
-            ),
+              textInputAction: TextInputAction.done,
+              valueKey: 'longitude',
+              labelText: 'longitude',
+              hintText: '-118.2437',
+               onEditingComplete:(){
+                 navigateToNextIfEverythingIsOkay();
+               }
           ),
-
-          
         ],
       ),
     );

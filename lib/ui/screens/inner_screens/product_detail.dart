@@ -293,7 +293,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: InkWell(
                   onTap: () {
                     Navigator.of(context).pushNamed(
-                      RouteName.buyScreen,
+                      RouteName.productPurchaseScreen,
                       arguments: {
                         'products': [
                           BuyProductModel(

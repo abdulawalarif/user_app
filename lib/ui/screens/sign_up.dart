@@ -62,11 +62,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         email: _userModel.email.toLowerCase().trim(),
         password: _password.trim(),
         userModel: _userModel,
-      )
-          .then((_) {
-        //if (Navigator.canPop(context)) Navigator.pop(context);
+      ).then((_) {
+        if (Navigator.canPop(context)) Navigator.pop(context);
       }).catchError((error) {
-
         if (error.toString().toLowerCase().contains('email')) {
           _isEmailValid = false;
           _emailErrorMessage = error.message.toString();
@@ -103,38 +101,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 // Upload Profile Picture
                 Center(
-                  child: Stack(children: [
-                    ImagePreview(imagePath: _pickedImagePath),
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: SizedBox(
-                        height: 26,
-                        width: 26,
-                        child: RawMaterialButton(
-                          elevation: 5,
-                          fillColor: Theme.of(context).primaryColor,
-                          shape: const CircleBorder(),
-                          onPressed: () async {
-                            MyAlertDialog.imagePicker(context)
-                                .then(
-                                  (pickedImagePath) => setState(
-                                    () => _pickedImagePath = pickedImagePath,
-                                  ),
-                                )
-                                .then(
-                                  (_) => _userModel.imageUrl = _pickedImagePath,
-                                );
-                          },
-                          child: const Icon(
-                            Icons.add_a_photo,
-                            color: Colors.white,
-                            size: 14,
+                  child: Stack(
+                    children: [
+                      ImagePreview(imagePath: _pickedImagePath),
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: SizedBox(
+                          height: 26,
+                          width: 26,
+                          child: RawMaterialButton(
+                            elevation: 5,
+                            fillColor: Theme.of(context).primaryColor,
+                            shape: const CircleBorder(),
+                            onPressed: () async {
+                              MyAlertDialog.imagePicker(context)
+                                  .then(
+                                    (pickedImagePath) => setState(
+                                      () => _pickedImagePath = pickedImagePath,
+                                    ),
+                                  )
+                                  .then(
+                                    (_) =>
+                                        _userModel.imageUrl = _pickedImagePath,
+                                  );
+                            },
+                            child: const Icon(
+                              Icons.add_a_photo,
+                              color: Colors.white,
+                              size: 14,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],),
+                    ],
+                  ),
                 ),
                 Form(
                   key: _formKey,
@@ -168,7 +169,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       // Email TextFormField
 
-                      ///TODO fixing duplicate email error problem on auth return appropriate error message 
+                      ///TODO fixing duplicate email error problem on auth return appropriate error message
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
@@ -311,10 +312,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               _isLoading
-                                  ?   CircularProgressIndicator(
-                                color: Theme.of(context).primaryColor,
-
-                              )
+                                  ? CircularProgressIndicator(
+                                      color: Theme.of(context).primaryColor,
+                                    )
                                   : const Text('Sign Up'),
                             ],
                           ),
