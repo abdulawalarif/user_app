@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:user_app/core/models/product_model.dart';
+import 'package:user_app/core/providers/firebase_service.dart';
 
 class ProductProvider with ChangeNotifier {
+  final FirebaseFirestore _fireStore = FireStoreService().instance;
+
   List<ProductModel> _products = [];
   bool _isFetched = false;
 
@@ -26,10 +29,7 @@ class ProductProvider with ChangeNotifier {
 
   Future<void> fetchProducts() async {
     if (_isFetched) return;
-    await FirebaseFirestore.instance
-        .collection('products')
-        .get()
-        .then((snapshot) {
+    await _fireStore.collection('products').get().then((snapshot) {
       snapshot.docs.forEach((element) {
         _products.insert(0, ProductModel.fromJson(element.data()));
       });
