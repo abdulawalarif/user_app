@@ -12,6 +12,7 @@ import 'package:user_app/ui/screens/log_in.dart';
 import 'package:user_app/ui/screens/sign_up.dart';
 import 'package:user_app/ui/screens/update_users_inofrmation.dart';
 import 'package:user_app/ui/screens/wishlist.dart';
+import '../../core/models/orders_model.dart';
 import '../screens/bottom_bar.dart';
 import '../screens/buy_screen/my_orders_status_screen.dart';
 import '../screens/buy_screen/orders_screen.dart';
@@ -78,15 +79,12 @@ class Routes {
         );
       case RouteName.ordersStatusScreen:
         Map<String, Object>? args = settings.arguments as Map<String, Object>;
-        String status = args['status'] as String;
-        String confirmedDate = args['confirmedDate'] as String;
-        String orderdDate = args['orderdDate'] as String;
+        OrdersModel ordersModel = args['OrdersModel'] as OrdersModel;
+     
 
         return SlidePageRoute(
           builder: (BuildContext context) => MyOrdersStatusScreen(
-            status: status,
-            confirmedDate: confirmedDate,
-            orderdDate: orderdDate,
+            ordersModel: ordersModel
           ),
         );
 

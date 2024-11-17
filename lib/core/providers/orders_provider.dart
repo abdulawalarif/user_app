@@ -7,12 +7,15 @@ typedef EitherError<T> = Future<Either<String, T>>;
 
 class OrdersProvider with ChangeNotifier {
   List<OrdersModel> _orderList = [];
-    bool _isFetched = false;
+  bool _isFetched = false;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
   List<OrdersModel> get orderList => _orderList;
 
-  Future<void> addOrder(
-      {required OrdersModel order,
-      required ShippingAddress shippingAddress}) async {
+  Future<void> addOrder({
+    required OrdersModel order,
+    required ShippingAddress shippingAddress,
+  }) async {
     try {
       final orderId = order.orderId;
       final jsonOrderData = order.toJson();
@@ -40,8 +43,10 @@ class OrdersProvider with ChangeNotifier {
   }
 
   Future<void> myOrders({required String customerId}) async {
+    _isLoading = true;
+    notifyListeners();
     _orderList.clear();
-       if (_isFetched) return;
+    if (_isFetched) return;
     try {
       //TODO writing some logic if the user do not have any oders on his profile
       final userDoc = await FirebaseFirestore.instance
@@ -59,21 +64,45 @@ class OrdersProvider with ChangeNotifier {
       }
 
       for (final orderId in ordersList) {
-        final orderDoc = await FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('orders')
             .doc(orderId as String)
             .get()
             .then((snapshot) {
           final orderData = OrdersModel.fromJson(snapshot.data()!);
+          // TODO filtering confirms order from the lists and deleting it's instace from the user orders doc id
 
           _orderList.insert(0, orderData);
-      
         });
       }
-          print('One user order: ${_orderList.length}');
-      notifyListeners();
     } catch (e) {
       throw Exception(e.toString());
+    } finally {
+      _isLoading = false;
+
+      notifyListeners();
+    }
+  }
+
+  Future<void> confirmOrder({required OrdersModel ordersModel}) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('orders')
+          .doc(ordersModel.orderId)
+          .update({
+        'status': 'confirmedByCustomer',
+        'updatedAt': DateTime.now().toIso8601String(),
+      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(ordersModel.customerId)
+          .update({
+        'orders': FieldValue.arrayRemove([ordersModel.orderId]),
+      });
+      _orderList.removeWhere((order) => order.orderId == ordersModel.orderId);
+      notifyListeners();
+    } catch (e) {
+      rethrow;
     }
   }
 }

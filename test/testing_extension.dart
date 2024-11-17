@@ -1,6 +1,9 @@
+
+import 'package:intl/intl.dart';
+
 void main() {
-  String text = 'Lorem ipsum is a dummy or placeholder text used in design.';
-  print(text.truncate(20));
+ 
+  print('11z f - dld - 2024-11-16T19:44:55.357816'.formate());
 }
 
 extension on String {
@@ -9,3 +12,17 @@ extension on String {
     return '${substring(0, maxLength)}$suffix';
   }
 }
+
+
+extension on String {
+  String formate() {
+    try {
+      DateTime dateTime = DateTime.parse(this);
+      return DateFormat('MMMM d, y').format(dateTime);
+    } catch (_) {
+      return 'Invalid date';
+    }
+  }
+}
+// Input: '2024-11-16T19:44:55.357816'.formate()
+// Output: November 16, 2024
