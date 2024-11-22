@@ -89,16 +89,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           child: Column(
                             children: [
                               _userBagListTile(
-                                  'My Orders',
-                                  mOrdersListIcon,
-                                  mTrailingIcon,
-                                  context,
-                                  () => Navigator.of(context).pushNamed(
-                                        RouteName.myOrdersScreen,
-                                        arguments: {
-                                             'userId': _userData.id,
-                                        }
-                                      ),),
+                                'My Orders',
+                                mOrdersListIcon,
+                                mTrailingIcon,
+                                context,
+                                () => Navigator.of(context).pushNamed(
+                                    RouteName.myOrdersScreen,
+                                    arguments: {
+                                      'userId': _userData.id,
+                                    }),
+                              ),
                               _userBagListTile(
                                   'Wishlist',
                                   mWishListIcon,
@@ -155,6 +155,35 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         //    Settings Section
 
                         _sectionTitle('Settings'),
+
+                        ListTile(
+                          leading: const Icon(Icons.policy_sharp),
+                          title: const Text('Privacy Policies'),
+                          onTap: (() async {
+                            // var url = 'https://sites.google.com/view/solutionpro';
+                            // if(await canLaunch(url)){
+                            //   await launch(url);
+                            // }
+                            // else
+                            // {
+                            //   throw "Cannot load url";
+                            // }
+                          }),
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.description),
+                          title: const Text('Terms Of Use'),
+                          onTap: (() async {
+                           
+                            // if(await canLaunch(url)){
+                            //   await launch(url);
+                            // }
+                            // else
+                            // {
+                            //   throw "Cannot load url";
+                            // }
+                          }),
+                        ),
                         Card(
                           child: Column(
                             children: [
@@ -169,7 +198,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 },
                               ),
                               ListTile(
-                                  title: Text('Sign Out'),
+                                  title:const Text('Sign Out'),
                                   leading:
                                       _customIcon(Icons.exit_to_app_outlined),
                                   onTap: () {
@@ -234,11 +263,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   Widget _uploadPictureFab() {
     // Starting Fab position
-    final double defaultTopMargin = 200.0 - 20;
+    const double defaultTopMargin = 200.0 - 20;
     // pixels from top where scalling should start
-    final double scaleStart = defaultTopMargin / 2;
+    const double scaleStart = defaultTopMargin / 2;
     // pixels from top where scalling should end
-    final double scaleEnd = scaleStart / 2;
+    const double scaleEnd = scaleStart / 2;
 
     double top = defaultTopMargin;
     double scale = 1.0;

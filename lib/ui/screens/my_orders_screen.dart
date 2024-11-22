@@ -16,11 +16,10 @@ class MyOrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<OrdersProvider>(context, listen: false)
           .myOrders(customerId: userId);
     });
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Orders'),
@@ -37,6 +36,12 @@ class MyOrdersScreen extends StatelessWidget {
               itemCount: myOrdersProvider.orderList.length,
               itemBuilder: (context, index) {
                 final order = myOrdersProvider.orderList[index];
+                final productNames = order.products
+                    .asMap()
+                    .entries
+                    .map((entry) =>
+                        '${entry.key + 1}. ${entry.value.productName}')
+                    .join(', ');
                 return Card(
                   margin: const EdgeInsets.all(8.0),
                   child: ListTile(
@@ -45,7 +50,7 @@ class MyOrdersScreen extends StatelessWidget {
                     subtitle: Padding(
                       padding: const EdgeInsets.fromLTRB(4, 16, 0, 0),
                       child: Text(
-                        'Status: ${order.status}',
+                        'Products: $productNames\nStatus: ${order.status}',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
@@ -115,5 +120,12 @@ extension on String {
     } catch (e) {
       return 'Invalid date';
     }
+  }
+}
+
+extension on String {
+  String truncate(int maxLength, {String suffix = '...'}) {
+    if (length <= maxLength) return this;
+    return '${substring(0, maxLength)}$suffix';
   }
 }

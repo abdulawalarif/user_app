@@ -9,11 +9,11 @@ import '../../core/providers/auth_provider.dart';
 import '../../core/providers/cart_provider.dart';
 import '../../core/providers/user_data_provider.dart';
 import '../constants/route_name.dart';
-import '../utils/my_border.dart';
 import '../utils/my_snackbar.dart';
 import 'package:uuid/uuid.dart';
-
 import '../widgets/text_field_for_address.dart';
+
+
 
 class ProductPurchaseScreen extends StatefulWidget {
   final List<BuyProductModel> products;
@@ -122,11 +122,12 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
     latitudeFocusNode.dispose();
     longitudeFocusNode.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     var userData = Provider.of<UserDataProvider>(context).userData;
     final orderProcessing = Provider.of<OrdersProvider>(context);
+    
 
     final isLoggedIn = Provider.of<AuthProvider>(context).isLoggedIn;
     if (isLoggedIn) {
@@ -145,8 +146,9 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
                       type: StepperType.horizontal,
                       steps: getStepps(),
                       currentStep: currentStep,
-                      onStepTapped: (step) =>
-                          setState(() => currentStep = step),
+                      //If you want user to be capable fo navigating between steps by clicking on the steps click then uncomment this lines..
+                      // onStepTapped: (step) =>
+                      //     setState(() => currentStep = step),
                       onStepContinue: () {
                         final isLastStep =
                             currentStep == getStepps().length - 1;

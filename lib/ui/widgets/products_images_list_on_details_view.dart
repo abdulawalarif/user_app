@@ -4,16 +4,14 @@ import 'package:shimmer/shimmer.dart';
 
 /// product images list widget
 /// 
+// ignore: must_be_immutable
 class ProductImagesListWidget extends StatefulWidget {
+  final List<String> productImgList;
 
-    ProductImagesListWidget({
+     ProductImagesListWidget({
     super.key,
     required this.productImgList,
   });
-
-  // image list
-  List<String> productImgList;
-  // Dimensions for the main image display
   double height = 330;
   double width = 350;
 

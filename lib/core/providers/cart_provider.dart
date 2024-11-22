@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user_app/core/models/cart_model.dart';
 
 class CartProvider with ChangeNotifier {
+  
   Map<String, CartModel> _cartItems = {};
   CartProvider() {
     loadCart();

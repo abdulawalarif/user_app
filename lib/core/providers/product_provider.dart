@@ -4,10 +4,13 @@ import 'package:user_app/core/models/product_model.dart';
 import 'package:user_app/core/providers/firebase_service.dart';
 
 class ProductProvider with ChangeNotifier {
+  ProductProvider() {
+    fetchProducts();
+  }
+
   final FirebaseFirestore _fireStore = FireStoreService().instance;
 
   List<ProductModel> _products = [];
-  bool _isFetched = false;
 
   List<ProductModel> get products => _products;
 
@@ -28,12 +31,10 @@ class ProductProvider with ChangeNotifier {
       .toList();
 
   Future<void> fetchProducts() async {
-    if (_isFetched) return;
     await _fireStore.collection('products').get().then((snapshot) {
       snapshot.docs.forEach((element) {
         _products.insert(0, ProductModel.fromJson(element.data()));
       });
-      _isFetched = true;
       notifyListeners();
     });
   }

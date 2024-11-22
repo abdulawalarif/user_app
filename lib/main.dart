@@ -37,26 +37,20 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => ProductProvider()),
             ChangeNotifierProvider(create: (_) => CartProvider()),
             ChangeNotifierProvider(create: (_) => WishlistProvider()),
+            ChangeNotifierProvider(create: (_) => ProductProvider()),
             ChangeNotifierProvider(create: (_) => OrdersProvider()),
-            
             ChangeNotifierProvider(
                 create: (_) => ThemeChangeProvider(isDarkTheme)),
           ],
           child: Consumer<ThemeChangeProvider>(
             builder: (_, themeChangeProvider, __) {
-              return Consumer<ProductProvider>(
-                builder:  (_, productProvider, __) {
-                  productProvider.fetchProducts();
-
-                  return MaterialApp(
+              return MaterialApp(
                     debugShowCheckedModeBanner: false,
                     title: 'Store App',
                     theme: Styles.getThemeData(themeChangeProvider.isDarkTheme),
                     initialRoute: RouteName.mainScreen,
                     onGenerateRoute: Routes.generatedRoute,
                   );
-                },
-              );
             },
           ),
         );

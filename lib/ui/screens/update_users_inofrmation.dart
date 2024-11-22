@@ -9,8 +9,8 @@ import 'package:user_app/ui/utils/my_alert_dialog.dart';
 import 'package:user_app/ui/utils/my_border.dart';
 
 class UpdateUsersInformation extends StatefulWidget {
-  UserModel userModel;
-  UpdateUsersInformation({super.key, required this.userModel});
+ final  UserModel userModel;
+   const UpdateUsersInformation({super.key, required this.userModel});
 
   @override
   State<UpdateUsersInformation> createState() => _UpdateUsersInformationState();
@@ -73,7 +73,9 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
             .putFile(File(widget.userModel.imageUrl))
             .then((_) async => ref.getDownloadURL())
             .then((imageUrl) => widget.userModel.imageUrl = imageUrl)
-            .catchError((e) {});
+            .catchError((e) {
+              throw e.toString();
+            });
       } else {
         widget.userModel.imageUrl = initialImagePath;
       }

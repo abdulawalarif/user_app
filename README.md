@@ -1,16 +1,16 @@
 
-# E-commece with Flutter dart and firebase
+# E-commerce with Flutter dart and firebase
 
-## This E-commece project is for user and there is another app for admin to manage the shop [Admin app](https://github.com/abdulawalarif/shop_owner_app.git)
+## This E-commerce project is for user and there is another app for admin to manage the shop [Admin app](https://github.com/abdulawalarif/shop_owner_app.git)
   
-**It's a fully fledged applicaiton for small business to manage business their online.**
+**It's a fully fledged application for small business**
 
 
 
 ## Features
 * **Authentication:**  
 
-## File stracture
+## File structure
 
     
     ├── lib
@@ -74,6 +74,7 @@ please submit an issue using the issues tab above. If you would like to submit a
 * **Fetching category from network:** Future improvements could include fetching the product categories from the network.
 * **Advanced Caching:** Currently there is no caching mechanism for this application. 
 * **Facebook Auth:** Facebook Auth is not configured. 
+* **Sometime registering a user with email and password:** do not pop that widget instantly
 * **Improved Error Handling:** The current implementation focuses on successful responses. Implementing comprehensive error handling for failed network requests would make the app more robust.
 
 
@@ -84,7 +85,9 @@ please submit an issue using the issues tab above. If you would like to submit a
   
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+
+The MIT License [MIT](https://choosealicense.com/licenses/mit/). Please view the [License](LICENSE) File for more information.
+
 
 
 

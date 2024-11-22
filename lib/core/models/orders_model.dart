@@ -25,6 +25,21 @@ class OrdersModel {
     required this.products,
   });
 
+  factory OrdersModel.loading() {
+    return OrdersModel(
+      orderId: '',
+      customerId: '',
+      orderDate: DateTime.now(),
+      totalItemsOrdered: 0,
+      totalAmount: 0,
+      paymentStatus: '',
+      status: '',
+      createdAt: '',
+      updatedAt: '',
+      products: [],
+    );
+  }
+
   // Convert JSON to OrdersModel
   factory OrdersModel.fromJson(Map<String, dynamic> json) {
     return OrdersModel(
