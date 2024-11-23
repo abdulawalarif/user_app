@@ -39,7 +39,7 @@ class OrdersProvider with ChangeNotifier {
   }
 
 
-  Future<void> myOrders({required String customerId}) async {
+   Future<void> myOrders({required String customerId}) async {
     _isLoading = true;
     notifyListeners();
     _orderList.clear();
@@ -56,7 +56,7 @@ class OrdersProvider with ChangeNotifier {
       for (final orderId in ordersList) {
         await _fireStore
             .collection('orders')
-            .doc(orderId as String)
+            .doc(orderId)
             .get()
             .then((snapshot) {
           final orderData = OrdersModel.fromJson(snapshot.data()!);
@@ -70,6 +70,7 @@ class OrdersProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
 
 
   Future<void> confirmOrder({required OrdersModel ordersModel}) async {

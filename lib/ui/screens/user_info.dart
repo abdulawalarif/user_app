@@ -174,7 +174,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           leading: const Icon(Icons.description),
                           title: const Text('Terms Of Use'),
                           onTap: (() async {
-                           
                             // if(await canLaunch(url)){
                             //   await launch(url);
                             // }
@@ -198,7 +197,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 },
                               ),
                               ListTile(
-                                  title:const Text('Sign Out'),
+                                  title: const Text('Sign Out'),
                                   leading:
                                       _customIcon(Icons.exit_to_app_outlined),
                                   onTap: () {

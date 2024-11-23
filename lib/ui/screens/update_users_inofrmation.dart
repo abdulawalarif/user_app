@@ -9,8 +9,8 @@ import 'package:user_app/ui/utils/my_alert_dialog.dart';
 import 'package:user_app/ui/utils/my_border.dart';
 
 class UpdateUsersInformation extends StatefulWidget {
- final  UserModel userModel;
-   const UpdateUsersInformation({super.key, required this.userModel});
+  final UserModel userModel;
+  const UpdateUsersInformation({super.key, required this.userModel});
 
   @override
   State<UpdateUsersInformation> createState() => _UpdateUsersInformationState();
@@ -60,22 +60,38 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
           Provider.of<UserDataProvider>(context, listen: false);
       setState(() => _isLoading = true);
       if (initialImagePath != widget.userModel.imageUrl) {
-        final FirebaseStorage _storage = FirebaseStorage.instance;
-        final reference = _storage.refFromURL(initialImagePath);
-        await reference.delete();
-        // Upload picture to Firebase Storage
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('userimages')
-            .child(widget.userModel.id + '.jpg');
-
-        await ref
-            .putFile(File(widget.userModel.imageUrl))
-            .then((_) async => ref.getDownloadURL())
-            .then((imageUrl) => widget.userModel.imageUrl = imageUrl)
-            .catchError((e) {
-              throw e.toString();
-            });
+        //Checking if the user is logged In using google account then writing logic for changing that image also.
+        if (initialImagePath.contains('firebasestorage')) {
+          //user have images that if not from google account
+          final FirebaseStorage _storage = FirebaseStorage.instance;
+          final reference = _storage.refFromURL(initialImagePath);
+          await reference.delete();
+          // Upload picture to Firebase Storage
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('userimages')
+              .child(widget.userModel.id + '.jpg');
+          await ref
+              .putFile(File(widget.userModel.imageUrl))
+              .then((_) async => ref.getDownloadURL())
+              .then((imageUrl) => widget.userModel.imageUrl = imageUrl)
+              .catchError((e) {
+            throw e.toString();
+          });
+        } else {
+           // Upload picture to Firebase Storage
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('userimages')
+              .child(widget.userModel.id + '.jpg');
+          await ref
+              .putFile(File(widget.userModel.imageUrl))
+              .then((_) async => ref.getDownloadURL())
+              .then((imageUrl) => widget.userModel.imageUrl = imageUrl)
+              .catchError((e) {
+            throw e.toString();
+          });
+        }
       } else {
         widget.userModel.imageUrl = initialImagePath;
       }
@@ -288,23 +304,21 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                                           FocusScope.of(context).unfocus();
                                         },
                                   child: Center(
-                                    child:!_isLoading? Text(
-                                      'Update !'.toUpperCase(),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ):  CircularProgressIndicator(
-                                      color: Theme.of(context).primaryColor,
-
-                                    ),
+                                    child: !_isLoading
+                                        ? Text(
+                                            'Update !'.toUpperCase(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 0.5,
+                                            ),
+                                          )
+                                        : const CircularProgressIndicator(),
                                   ),
                                 ),
                               ),
                             ),
-
                           ],
                         ),
                       ],

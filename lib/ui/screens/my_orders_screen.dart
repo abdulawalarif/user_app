@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +17,7 @@ class MyOrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<OrdersProvider>(context, listen: false)
           .myOrders(customerId: userId);
     });
@@ -48,10 +49,21 @@ class MyOrdersScreen extends StatelessWidget {
                     title: Text(order.createdAt.formattedDate(),
                         style: Theme.of(context).textTheme.titleMedium),
                     subtitle: Padding(
-                      padding: const EdgeInsets.fromLTRB(4, 16, 0, 0),
-                      child: Text(
-                        'Products: $productNames\nStatus: ${order.status}',
-                        style: Theme.of(context).textTheme.titleLarge,
+                      padding: const EdgeInsets.fromLTRB(4, 1, 0, 0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Products: $productNames',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                         const Gap(4),
+                          Text(
+                            'STATUS: ${order.status}',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
                       ),
                     ),
                     trailing: Icon(
