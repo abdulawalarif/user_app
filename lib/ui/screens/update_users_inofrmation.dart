@@ -62,7 +62,7 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
       if (initialImagePath != widget.userModel.imageUrl) {
         //Checking if the user is logged In using google account then writing logic for changing that image also.
         if (initialImagePath.contains('firebasestorage')) {
-          //user have images that if not from google account
+          //user have images that is not from google account
           final FirebaseStorage _storage = FirebaseStorage.instance;
           final reference = _storage.refFromURL(initialImagePath);
           await reference.delete();

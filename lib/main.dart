@@ -10,7 +10,7 @@ import 'package:user_app/core/providers/product_provider.dart';
 import 'package:user_app/core/providers/theme_change_provider.dart';
 import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/core/providers/wishlist_provider.dart';
- import 'ui/constants/route_name.dart';
+import 'ui/constants/route_name.dart';
 import 'ui/constants/routes.dart';
 import 'ui/constants/theme_data.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +23,7 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp(isDarkTheme: isDarkTheme));
 }
+
 class MyApp extends StatelessWidget {
   final bool isDarkTheme;
   const MyApp({super.key, required this.isDarkTheme});
@@ -45,12 +46,12 @@ class MyApp extends StatelessWidget {
           child: Consumer<ThemeChangeProvider>(
             builder: (_, themeChangeProvider, __) {
               return MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    title: 'Store App',
-                    theme: Styles.getThemeData(themeChangeProvider.isDarkTheme),
-                    initialRoute: RouteName.mainScreen,
-                    onGenerateRoute: Routes.generatedRoute,
-                  );
+                debugShowCheckedModeBanner: false,
+                title: 'Store App',
+                theme: Styles.getThemeData(themeChangeProvider.isDarkTheme),
+                initialRoute: RouteName.mainScreen,
+                onGenerateRoute: Routes.generatedRoute,
+              );
             },
           ),
         );
@@ -58,7 +59,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 
 extension Log on Object {
   void log() => devtools.log(toString());

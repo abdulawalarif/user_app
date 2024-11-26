@@ -8,7 +8,13 @@
 
 
 ## Features
-* **Authentication:**  
+* **Authentication:**  1. Google 2. Email Password. With complete user profile management. 
+* **Products :**  
+* **orders :**
+* **Cart :**  
+* **Favourite products :**
+* **Theming :**    
+
 
 ## File structure
 
@@ -62,6 +68,7 @@ Connect a physical device or start a virtual device on your machine
 
 ## How to tweak this project for your own uses
 * **Change the Firebase projects:** Create your 
+* **Add SHA256 key for google auth:** Create your 
 
  
 
@@ -72,11 +79,11 @@ please submit an issue using the issues tab above. If you would like to submit a
 
 ##  Known Issues and Future Work
 * **Fetching category from network:** Future improvements could include fetching the product categories from the network.
-* **Advanced Caching:** Currently there is no caching mechanism for this application. 
 * **Facebook Auth:** Facebook Auth is not configured. 
-* **Sometime registering a user with email and password:** do not pop that widget instantly
 * **Improved Error Handling:** The current implementation focuses on successful responses. Implementing comprehensive error handling for failed network requests would make the app more robust.
-
+* **Review on products:** Making review on product funtional. 
+* **Adding payment method:** Online payment integrations. 
+* **Making Order status a Stream:** 
 
 ## Author
 

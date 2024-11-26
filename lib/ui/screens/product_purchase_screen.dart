@@ -283,6 +283,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
     void navigateToNextIfEverythingIsOkay() {
     final isValid = _formKey.currentState!.validate();
     if (isValid) {
+       FocusScope.of(context).unfocus();
       _formKey.currentState!.save();
       setState(() => currentStep += 1);
     }
@@ -532,7 +533,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
             keyboardType: TextInputType.number,
             valueKey: 'latitude',
             labelText: 'latitude',
-            hintText: '-118.2437',
+            hintText: '33.97365',
             onEditingComplete: () =>
                 FocusScope.of(context).requestFocus(longitudeFocusNode),
           ),
@@ -544,7 +545,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
               textInputAction: TextInputAction.done,
               valueKey: 'longitude',
               labelText: 'longitude',
-              hintText: '-118.2437',
+              hintText: '-118.24904',
                onEditingComplete:(){
                  navigateToNextIfEverythingIsOkay();
                }

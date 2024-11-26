@@ -6,6 +6,17 @@ import 'package:user_app/core/providers/orders_provider.dart';
 import '../../../core/models/orders_model.dart';
 import '../../widgets/order_status_setup.dart';
 
+
+/*
+Here with orders i will get three status from adim 
+1. "Pending"
+2. "Received"
+3. "Delivered"
+based on that i have rendered my widget for showing the status of orders
+
+Now if the status is Delivered i have activated the button for user to confirm the delivery and sent a 
+status that "confirmedByCustomer"
+*/
 class MyOrdersStatusScreen extends StatefulWidget {
   final OrdersModel ordersModel;
 
