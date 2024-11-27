@@ -12,18 +12,22 @@ class ProductModel with ChangeNotifier {
   String description;
   List<String>? imageUrls;
   String category;
-    bool isPopular;
+  bool isPopular;
+  String updatedAt;
+  String createdAt;
 
-  ProductModel(
-      {this.id = '',
-      this.name = '',
-      this.price = 0,
-      this.brand = '',
-      this.description = '',
-      this.imageUrls,
-      this.category = '',
-        this.isPopular = false,
-     });
+  ProductModel({
+    this.id = '',
+    this.name = '',
+    this.price = 0,
+    this.brand = '',
+    this.description = '',
+    this.imageUrls,
+    this.category = '',
+    this.createdAt = '',
+    this.updatedAt = '',
+    this.isPopular = false,
+  });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) =>
       _$ProductModelFromJson(json);

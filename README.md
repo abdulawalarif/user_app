@@ -38,10 +38,10 @@
 <img src="ProjectSnap/light_theme/12.png" width="15%" alt="Demo of this application" />
 <img src="ProjectSnap/light_theme/13.png" width="15%" alt="Demo of this application" />
 <img src="ProjectSnap/light_theme/14.png" width="15%" alt="Demo of this application" />
-<img src="ProjectSnap/light_theme/49.png" width="15%" alt="order confirmed" />
 <img src="ProjectSnap/light_theme/44.png" width="15%" alt="Demo of this application" />
 <img src="ProjectSnap/light_theme/26.png" width="15%" alt="Demo of this application" />
 <img src="ProjectSnap/light_theme/21.png" width="15%" alt="OrderPlacing first step" />
+<img src="ProjectSnap/light_theme/49.png" width="15%" alt="order confirmed" />
 <img src="ProjectSnap/dark_theme/40.png" width="15%" alt="Registration Form" />
 <img src="ProjectSnap/dark_theme/33.png" width="15%" alt="Demo of this application" />
 <img src="ProjectSnap/dark_theme/39.png" width="15%" alt="Demo of this application" />
@@ -99,12 +99,13 @@ please submit an issue using the issues tab above. If you would like to submit a
 * **Improved Error Handling:** The current implementation focuses on successful responses. Implementing comprehensive error handling for failed network requests would make the app more robust.
 * **Review on products:** Making review on product funtional. 
 * **Adding payment method:** Online payment integrations. 
+* **Pull-to-Refresh :**
 * **Improving recomendation algorithm:** Storing user's interections with different products and based on that recomending products to specific user.
 
 ## Author
 
 - [@abdulawalarif](https://github.com/abdulawalarif) 
--  User app is build from this [Boilerplate](https://github.com/nur4nnis4/store_app)
+- This project is cloned from this [StoreApp](https://github.com/nur4nnis4/store_app)
   
 ## License
 
