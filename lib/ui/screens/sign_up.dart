@@ -185,6 +185,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
                           key: const ValueKey('Email'),
+                    //         validator: (_) {
+                    //   if (!validateEmail(
+                    //       emailController.text.trim().toString(),)) {
+                    //     return 'Enter a valid email';
+                    //   } else {
+                    //     return null;
+                    //   }
+                    // },
                           validator: (value) {
                             if (!_isEmailValid) {
                               return _emailErrorMessage;
@@ -359,4 +367,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+}
+
+bool validateEmail(String email) {
+  final emailReg = RegExp(
+      r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+  return emailReg.hasMatch(email);
 }
