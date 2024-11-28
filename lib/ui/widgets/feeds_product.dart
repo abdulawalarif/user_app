@@ -43,7 +43,6 @@ class FeedsProduct extends StatelessWidget {
                     ),
                   ),
                   //here this logic is for new product badge if productd creatio date is less then a week it is gonna show new
-
                   isNew(dateOfCreation: product.createdAt)
                       ? const badges.Badge(
                           badgeStyle: badges.BadgeStyle(

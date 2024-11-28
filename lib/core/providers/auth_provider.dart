@@ -80,7 +80,7 @@ class AuthProvider with ChangeNotifier {
 
           final userCredential = await _auth.signInWithCredential(credential);
           final user = userCredential.user;
-
+ 
           if (user != null) {
             final userDoc = await FirebaseFirestore.instance
                 .collection('users')
@@ -147,3 +147,4 @@ class AuthProvider with ChangeNotifier {
     }
   }
 }
+

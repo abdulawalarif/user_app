@@ -125,7 +125,11 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
   
   @override
   Widget build(BuildContext context) {
-    var userData = Provider.of<UserDataProvider>(context).userData;
+    var userData;
+    Provider.of<UserDataProvider>(context, listen: false).fetchUserData().then((_){
+  userData = Provider.of<UserDataProvider>(context,listen:  false).userData;
+    });
+   
     final orderProcessing = Provider.of<OrdersProvider>(context);
     
 
@@ -185,7 +189,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
                             text: 'Back',
                           ),
                         Button(
-                          onPressed: () {
+                          onPressed: ()async {
                             final isLastStep =
                                 currentStep == getStepps().length - 1;
                             final isAddressStep =
@@ -236,8 +240,8 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
                                         longitudeController.text.toString(),
                                     formattedAddress:
                                         '${addressLine1Controller.text.toString()}, ${addressLine2Controller.text.toString()}, ${cityController.text.toString()}, ${stateController.text.toString()} ${postalCodeController.text.toString()}, ${countryController.text.toString()}');
-
-                                orderProcessing
+                              if(!orderProcessing.isLoading){
+                                await  orderProcessing
                                     .addOrder(
                                   order: orderData,
                                   shippingAddress: shippingAddress,
@@ -254,6 +258,11 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
                                 }).catchError((error) {
                                   print("Error: $error");
                                 });
+
+
+
+                              }
+                              
                               } else {
                                 MySnackBar().showSnackBar(
                                     'Payment method is not integrated yet',
@@ -266,7 +275,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
                             }
                           },
                           text: currentStep == getStepps().length - 1
-                              ? 'Confirm'
+                              ? orderProcessing.isLoading?'...':'Confirm'
                               : 'Next',
                         ),
                       ],

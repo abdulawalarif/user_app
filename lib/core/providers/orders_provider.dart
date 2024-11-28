@@ -4,40 +4,50 @@ import 'package:user_app/core/models/orders_model.dart';
 import 'package:dartz/dartz.dart';
 import 'firebase_service.dart';
 
-
 typedef EitherError<T> = Future<Either<String, T>>;
+
 class OrdersProvider with ChangeNotifier {
   final FirebaseFirestore _fireStore = FireStoreService().instance;
 
-  List<OrdersModel> _orderList = [];
-  bool _isFetched = false;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  List<OrdersModel> get orderList => _orderList;
 
   Future<void> addOrder({
     required OrdersModel order,
     required ShippingAddress shippingAddress,
   }) async {
-
+    _isLoading = true;
+    notifyListeners();
     try {
       final orderId = order.orderId;
+
       final jsonOrderData = order.toJson();
       jsonOrderData['products'] =
           order.products.map((product) => product.toJson()).toList();
       await _fireStore.collection('orders').doc(orderId).set(jsonOrderData);
+
+      /*
+      Here I am storing users oders information under customar accounts also so that one clints app don't get the data of another clinets order in their cache
+      */
+
+
       await _fireStore.collection('users').doc(order.customerId).set(
+        // Correct here user ID is not found
         {
-          'shippingAddress': shippingAddress.toJson(),
+          'shippingAddress':
+              shippingAddress.toJson(), // Storing address under users ID
           'orders': FieldValue.arrayUnion([orderId]),
         },
         SetOptions(merge: true),
       );
     } catch (e) {
+      print('Order debug: ${e.toString()}');
       throw Exception(e.toString());
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
-
 
   //  Future<void> myOrders({required String customerId}) async {
   //   _isLoading = true;
@@ -71,24 +81,26 @@ class OrdersProvider with ChangeNotifier {
   //   }
   // }
 
-
-
-Stream<List<OrdersModel>> streamMyOrders(String customerId) {
-  return _fireStore.collection('users').doc(customerId).snapshots().asyncMap((userDoc) async {
-    if (!userDoc.exists) return [];
-    final ordersList = userDoc.data()?['orders'] as List<dynamic>? ?? [];
-    if (ordersList.isEmpty) return [];
-    List<OrdersModel> orders = [];
-    for (final orderId in ordersList) {
-      final orderDoc = await _fireStore.collection('orders').doc(orderId).get();
-      if (orderDoc.exists) {
-        orders.add(OrdersModel.fromJson(orderDoc.data()!));
+  Stream<List<OrdersModel>> streamMyOrders(String customerId) {
+    return _fireStore
+        .collection('users')
+        .doc(customerId)
+        .snapshots()
+        .asyncMap((userDoc) async {
+      if (!userDoc.exists) return [];
+      final ordersList = userDoc.data()?['orders'] as List<dynamic>? ?? [];
+      if (ordersList.isEmpty) return [];
+      List<OrdersModel> orders = [];
+      for (final orderId in ordersList) {
+        final orderDoc =
+            await _fireStore.collection('orders').doc(orderId).get();
+        if (orderDoc.exists) {
+          orders.add(OrdersModel.fromJson(orderDoc.data()!));
+        }
       }
-    }
-    return orders;
-  });
-}
-
+      return orders;
+    });
+  }
 
   Future<void> confirmOrder({required OrdersModel ordersModel}) async {
     try {
@@ -99,8 +111,6 @@ Stream<List<OrdersModel>> streamMyOrders(String customerId) {
       await _fireStore.collection('users').doc(ordersModel.customerId).update({
         'orders': FieldValue.arrayRemove([ordersModel.orderId]),
       });
-      _orderList.removeWhere((order) => order.orderId == ordersModel.orderId);
-      notifyListeners();
     } catch (e) {
       rethrow;
     }

@@ -6,7 +6,7 @@ import 'package:user_app/core/models/user_model.dart';
 import 'firebase_service.dart';
 
 class UserDataProvider with ChangeNotifier {
-  UserDataProvider(){
+  UserDataProvider() {
     fetchUserData();
   }
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -57,8 +57,11 @@ class UserDataProvider with ChangeNotifier {
         await _fireStore
             .collection('users')
             .doc(userModel.id)
-            .set(userModel.toJson());
-        notifyListeners();
+            .set(userModel.toJson())
+            .then((_) async {
+          await fetchUserData();
+        });
+       
       } else {
         throw Exception('No authenticated user found');
       }
