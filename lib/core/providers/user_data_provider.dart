@@ -20,21 +20,7 @@ class UserDataProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void resetUserData() {
-    _userData = UserModel();
-    _shippingAddress = ShippingAddress(
-      addressLine1: '',
-      addressLine2: '',
-      city: '',
-      state: '',
-      postalCode: '',
-      country: '',
-      latitude: '',
-      longitude: '',
-      formattedAddress: '',
-    );
-    notifyListeners();
-  }
+  
 
   Future<UserModel> fetchUserData() async {
     try {

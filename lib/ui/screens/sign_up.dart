@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_app/core/models/user_model.dart';
 import 'package:user_app/core/providers/auth_provider.dart';
+import 'package:user_app/ui/utils/email_validator.dart';
 import 'package:user_app/ui/utils/my_alert_dialog.dart';
-import 'package:user_app/ui/utils/my_border.dart';
 import 'package:user_app/ui/widgets/image_preview.dart';
 import '../constants/route_name.dart';
+import '../widgets/reusable_text_field.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -15,25 +16,27 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  late FocusNode _passwordNode;
+  late FocusNode _fullNameNode;
+   late FocusNode _passwordNode;
   late FocusNode _emailNode;
   late FocusNode _phoneNumberNode;
   late FocusNode _addressNode;
   String _pickedImagePath = '';
   final _formKey = GlobalKey<FormState>();
-  bool _passwordIsVisible = false;
   late UserModel _userModel;
   late String _password;
   late bool _isEmailValid;
   late bool _isLoading;
-  String _emailErrorMessage = '';
+ 
 
   @override
   void initState() {
     super.initState();
     _userModel = UserModel();
+    
     _isLoading = false;
     _isEmailValid = true;
+        _fullNameNode = FocusNode();
     _passwordNode = FocusNode();
     _emailNode = FocusNode();
     _phoneNumberNode = FocusNode();
@@ -69,7 +72,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }).catchError((error) {
         if (error.toString().toLowerCase().contains('email')) {
           _isEmailValid = false;
-          _emailErrorMessage = error.message.toString();
           _formKey.currentState!.validate();
         } else if (error.toString().toLowerCase().contains('network')) {
           MyAlertDialog.connectionError(context);
@@ -77,7 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           MyAlertDialog.error(context, error.message.toString());
         }
       }).whenComplete(() {
-        _isEmailValid = true;
+
         setState(() => _isLoading = false);
       });
     }
@@ -139,168 +141,93 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                 ),
+                 Container(
+                  height: 65,
+                  padding: const EdgeInsets.only(top: 14),
+                  child: !_isEmailValid
+                      ? const Text(
+                          'This email already exists. You can reset your passowd from login page..',
+                          style: TextStyle(color: Colors.redAccent),
+                        )
+                      : null,
+                ),
                 Form(
                   key: _formKey,
                   child: Column(
                     children: [
                       // Full Name TextFormField
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: TextFormField(
-                          key: const ValueKey('Full Name'),
-                          textCapitalization: TextCapitalization.words,
-                          validator: (value) => value!.isEmpty
-                              ? 'Please enter your full name'
-                              : null,
-                          maxLines: 1,
-                          textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.name,
-                          decoration: InputDecoration(
-                            labelText: 'Full Name',
-                            contentPadding: const EdgeInsets.all(12),
-                            border: const OutlineInputBorder(),
-                            enabledBorder: MyBorder.outlineInputBorder(context),
-                            filled: true,
-                            fillColor: Theme.of(context).cardColor,
-                          ),
-                          onEditingComplete: () =>
-                              FocusScope.of(context).requestFocus(_emailNode),
-                          onSaved: (value) => _userModel.fullName = value!,
-                        ),
+                      ReusableTextField(
+                        valueKey: 'Full Name',
+                        focusNode: _fullNameNode,
+                        labelText: 'Full Name',
+                        hintText: 'Enter your full name',
+                        textCapitalization: TextCapitalization.words,
+                        validator: (value) => value!.isEmpty
+                            ? 'Please enter your full name'
+                            : null,
+                        maxLines: 1,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.name,
+                        onEditingComplete: () =>
+                            FocusScope.of(context).requestFocus(_emailNode),
+                        onSaved: (value) => _userModel.fullName = value!,
                       ),
 
                       // Email TextFormField
-
-                      ///TODO fixing duplicate email error problem on auth return appropriate error message
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: TextFormField(
-                          key: const ValueKey('Email'),
-                          //         validator: (_) {
-                          //   if (!validateEmail(
-                          //       emailController.text.trim().toString(),)) {
-                          //     return 'Enter a valid email';
-                          //   } else {
-                          //     return null;
-                          //   }
-                          // },
-                          validator: (value) {
-                            if (!_isEmailValid) {
-                              return _emailErrorMessage;
-                            }
-                            return null;
-                          },
-                          focusNode: _emailNode,
-                          maxLines: 1,
-                          textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            contentPadding: const EdgeInsets.all(12),
-                            border: const OutlineInputBorder(),
-                            enabledBorder: MyBorder.outlineInputBorder(context),
-                            filled: true,
-                            fillColor: Theme.of(context).cardColor,
-                          ),
-                          onEditingComplete: () => FocusScope.of(context)
-                              .requestFocus(_phoneNumberNode),
-                          onSaved: (value) => _userModel.email = value!,
-                        ),
+                      ReusableTextField(
+                        focusNode: _emailNode,
+                        valueKey: 'Email',
+                        validator: (value) => value == null ||
+                                !EmailValidator.validateEmail(value)
+                            ? 'Please enter a valid email address'
+                            : null,
+                        maxLines: 1,
+                        labelText: 'Email',
+                        hintText: 'Enter your email',
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.emailAddress,
+                        onEditingComplete: () =>
+                            FocusScope.of(context).requestFocus(_passwordNode),
+                        onSaved: (value) => _userModel.email = value!,
                       ),
 
                       // Phone Number TextFormField
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: TextFormField(
-                          key: const ValueKey('Phone Number'),
-                          validator: (value) => value!.isEmpty
-                              ? 'Please enter a valid phone number'
-                              : null,
-                          focusNode: _phoneNumberNode,
-                          maxLines: 1,
-                          textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.phone,
-                          decoration: InputDecoration(
-                            labelText: 'Phone Number',
-                            contentPadding: const EdgeInsets.all(12),
-                            border: const OutlineInputBorder(),
-                            enabledBorder: MyBorder.outlineInputBorder(context),
-                            filled: true,
-                            fillColor: Theme.of(context).cardColor,
-                          ),
-                          onEditingComplete: () =>
-                              FocusScope.of(context).requestFocus(_addressNode),
-                          onSaved: (value) => _userModel.phoneNumber = value!,
-                        ),
+                      ReusableTextField(
+                        valueKey: 'Phone Number',
+                        focusNode: _phoneNumberNode,
+                        labelText: 'Phone Number',
+                        hintText: 'Enter your phone number',
+                        validator: (value) => value!.isEmpty
+                            ? 'Please enter a valid phone number'
+                            : null,
+                        keyboardType: TextInputType.phone,
+                        onEditingComplete: () =>
+                            FocusScope.of(context).requestFocus(_addressNode),
+                        onSaved: (value) => _userModel.phoneNumber = value!,
                       ),
+
                       // Address
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: TextFormField(
-                          key: const ValueKey('Address'),
-                          validator: (value) => value!.isEmpty
-                              ? 'Please Enter full address'
-                              : null,
-                          focusNode: _addressNode,
-                          maxLines: 1,
-                          textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            labelText: 'Address',
-                            contentPadding: const EdgeInsets.all(12),
-                            border: const OutlineInputBorder(),
-                            enabledBorder: MyBorder.outlineInputBorder(context),
-                            filled: true,
-                            fillColor: Theme.of(context).cardColor,
-                          ),
-                          onEditingComplete: () => FocusScope.of(context)
-                              .requestFocus(_passwordNode),
-                          onSaved: (value) => _userModel.address = value!,
-                        ),
+                      ReusableTextField(
+                        valueKey: 'Address',
+                        focusNode: _addressNode,
+                        labelText: 'Address',
+                        hintText: 'Enter your full address',
+                        validator: (value) =>
+                            value!.isEmpty ? 'Please Enter full address' : null,
+                        onEditingComplete: () =>
+                            FocusScope.of(context).requestFocus(_passwordNode),
+                        onSaved: (value) => _userModel.address = value!,
                       ),
 
                       // Password TextFormField
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 14.0),
-                        child: TextFormField(
-                          key: const ValueKey('Password'),
-                          validator: (value) => value!.isEmpty ||
-                                  value.length < 8
-                              ? 'Password must be at least 8 characters long'
-                              : null,
-                          maxLines: 1,
-                          focusNode: _passwordNode,
-                          keyboardType: TextInputType.visiblePassword,
-                          onEditingComplete: _submitForm,
-                          obscureText: !_passwordIsVisible,
-                          decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 12),
-                            labelText: 'Password',
-                            border: const OutlineInputBorder(),
-                            enabledBorder: MyBorder.outlineInputBorder(context),
-                            filled: true,
-                            fillColor: Theme.of(context).cardColor,
-                            suffix: SizedBox(
-                              height: 32,
-                              width: 28,
-                              child: IconButton(
-                                onPressed: () => setState(
-                                  () =>
-                                      _passwordIsVisible = !_passwordIsVisible,
-                                ),
-                                splashRadius: 18,
-                                iconSize: 18,
-                                icon: Icon(
-                                  _passwordIsVisible
-                                      ? Icons.visibility_off_outlined
-                                      : Icons.visibility_outlined,
-                                ),
-                              ),
-                            ),
-                          ),
-                          onSaved: (value) => _password = value!,
-                        ),
+                       PasswordTextField(
+                        focusNode: _passwordNode,
+                        label: 'Password',
+                        validator: (value) => value != null && value.length < 6
+                            ? 'Password must be at least 6 characters'
+                            : null,
+                        onSaved: (value) => _password = value!,
+                        onEditingComplete: _submitForm,
                       ),
 
                       SizedBox(
@@ -346,10 +273,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ],
                       ),
-
-                       
-
-                          
                     ],
                   ),
                 ),
@@ -360,13 +283,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
-  
-
-  
-}
-
-bool validateEmail(String email) {
-  final emailReg = RegExp(
-      r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-  return emailReg.hasMatch(email);
 }

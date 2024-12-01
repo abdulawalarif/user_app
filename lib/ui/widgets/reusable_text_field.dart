@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:user_app/ui/utils/my_border.dart';
 
 class ReusableTextField extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final FocusNode focusNode;
   final String valueKey;
   final TextCapitalization textCapitalization;
@@ -17,7 +17,7 @@ class ReusableTextField extends StatelessWidget {
 
   const ReusableTextField({
     super.key,
-    required this.controller,
+     this.controller,
     required this.focusNode,
     required this.valueKey,
     this.textCapitalization = TextCapitalization.words,
@@ -55,6 +55,77 @@ class ReusableTextField extends StatelessWidget {
           fillColor: Theme.of(context).cardColor,
         ),
         onEditingComplete: onEditingComplete,
+      ),
+    );
+  }
+}
+
+
+
+
+class PasswordTextField extends StatefulWidget {
+  final FocusNode? focusNode;
+  final String label;
+  final String? Function(String?)? validator;
+  final void Function(String?)? onSaved;
+  final VoidCallback? onEditingComplete;
+
+  const PasswordTextField({
+    super.key,
+    this.focusNode,
+    required this.label,
+    this.validator,
+    this.onSaved,
+    this.onEditingComplete,
+  });
+
+  @override
+  State<PasswordTextField> createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<PasswordTextField> {
+  bool _passwordIsVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14.0),
+      child: TextFormField(
+        focusNode: widget.focusNode,
+        validator: widget.validator,
+        onSaved: widget.onSaved,
+        onEditingComplete: widget.onEditingComplete,
+        obscureText: !_passwordIsVisible,
+        maxLines: 1,
+        keyboardType: TextInputType.visiblePassword,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+          labelText: widget.label,
+          border: const OutlineInputBorder(),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+          ),
+          filled: true,
+          fillColor: Theme.of(context).cardColor,
+          suffix: SizedBox(
+            height: 32,
+            width: 28,
+            child: IconButton(
+              onPressed: () {
+                setState(() {
+                  _passwordIsVisible = !_passwordIsVisible;
+                });
+              },
+              splashRadius: 18,
+              iconSize: 18,
+              icon: Icon(
+                _passwordIsVisible
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
