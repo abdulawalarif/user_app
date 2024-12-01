@@ -26,7 +26,7 @@ class ImagePreview extends StatelessWidget {
         image: imagePath.isNotEmpty && !kIsWeb
             ? DecorationImage(
                 image: FileImage(File(imagePath)),
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               )
             : imagePath.isNotEmpty && kIsWeb
                 ? DecorationImage(

@@ -11,7 +11,7 @@ import '../../core/providers/user_data_provider.dart';
 import '../constants/route_name.dart';
 import '../utils/my_snackbar.dart';
 import 'package:uuid/uuid.dart';
-import '../widgets/text_field_for_address.dart';
+import '../widgets/reusable_text_field.dart';
 
 
 class ProductPurchaseScreen extends StatefulWidget {
@@ -467,7 +467,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
       key: _formKey,
       child: Column(
         children: [
-          TextFieldForAddress(
+          ReusableTextField(
             controller: addressLine1Controller,
             focusNode: addressLine1FocusNode,
             valueKey: 'addressLine1',
@@ -479,7 +479,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
             onEditingComplete: () =>
                 FocusScope.of(context).requestFocus(addressLine2FocusNode),
           ),
-          TextFieldForAddress(
+          ReusableTextField(
             controller: addressLine2Controller,
             focusNode: addressLine2FocusNode,
             valueKey: 'addressLine2',
@@ -490,7 +490,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
             onEditingComplete: () =>
                 FocusScope.of(context).requestFocus(cityFocusNode),
           ),
-          TextFieldForAddress(
+          ReusableTextField(
             controller: cityController,
             focusNode: cityFocusNode,
             valueKey: 'City',
@@ -501,7 +501,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
             onEditingComplete: () =>
                 FocusScope.of(context).requestFocus(stateFocusNode),
           ),
-          TextFieldForAddress(
+          ReusableTextField(
             controller: stateController,
             focusNode: stateFocusNode,
             valueKey: 'State',
@@ -512,7 +512,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
             onEditingComplete: () =>
                 FocusScope.of(context).requestFocus(postalCodeFocusNode),
           ),
-          TextFieldForAddress(
+          ReusableTextField(
             controller: postalCodeController,
             focusNode: postalCodeFocusNode,
             valueKey: 'postalCode',
@@ -524,7 +524,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
             onEditingComplete: () =>
                 FocusScope.of(context).requestFocus(countryFocusNode),
           ),
-          TextFieldForAddress(
+          ReusableTextField(
             controller: countryController,
             focusNode: countryFocusNode,
             valueKey: 'country',
@@ -535,7 +535,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
             onEditingComplete: () =>
                 FocusScope.of(context).requestFocus(latitudeFocusNode),
           ),
-          TextFieldForAddress(
+          ReusableTextField(
             controller: latitudeController,
             focusNode: latitudeFocusNode,
             keyboardType: TextInputType.number,
@@ -546,7 +546,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
                 FocusScope.of(context).requestFocus(longitudeFocusNode),
           ),
 
-          TextFieldForAddress(
+          ReusableTextField(
               controller: longitudeController,
               focusNode: longitudeFocusNode,
               keyboardType: TextInputType.number,

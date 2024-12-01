@@ -1,41 +1,41 @@
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_app/core/models/user_model.dart';
 import 'package:user_app/core/providers/user_data_provider.dart';
 import 'package:user_app/ui/utils/my_alert_dialog.dart';
-import 'package:user_app/ui/utils/my_border.dart';
+import '../widgets/reusable_text_field.dart';
+import '../widgets/update_image_preview.dart';
 
 class UpdateUsersInformation extends StatefulWidget {
   final UserModel userModel;
   const UpdateUsersInformation({super.key, required this.userModel});
-
   @override
   State<UpdateUsersInformation> createState() => _UpdateUsersInformationState();
 }
 
 class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
-  late FocusNode _nameNode;
-  late FocusNode _phoneNumberNode;
-  late FocusNode _addressNode;
+  late final FocusNode _nameNode;
+  late final FocusNode _phoneNumberNode;
+  late final FocusNode _addressNode;
   final _formKey = GlobalKey<FormState>();
   String initialImagePath = '';
-  late bool _isLoading;
-
-  var fullNameEditingController = TextEditingController();
-  var phoneNumberController = TextEditingController();
-  var addressEditingController = TextEditingController();
+  bool _isLoading = false;
+  late final TextEditingController fullNameEditingController;
+  late final TextEditingController phoneNumberController;
+  late final TextEditingController addressEditingController;
 
   @override
   void initState() {
     super.initState();
 
-    _isLoading = false;
     _nameNode = FocusNode();
     _phoneNumberNode = FocusNode();
     _addressNode = FocusNode();
+    fullNameEditingController = TextEditingController();
+    phoneNumberController = TextEditingController();
+    addressEditingController = TextEditingController();
 
     fullNameEditingController.text = widget.userModel.fullName;
     phoneNumberController.text = widget.userModel.phoneNumber;
@@ -49,6 +49,9 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
     _nameNode.dispose();
     _phoneNumberNode.dispose();
     _addressNode.dispose();
+    fullNameEditingController.dispose();
+    phoneNumberController.dispose();
+    addressEditingController.dispose();
   }
 
   void _submitForm() async {
@@ -79,7 +82,7 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
             throw e.toString();
           });
         } else {
-           // Upload picture to Firebase Storage
+          // Upload picture to Firebase Storage
           final ref = FirebaseStorage.instance
               .ref()
               .child('userimages')
@@ -130,7 +133,7 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                   Center(
                     child: Stack(
                       children: [
-                        ImageViewer(
+                        UpdateImagePreViewer(
                           imagePath: widget.userModel.imageUrl,
                         ),
                         Positioned(
@@ -170,90 +173,54 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                     child: Column(
                       children: [
                         // Full Name TextFormField
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: TextFormField(
-                            key: const ValueKey('Full Name'),
-                            controller: fullNameEditingController,
-                            textCapitalization: TextCapitalization.words,
-                            validator: (value) => value!.isEmpty
-                                ? 'Please enter your full name'
-                                : null,
-                            maxLines: 1,
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.name,
-                            decoration: InputDecoration(
-                              labelText: 'Full Name',
-                              contentPadding: EdgeInsets.all(12),
-                              border: const OutlineInputBorder(),
-                              enabledBorder:
-                                  MyBorder.outlineInputBorder(context),
-                              filled: true,
-                              fillColor: Theme.of(context).cardColor,
-                            ),
-                            onEditingComplete: () =>
-                                FocusScope.of(context).requestFocus(_nameNode),
-                            onSaved: (value) =>
-                                widget.userModel.fullName = value!,
-                          ),
+                        ReusableTextField(
+                          valueKey: 'Full Name',
+                          hintText: 'Enter your full name',
+                          controller: fullNameEditingController,
+                          focusNode: _nameNode,
+                          textCapitalization: TextCapitalization.words,
+                          validator: (value) => value!.isEmpty
+                              ? 'Please enter your full name'
+                              : null,
+                          keyboardType: TextInputType.name,
+                          labelText: 'Full Name',
+                          onEditingComplete: () => FocusScope.of(context)
+                              .requestFocus(_phoneNumberNode),
+                          onSaved: (value) =>
+                              widget.userModel.fullName = value!,
                         ),
 
                         // Phone Number TextFormField
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: TextFormField(
-                            controller: phoneNumberController,
-                            key: const ValueKey('Phone Number'),
-                            validator: (value) => value!.isEmpty
-                                ? 'Please enter a valid phone number'
-                                : null,
-                            focusNode: _phoneNumberNode,
-                            maxLines: 1,
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(
-                              labelText: 'Phone Number',
-                              contentPadding: EdgeInsets.all(12),
-                              border: const OutlineInputBorder(),
-                              enabledBorder:
-                                  MyBorder.outlineInputBorder(context),
-                              filled: true,
-                              fillColor: Theme.of(context).cardColor,
-                            ),
-                            onEditingComplete: () => FocusScope.of(context)
-                                .requestFocus(_addressNode),
-                            onSaved: (value) =>
-                                widget.userModel.phoneNumber = value!,
-                          ),
+                        ReusableTextField(
+                          valueKey: 'Phone Number',
+                          hintText: 'Enter your Phone Number',
+                          controller: phoneNumberController,
+                          focusNode: _phoneNumberNode,
+                          textInputAction: TextInputAction.next,
+                          validator: (value) => value!.isEmpty
+                              ? 'Please enter a valid phone number'
+                              : null,
+                          keyboardType: TextInputType.phone,
+                          labelText: 'Phone Number',
+                          onEditingComplete: () =>
+                              FocusScope.of(context).requestFocus(_addressNode),
+                          onSaved: (value) =>
+                              widget.userModel.phoneNumber = value!,
                         ),
+
                         // Address
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: TextFormField(
-                            controller: addressEditingController,
-                            key: const ValueKey('Address'),
-                            validator: (value) => value!.isEmpty
-                                ? 'Please Enter full address'
-                                : null,
-                            focusNode: _addressNode,
-                            maxLines: 1,
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecoration(
-                              labelText: 'Address',
-                              hintText: 'Country/State/City/Street/ZIP',
-                              contentPadding: const EdgeInsets.all(12),
-                              border: const OutlineInputBorder(),
-                              enabledBorder:
-                                  MyBorder.outlineInputBorder(context),
-                              filled: true,
-                              fillColor: Theme.of(context).cardColor,
-                            ),
-                            onEditingComplete: () =>
-                                FocusScope.of(context).requestFocus(),
-                            onSaved: (value) =>
-                                widget.userModel.address = value!,
-                          ),
+                        ReusableTextField(
+                          valueKey: 'Address',
+                          hintText: 'Enter your Address',
+                          controller: addressEditingController,
+                          focusNode: _addressNode,
+                          textInputAction: TextInputAction.done,
+                          labelText: 'Address',
+                          validator: (value) => value!.isEmpty
+                              ? 'Please enter a valid Address'
+                              : null,
+                          onEditingComplete: () => _submitForm(),
+                          onSaved: (value) => widget.userModel.address = value!,
                         ),
 
                         SizedBox(
@@ -285,12 +252,7 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                                 ),
                               ),
                             ),
-
-                            // Update button
-
                             const Spacer(),
-                            // cancel Update button
-
                             SizedBox(
                               height: 50,
                               width: 100,
@@ -314,7 +276,7 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
                                               letterSpacing: 0.5,
                                             ),
                                           )
-                                        : const CircularProgressIndicator(),
+                                        : const CircularProgressIndicator(color: Colors.white,),
                                   ),
                                 ),
                               ),
@@ -330,44 +292,6 @@ class _UpdateUsersInformationState extends State<UpdateUsersInformation> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class ImageViewer extends StatefulWidget {
-  final String? imagePath;
-  const ImageViewer({super.key, required this.imagePath});
-  @override
-  _ImageViewerState createState() => _ImageViewerState();
-}
-
-class _ImageViewerState extends State<ImageViewer> {
-  bool _isNetworkImage(String? path) {
-    return path != null &&
-        (path.startsWith('http://') || path.startsWith('https://'));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200, // Fixed height
-      width: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Colors.grey[300]!,
-          width: 2,
-        ),
-        color: Colors.grey[200],
-        image: DecorationImage(
-          image: _isNetworkImage(widget.imagePath)
-              ? CachedNetworkImageProvider(widget.imagePath!)
-              : FileImage(File(widget.imagePath!)),
-          fit: BoxFit.cover,
-        ),
-      ),
-
-      // Show local file image
     );
   }
 }

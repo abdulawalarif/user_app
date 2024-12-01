@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:user_app/ui/utils/my_border.dart';
 
-class TextFieldForAddress extends StatelessWidget {
+class ReusableTextField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final String valueKey;
@@ -13,8 +13,9 @@ class TextFieldForAddress extends StatelessWidget {
   final TextInputAction textInputAction;
   final TextInputType keyboardType;
   final VoidCallback? onEditingComplete;
+  final void Function(String?)? onSaved;
 
-  const TextFieldForAddress({
+  const ReusableTextField({
     super.key,
     required this.controller,
     required this.focusNode,
@@ -22,6 +23,7 @@ class TextFieldForAddress extends StatelessWidget {
     this.textCapitalization = TextCapitalization.words,
     this.textInputAction = TextInputAction.next,
     this.validator,
+    this.onSaved,
     this.maxLines = 1,
     required this.labelText,
     required this.hintText,
@@ -42,6 +44,7 @@ class TextFieldForAddress extends StatelessWidget {
         maxLines: maxLines,
         textInputAction: textInputAction,
         keyboardType: keyboardType,
+        onSaved: onSaved,
         decoration: InputDecoration(
           labelText: labelText,
           hintText: hintText,
