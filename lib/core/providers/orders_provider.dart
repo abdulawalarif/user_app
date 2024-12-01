@@ -30,9 +30,7 @@ class OrdersProvider with ChangeNotifier {
       Here I am storing users oders information under customar accounts also so that one clints app don't get the data of another clinets order in their cache
       */
 
-
       await _fireStore.collection('users').doc(order.customerId).set(
-        // Correct here user ID is not found
         {
           'shippingAddress':
               shippingAddress.toJson(), // Storing address under users ID
@@ -48,38 +46,6 @@ class OrdersProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-
-  //  Future<void> myOrders({required String customerId}) async {
-  //   _isLoading = true;
-  //   notifyListeners();
-  //   _orderList.clear();
-  //   if (_isFetched) return;
-  //   try {
-  //     final userDoc = await _fireStore.collection('users').doc(customerId).get();
-  //     if (!userDoc.exists) {
-  //       throw Exception('User not found');
-  //     }
-  //     final ordersList = userDoc.data()?['orders'] as List<dynamic>? ?? [];
-  //     if (ordersList.isEmpty) {
-  //       return;
-  //     }
-  //     for (final orderId in ordersList) {
-  //       await _fireStore
-  //           .collection('orders')
-  //           .doc(orderId)
-  //           .get()
-  //           .then((snapshot) {
-  //         final orderData = OrdersModel.fromJson(snapshot.data()!);
-  //         _orderList.insert(0, orderData);
-  //       });
-  //     }
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   } finally {
-  //     _isLoading = false;
-  //     notifyListeners();
-  //   }
-  // }
 
   Stream<List<OrdersModel>> streamMyOrders(String customerId) {
     return _fireStore

@@ -14,7 +14,6 @@ import 'package:uuid/uuid.dart';
 import '../widgets/text_field_for_address.dart';
 
 
-
 class ProductPurchaseScreen extends StatefulWidget {
   final List<BuyProductModel> products;
   final double totalPrice;
@@ -127,7 +126,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
   Widget build(BuildContext context) {
     var userData;
     Provider.of<UserDataProvider>(context, listen: false).fetchUserData().then((_){
-  userData = Provider.of<UserDataProvider>(context,listen:  false).userData;
+    userData = Provider.of<UserDataProvider>(context,listen:  false).userData;
     });
    
     final orderProcessing = Provider.of<OrdersProvider>(context);

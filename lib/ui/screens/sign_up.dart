@@ -5,7 +5,6 @@ import 'package:user_app/core/providers/auth_provider.dart';
 import 'package:user_app/ui/utils/my_alert_dialog.dart';
 import 'package:user_app/ui/utils/my_border.dart';
 import 'package:user_app/ui/widgets/image_preview.dart';
-
 import '../constants/route_name.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -49,15 +48,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _phoneNumberNode.dispose();
     _addressNode.dispose();
   }
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-     final isLoggedIn = Provider.of<AuthProvider>(context, listen: false).isLoggedIn;
-     if(isLoggedIn){
-    //  Navigator.of(context).pop();
-     if (Navigator.canPop(context)) Navigator.pop(context);
-     }
-  }
 
   void _submitForm() async {
     final isValid = _formKey.currentState!.validate();
@@ -73,7 +63,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         email: _userModel.email.toLowerCase().trim(),
         password: _password.trim(),
         userModel: _userModel,
-      ).then((_) {
+      )
+          .then((_) {
         if (Navigator.canPop(context)) Navigator.pop(context);
       }).catchError((error) {
         if (error.toString().toLowerCase().contains('email')) {
@@ -185,14 +176,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: TextFormField(
                           key: const ValueKey('Email'),
-                    //         validator: (_) {
-                    //   if (!validateEmail(
-                    //       emailController.text.trim().toString(),)) {
-                    //     return 'Enter a valid email';
-                    //   } else {
-                    //     return null;
-                    //   }
-                    // },
+                          //         validator: (_) {
+                          //   if (!validateEmail(
+                          //       emailController.text.trim().toString(),)) {
+                          //     return 'Enter a valid email';
+                          //   } else {
+                          //     return null;
+                          //   }
+                          // },
                           validator: (value) {
                             if (!_isEmailValid) {
                               return _emailErrorMessage;
@@ -311,8 +302,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           onSaved: (value) => _password = value!,
                         ),
                       ),
-                      
-                   
 
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.02,
@@ -341,25 +330,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ),
-                       Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Already have an account?',
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, RouteName.logInScreen);
-                      },
-                      child: const Text('LogIn'),
-                    ),
-                  ],
-                ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Already have an account?',
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.popAndPushNamed(
+                                  context, RouteName.logInScreen);
+                            },
+                            child: const Text('LogIn'),
+                          ),
+                        ],
+                      ),
+
+                       
+
+                          
                     ],
                   ),
                 ),
-             
               ],
             ),
           ),
@@ -367,6 +360,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+  
+
+  
 }
 
 bool validateEmail(String email) {

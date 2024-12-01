@@ -20,6 +20,22 @@ class UserDataProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void resetUserData() {
+    _userData = UserModel();
+    _shippingAddress = ShippingAddress(
+      addressLine1: '',
+      addressLine2: '',
+      city: '',
+      state: '',
+      postalCode: '',
+      country: '',
+      latitude: '',
+      longitude: '',
+      formattedAddress: '',
+    );
+    notifyListeners();
+  }
+
   Future<UserModel> fetchUserData() async {
     try {
       final user = _auth.currentUser;
@@ -28,6 +44,18 @@ class UserDataProvider with ChangeNotifier {
         if (!user.isAnonymous) {
           final snapshot = await _fireStore.collection('users').doc(uid).get();
           _userData = UserModel.fromJson(snapshot.data()!);
+          //clenning user shippingAddress here if user loggleIn with a new account
+          _shippingAddress = ShippingAddress(
+            addressLine1: '',
+            addressLine2: '',
+            city: '',
+            state: '',
+            postalCode: '',
+            country: '',
+            latitude: '',
+            longitude: '',
+            formattedAddress: '',
+          );
           final data = snapshot.data();
           if (data != null && data['shippingAddress'] != null) {
             final shippingAddress = data['shippingAddress'];
@@ -61,7 +89,6 @@ class UserDataProvider with ChangeNotifier {
             .then((_) async {
           await fetchUserData();
         });
-       
       } else {
         throw Exception('No authenticated user found');
       }

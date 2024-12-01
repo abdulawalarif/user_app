@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:user_app/core/providers/auth_provider.dart';
+import 'package:user_app/core/providers/user_data_provider.dart';
+import 'package:user_app/core/providers/wishlist_provider.dart';
+
+import '../../core/providers/cart_provider.dart';
 
 class MyAlertDialog {
   void removeCartItem(context, Function() func) {
@@ -75,9 +79,22 @@ class MyAlertDialog {
           Consumer<AuthProvider>(
             builder: (_, authProvider, __) => TextButton(
               onPressed: () async {
-                await authProvider.signOut(context);
-
-                Navigator.pop(context);
+                await authProvider.signOut(context).then((_) {
+                  //Clearing users address and profile information
+                  Provider.of<UserDataProvider>(context, listen: false)
+                      .resetUserData();
+                  // removeing all the carts of that user
+                  final cartProvider = Provider.of<CartProvider>(context, listen: false);
+                  cartProvider.removeAll();
+                  // Removing favourite's of that user
+                  final wishlistProvider =
+                      Provider.of<WishlistProvider>(context, listen: false);
+                  if (wishlistProvider.getwishListItems.isNotEmpty) {
+                    wishlistProvider.clearWishlist();
+                  }
+                }).then((_) {
+                  Navigator.pop(context);
+                });
               },
               child: Text('Sign Out'.toUpperCase()),
             ),

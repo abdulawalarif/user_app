@@ -49,13 +49,13 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> signInAnonymously() async {
-    if (_auth.currentUser == null) {
-      await _auth.signInAnonymously().catchError((e) {
-        throw Exception(e.toString());
-      });
-    }
-  }
+  // Future<void> signInAnonymously() async {
+  //   if (_auth.currentUser == null) {
+  //     await _auth.signInAnonymously().catchError((e) {
+  //       throw Exception(e.toString());
+  //     });
+  //   }
+  // }
 
   Future<void> signIn({required String email, required String password}) async {
     try {
@@ -137,7 +137,7 @@ class AuthProvider with ChangeNotifier {
         }
       }
       await _auth.signOut().then((_) {
-        signInAnonymously();
+       // signInAnonymously();
         notifyListeners();
       });
     } catch (e) {
