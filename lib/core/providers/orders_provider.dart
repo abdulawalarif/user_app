@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:user_app/core/models/orders_model.dart';
-import 'package:dartz/dartz.dart';
 import 'firebase_service.dart';
 
-typedef EitherError<T> = Future<Either<String, T>>;
+ 
 
 class OrdersProvider with ChangeNotifier {
   final FirebaseFirestore _fireStore = FireStoreService().instance;

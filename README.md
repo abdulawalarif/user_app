@@ -1,7 +1,7 @@
 
-# E-commerce with Flutter dart and firebase
+# E-commerce app with Flutter Dart and Firebase
 
-## This E-commerce project is for user and there is another app for admin to manage the shop [Admin app](https://github.com/abdulawalarif/shop_owner_app.git)
+## This E-commerce project is for user app and there is another app for admin to manage the shop [Admin app](https://github.com/abdulawalarif/shop_owner_app.git)
   
 **It's a fully fledged application for small business**
 
@@ -83,8 +83,7 @@ Connect a physical device or start a virtual device on your machine
 
 
 ## How to tweak this project for your own uses
-* **Change the Firebase projects:** Create your 
-* **Add SHA256 key for google auth:** Create your 
+* **Setup Firebase:** Insert some data for testing..
 
  
 

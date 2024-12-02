@@ -43,3 +43,11 @@ class UserModel with ChangeNotifier {
         'createdAt': createdAt,
       };
 }
+/// await _fireStore.collection('users').doc(order.customerId).set(
+      //   {
+      //     'shippingAddress':
+      //         shippingAddress.toJson(), // Storing address under users ID
+      //     'orders': FieldValue.arrayUnion([orderId]),
+      //   },
+      //   SetOptions(merge: true),
+      // );

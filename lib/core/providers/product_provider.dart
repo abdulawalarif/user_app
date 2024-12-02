@@ -26,6 +26,8 @@ class ProductProvider with ChangeNotifier {
       .toList();
 
   List<ProductModel> searchQuery(String query) => _products
+  // TODO improving the search making phrase based search 
+  // like Sliding Window for Phrase Search 
       .where(
           (element) => element.name.toLowerCase().contains(query.toLowerCase()))
       .toList();
