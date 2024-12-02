@@ -35,16 +35,7 @@
     │   ├── main.dart                  
      
  
-<img src="ProjectSnap/light_theme/12.png" width="15%" alt="Demo of this application" />
-<img src="ProjectSnap/light_theme/13.png" width="15%" alt="Demo of this application" />
-<img src="ProjectSnap/light_theme/14.png" width="15%" alt="Demo of this application" />
-<img src="ProjectSnap/light_theme/44.png" width="15%" alt="Demo of this application" />
-<img src="ProjectSnap/light_theme/26.png" width="15%" alt="Demo of this application" />
-<img src="ProjectSnap/light_theme/21.png" width="15%" alt="OrderPlacing first step" />
-<img src="ProjectSnap/light_theme/49.png" width="15%" alt="order confirmed" />
-<img src="ProjectSnap/dark_theme/40.png" width="15%" alt="Registration Form" />
-<img src="ProjectSnap/dark_theme/33.png" width="15%" alt="Demo of this application" />
-<img src="ProjectSnap/dark_theme/39.png" width="15%" alt="Demo of this application" />
+<img src="ProjectSnap/light_theme/12.png" width="15%" alt="Demo of this application" /><img src="ProjectSnap/light_theme/13.png" width="15%" alt="Demo of this application" /><img src="ProjectSnap/light_theme/14.png" width="15%" alt="Demo of this application" /><img src="ProjectSnap/light_theme/44.png" width="15%" alt="Demo of this application" /><img src="ProjectSnap/light_theme/26.png" width="15%" alt="Demo of this application" /><img src="ProjectSnap/light_theme/21.png" width="15%" alt="OrderPlacing first step" /><img src="ProjectSnap/light_theme/49.png" width="15%" alt="order confirmed" /><img src="ProjectSnap/dark_theme/40.png" width="15%" alt="Registration Form" /><img src="ProjectSnap/dark_theme/33.png" width="15%" alt="Demo of this application" /><img src="ProjectSnap/dark_theme/39.png" width="15%" alt="Demo of this application" />
 </br>
 
  
@@ -84,6 +75,7 @@ Connect a physical device or start a virtual device on your machine
 
 ## How to tweak this project for your own uses
 * **Setup Firebase:** Insert some data for testing..
+
 
  
 
