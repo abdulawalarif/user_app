@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class OrdersModel {
   final String orderId;
@@ -113,56 +112,56 @@ class Product {
   }
 }
 
-class ShippingAddress with ChangeNotifier {
-  String addressLine1 = '';
-  String addressLine2 = '';
-  String city = '';
-  String state = '';
-  String postalCode = '';
-  String country = '';
-  String latitude = '';
-  String longitude = '';
-  String formattedAddress = '';
+// class ShippingAddress with ChangeNotifier {
+//   String addressLine1 = '';
+//   String addressLine2 = '';
+//   String city = '';
+//   String state = '';
+//   String postalCode = '';
+//   String country = '';
+//   String latitude = '';
+//   String longitude = '';
+//   String formattedAddress = '';
 
-  ShippingAddress({
-    required this.addressLine1,
-    required this.addressLine2,
-    required this.city,
-    required this.state,
-    required this.postalCode,
-    required this.country,
-    required this.latitude,
-    required this.longitude,
-    required this.formattedAddress,
-  });
+//   ShippingAddress({
+//     required this.addressLine1,
+//     required this.addressLine2,
+//     required this.city,
+//     required this.state,
+//     required this.postalCode,
+//     required this.country,
+//     required this.latitude,
+//     required this.longitude,
+//     required this.formattedAddress,
+//   });
 
-  // Convert JSON to ShippingAddress
-  factory ShippingAddress.fromJson(Map<String, dynamic> json) {
-    return ShippingAddress(
-      addressLine1: json['addressLine1'],
-      addressLine2: json['addressLine2'],
-      city: json['city'],
-      state: json['state'],
-      postalCode: json['postalCode'],
-      country: json['country'],
-      latitude: json['latitude'].toString(),
-      longitude: json['longitude'].toString(),
-      formattedAddress: json['formattedAddress'],
-    );
-  }
+//   // Convert JSON to ShippingAddress
+//   factory ShippingAddress.fromJson(Map<String, dynamic> json) {
+//     return ShippingAddress(
+//       addressLine1: json['addressLine1'],
+//       addressLine2: json['addressLine2'],
+//       city: json['city'],
+//       state: json['state'],
+//       postalCode: json['postalCode'],
+//       country: json['country'],
+//       latitude: json['latitude'].toString(),
+//       longitude: json['longitude'].toString(),
+//       formattedAddress: json['formattedAddress'],
+//     );
+//   }
 
-  // Convert ShippingAddress to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'addressLine1': addressLine1,
-      'addressLine2': addressLine2,
-      'city': city,
-      'state': state,
-      'postalCode': postalCode,
-      'country': country,
-      'latitude': latitude,
-      'longitude': longitude,
-      'formattedAddress': formattedAddress,
-    };
-  }
-}
+//   // Convert ShippingAddress to JSON
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'addressLine1': addressLine1,
+//       'addressLine2': addressLine2,
+//       'city': city,
+//       'state': state,
+//       'postalCode': postalCode,
+//       'country': country,
+//       'latitude': latitude,
+//       'longitude': longitude,
+//       'formattedAddress': formattedAddress,
+//     };
+//   }
+// }

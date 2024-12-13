@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intl/intl.dart';
 import 'package:user_app/core/models/user_model.dart';
 import 'package:user_app/core/providers/user_data_provider.dart';
 
@@ -89,11 +90,14 @@ class AuthProvider with ChangeNotifier {
 
             if (!userDoc.exists) {
               UserModel userModel = UserModel(
+                
                 id: user.uid,
                 email: user.email ?? '',
                 fullName: user.displayName ?? '',
                 imageUrl: user.photoURL ?? '',
                 phoneNumber: user.phoneNumber ?? '',
+                createdAt: Timestamp.now(),
+                joinedAt: DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now()),
               );
 
               // Upload user data only if the document doesn't exist

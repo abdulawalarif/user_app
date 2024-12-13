@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:user_app/core/models/orders_model.dart';
 import 'package:user_app/core/models/user_model.dart';
 import 'firebase_service.dart';
 
@@ -11,14 +10,8 @@ class UserDataProvider with ChangeNotifier {
   }
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FireStoreService().instance;
-  UserModel _userData = UserModel();
+ late UserModel _userData;
   UserModel get userData => _userData;
-  ShippingAddress? _shippingAddress;
-  ShippingAddress? get shippingAddress => _shippingAddress;
-  set userData(UserModel value) {
-    _userData = value;
-    notifyListeners();
-  }
 
   
 
@@ -30,23 +23,6 @@ class UserDataProvider with ChangeNotifier {
         if (!user.isAnonymous) {
           final snapshot = await _fireStore.collection('users').doc(uid).get();
           _userData = UserModel.fromJson(snapshot.data()!);
-          //clenning user shippingAddress here if user loggleIn with a new account
-          _shippingAddress = ShippingAddress(
-            addressLine1: '',
-            addressLine2: '',
-            city: '',
-            state: '',
-            postalCode: '',
-            country: '',
-            latitude: '',
-            longitude: '',
-            formattedAddress: '',
-          );
-          final data = snapshot.data();
-          if (data != null && data['shippingAddress'] != null) {
-            final shippingAddress = data['shippingAddress'];
-            _shippingAddress = ShippingAddress.fromJson(shippingAddress);
-          }
         }
         notifyListeners();
         return _userData;
@@ -74,6 +50,7 @@ class UserDataProvider with ChangeNotifier {
             .set(userModel.toJson())
             .then((_) async {
           await fetchUserData();
+          
         });
       } else {
         throw Exception('No authenticated user found');
@@ -84,6 +61,7 @@ class UserDataProvider with ChangeNotifier {
   }
 
   Future<void> updateUserData(UserModel userModel) async {
+    ///TODO fixing update not changing existing user data of shipping address and so on
     try {
       final user = _auth.currentUser;
       userModel.id = user!.uid;

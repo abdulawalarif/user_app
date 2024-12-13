@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:user_app/core/models/buy_product_model.dart';
+import 'package:user_app/core/models/user_model.dart';
 import 'package:user_app/core/providers/orders_provider.dart';
 import 'package:user_app/ui/widgets/log_in_suggestion.dart';
 import '../../core/models/orders_model.dart';
@@ -12,7 +13,6 @@ import '../constants/route_name.dart';
 import '../utils/my_snackbar.dart';
 import 'package:uuid/uuid.dart';
 import '../widgets/reusable_text_field.dart';
-
 
 class ProductPurchaseScreen extends StatefulWidget {
   final List<BuyProductModel> products;
@@ -36,6 +36,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
   int _selectedPayment = 1;
 
   //user address  TextEditingController
+  late TextEditingController phoneNumberController;
   late TextEditingController addressLine1Controller;
   late TextEditingController addressLine2Controller;
   late TextEditingController cityController;
@@ -46,7 +47,9 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
   late TextEditingController longitudeController;
 
   //user address  FocusNode
+  late FocusNode phoneNumberFocusNode;
   late FocusNode addressLine1FocusNode;
+
   late FocusNode addressLine2FocusNode;
   late FocusNode cityFocusNode;
   late FocusNode stateFocusNode;
@@ -62,6 +65,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
     super.initState();
     //   'FromCart? ${widget.fromCart}'.log();
     //user address for sending data to ordered list
+    phoneNumberController = TextEditingController();
     addressLine1Controller = TextEditingController();
     addressLine2Controller = TextEditingController();
     cityController = TextEditingController();
@@ -73,6 +77,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
     longitudeController = TextEditingController();
 
     //user address  FocusNode
+    phoneNumberFocusNode = FocusNode();
     addressLine1FocusNode = FocusNode();
     addressLine2FocusNode = FocusNode();
     cityFocusNode = FocusNode();
@@ -84,18 +89,16 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
 
     Provider.of<UserDataProvider>(context, listen: false)
         .fetchUserData()
-        .then((_) {
-      var userAddressData =
-          Provider.of<UserDataProvider>(context, listen: false).shippingAddress;
-
-      addressLine1Controller.text = userAddressData?.addressLine1 ?? '';
-      addressLine2Controller.text = userAddressData?.addressLine2 ?? '';
-      cityController.text = userAddressData?.city ?? '';
-      stateController.text = userAddressData?.state ?? '';
-      postalCodeController.text = userAddressData?.postalCode ?? '';
-      countryController.text = userAddressData?.country ?? '';
-      latitudeController.text = userAddressData?.latitude ?? '';
-      longitudeController.text = userAddressData?.longitude ?? '';
+        .then((userAddressData) {
+      phoneNumberController.text = userAddressData.phoneNumber;
+      addressLine1Controller.text = userAddressData.addressLine1;
+      addressLine2Controller.text = userAddressData.addressLine2;
+      cityController.text = userAddressData.city;
+      stateController.text = userAddressData.state;
+      postalCodeController.text = userAddressData.postalCode;
+      countryController.text = userAddressData.country;
+      latitudeController.text = userAddressData.latitude;
+      longitudeController.text = userAddressData.longitude;
     });
   }
 
@@ -103,6 +106,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
   void dispose() {
     super.dispose();
     //user address for sending data to ordered list
+    phoneNumberController.dispose();
     addressLine1Controller.dispose();
     addressLine2Controller.dispose();
     cityController.dispose();
@@ -112,6 +116,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
     latitudeController.dispose();
     longitudeController.dispose();
 
+    phoneNumberFocusNode.dispose();
     addressLine1FocusNode.dispose();
     addressLine2FocusNode.dispose();
     cityFocusNode.dispose();
@@ -121,16 +126,17 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
     latitudeFocusNode.dispose();
     longitudeFocusNode.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     var userData;
-    Provider.of<UserDataProvider>(context, listen: false).fetchUserData().then((_){
-    userData = Provider.of<UserDataProvider>(context,listen:  false).userData;
+    Provider.of<UserDataProvider>(context, listen: false)
+        .fetchUserData()
+        .then((_) {
+      userData = Provider.of<UserDataProvider>(context, listen: false).userData;
     });
-   
+
     final orderProcessing = Provider.of<OrdersProvider>(context);
-    
 
     final isLoggedIn = Provider.of<AuthProvider>(context).isLoggedIn;
     if (isLoggedIn) {
@@ -188,7 +194,7 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
                             text: 'Back',
                           ),
                         Button(
-                          onPressed: ()async {
+                          onPressed: () async {
                             final isLastStep =
                                 currentStep == getStepps().length - 1;
                             final isAddressStep =
@@ -223,7 +229,15 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
                                   }).toList(),
                                 );
 
-                                var shippingAddress = ShippingAddress(
+                                var shippingAddress = UserModel(
+                                    createdAt: userData.createdAt,
+                                    email: userData.email,
+                                    fullName: userData.fullName,
+                                    id: userData.id,
+                                    imageUrl: userData.imageUrl,
+                                    joinedAt: userData.joinedAt,
+                                    phoneNumber:
+                                        phoneNumberController.text.toString(),
                                     addressLine1:
                                         addressLine1Controller.text.toString(),
                                     addressLine2:
@@ -237,31 +251,27 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
                                         latitudeController.text.toString(),
                                     longitude:
                                         longitudeController.text.toString(),
-                                    formattedAddress:
+                                    address:
                                         '${addressLine1Controller.text.toString()}, ${addressLine2Controller.text.toString()}, ${cityController.text.toString()}, ${stateController.text.toString()} ${postalCodeController.text.toString()}, ${countryController.text.toString()}');
-                              if(!orderProcessing.isLoading){
-                                await  orderProcessing
-                                    .addOrder(
-                                  order: orderData,
-                                  shippingAddress: shippingAddress,
-                                )
-                                    .then((data) {
-                                  if (widget.fromCart) {
-                                    Provider.of<CartProvider>(context,
-                                            listen: false)
-                                        .removeAll();
-                                  }
-                                  setState(() {
-                                    isCompleted = true;
+                                if (!orderProcessing.isLoading) {
+                                  await orderProcessing
+                                      .addOrder(
+                                    order: orderData,
+                                    shippingAddress: shippingAddress,
+                                  )
+                                      .then((data) {
+                                    if (widget.fromCart) {
+                                      Provider.of<CartProvider>(context,
+                                              listen: false)
+                                          .removeAll();
+                                    }
+                                    setState(() {
+                                      isCompleted = true;
+                                    });
+                                  }).catchError((error) {
+                                    print("Error: $error");
                                   });
-                                }).catchError((error) {
-                                  print("Error: $error");
-                                });
-
-
-
-                              }
-                              
+                                }
                               } else {
                                 MySnackBar().showSnackBar(
                                     'Payment method is not integrated yet',
@@ -274,7 +284,9 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
                             }
                           },
                           text: currentStep == getStepps().length - 1
-                              ? orderProcessing.isLoading?'...':'Confirm'
+                              ? orderProcessing.isLoading
+                                  ? '...'
+                                  : 'Confirm'
                               : 'Next',
                         ),
                       ],
@@ -288,10 +300,10 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
     return const Scaffold(body: LogInSuggestion());
   }
 
-    void navigateToNextIfEverythingIsOkay() {
+  void navigateToNextIfEverythingIsOkay() {
     final isValid = _formKey.currentState!.validate();
     if (isValid) {
-       FocusScope.of(context).unfocus();
+      FocusScope.of(context).unfocus();
       _formKey.currentState!.save();
       setState(() => currentStep += 1);
     }
@@ -468,6 +480,18 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
       child: Column(
         children: [
           ReusableTextField(
+            controller: phoneNumberController,
+            focusNode: phoneNumberFocusNode,
+            valueKey: 'Mobile Number',
+            keyboardType: TextInputType.phone,
+            validator: (value) =>
+                value!.isEmpty ? 'Please Provider your phone number' : null,
+            labelText: 'Mobile Number',
+            hintText: '+880001122020',
+            onEditingComplete: () =>
+                FocusScope.of(context).requestFocus(addressLine1FocusNode),
+          ),
+          ReusableTextField(
             controller: addressLine1Controller,
             focusNode: addressLine1FocusNode,
             valueKey: 'addressLine1',
@@ -545,7 +569,6 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
             onEditingComplete: () =>
                 FocusScope.of(context).requestFocus(longitudeFocusNode),
           ),
-
           ReusableTextField(
               controller: longitudeController,
               focusNode: longitudeFocusNode,
@@ -554,10 +577,9 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
               valueKey: 'longitude',
               labelText: 'longitude',
               hintText: '-118.24904',
-               onEditingComplete:(){
-                 navigateToNextIfEverythingIsOkay();
-               }
-          ),
+              onEditingComplete: () {
+                navigateToNextIfEverythingIsOkay();
+              }),
         ],
       ),
     );

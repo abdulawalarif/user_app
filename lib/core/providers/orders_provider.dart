@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:user_app/core/models/orders_model.dart';
+import '../models/user_model.dart';
 import 'firebase_service.dart';
 
  
@@ -13,7 +14,7 @@ class OrdersProvider with ChangeNotifier {
 
   Future<void> addOrder({
     required OrdersModel order,
-    required ShippingAddress shippingAddress,
+    required UserModel shippingAddress,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -29,14 +30,15 @@ class OrdersProvider with ChangeNotifier {
       Here I am storing users oders information under customar accounts also so that one clints app don't get the data of another clinets order in their cache
       */
 
+      await _fireStore.collection('users').doc(order.customerId).update(shippingAddress.toJson());
+
       await _fireStore.collection('users').doc(order.customerId).set(
         {
-          'shippingAddress':
-              shippingAddress.toJson(), // Storing address under users ID
+         
           'orders': FieldValue.arrayUnion([orderId]),
         },
         SetOptions(merge: true),
-      );
+     );
     } catch (e) {
       print('Order debug: ${e.toString()}');
       throw Exception(e.toString());
