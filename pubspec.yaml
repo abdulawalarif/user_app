@@ -32,6 +32,8 @@ dependencies:
   shimmer: ^3.0.0
   json_annotation: ^4.9.0
   intl: ^0.19.0
+  firebase_messaging: ^15.1.6
+  rxdart: ^0.28.0
   
 dev_dependencies:
   flutter_test:

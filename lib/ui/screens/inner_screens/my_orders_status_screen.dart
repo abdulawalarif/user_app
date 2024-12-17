@@ -8,7 +8,7 @@ import '../../widgets/order_status_setup.dart';
 
 
 /*
-Here with orders i will get three status from adim 
+Here with orders i will get three status from admin 
 1. "Pending"
 2. "Received"
 3. "Delivered"

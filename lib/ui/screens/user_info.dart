@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -21,25 +20,28 @@ class UserInfoScreen extends StatefulWidget {
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   final ScrollController _scrollController = ScrollController();
-  UserModel _userData = UserModel();
+   UserModel _userData = UserModel();
 
   @override
   void initState() {
     super.initState();
-
+      userData();
     _scrollController.addListener(() {
       setState(() {});
     });
   }
 
+void userData()async{
+_userData =  await Provider.of<UserDataProvider>(context, listen:  false).fetchUserData();
+setState(() {
+  
+});
+}
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<ThemeChangeProvider>(context);
-    final userDataProvider = Provider.of<UserDataProvider>(context);
-    FirebaseAuth.instance.authStateChanges().listen((firebaseUser) {
-      userDataProvider.fetchUserData();
-    });
-    _userData = userDataProvider.userData;
+
+   
 
     return SafeArea(
       child: Scaffold(

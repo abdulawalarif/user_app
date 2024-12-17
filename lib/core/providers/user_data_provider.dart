@@ -5,15 +5,13 @@ import 'package:user_app/core/models/user_model.dart';
 import 'firebase_service.dart';
 
 class UserDataProvider with ChangeNotifier {
-  UserDataProvider() {
-    fetchUserData();
-  }
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FireStoreService().instance;
- late UserModel _userData;
+   UserModel _userData = UserModel();
   UserModel get userData => _userData;
 
-  
+    
 
   Future<UserModel> fetchUserData() async {
     try {

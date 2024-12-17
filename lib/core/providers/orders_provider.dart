@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:user_app/core/models/orders_model.dart';
 import '../models/user_model.dart';
 import 'firebase_service.dart';
+import 'package:rxdart/rxdart.dart';
 
  
 
@@ -29,7 +30,8 @@ class OrdersProvider with ChangeNotifier {
       /*
       Here I am storing users oders information under customar accounts also so that one clints app don't get the data of another clinets order in their cache
       */
-
+      // TODO checking is user changed their address?
+      //if so callind this method
       await _fireStore.collection('users').doc(order.customerId).update(shippingAddress.toJson());
 
       await _fireStore.collection('users').doc(order.customerId).set(
@@ -48,26 +50,30 @@ class OrdersProvider with ChangeNotifier {
     }
   }
 
-  Stream<List<OrdersModel>> streamMyOrders(String customerId) {
-    return _fireStore
-        .collection('users')
-        .doc(customerId)
-        .snapshots()
-        .asyncMap((userDoc) async {
-      if (!userDoc.exists) return [];
-      final ordersList = userDoc.data()?['orders'] as List<dynamic>? ?? [];
-      if (ordersList.isEmpty) return [];
-      List<OrdersModel> orders = [];
-      for (final orderId in ordersList) {
-        final orderDoc =
-            await _fireStore.collection('orders').doc(orderId).get();
+ Stream<List<OrdersModel>> streamMyOrders(String customerId) {
+  return _fireStore.collection('users').doc(customerId).snapshots().switchMap((userDoc) {
+    if (!userDoc.exists) return Stream.value([]);
+    final ordersList = userDoc.data()?['orders'] as List<dynamic>? ?? [];
+    if (ordersList.isEmpty) return Stream.value([]);
+    
+    // Stream changes from each order document
+    final orderStreams = ordersList.map((orderId) {
+      return _fireStore.collection('orders').doc(orderId).snapshots().map((orderDoc) {
         if (orderDoc.exists) {
-          orders.add(OrdersModel.fromJson(orderDoc.data()!));
+          return OrdersModel.fromJson(orderDoc.data()!);
         }
-      }
-      return orders;
+        return null; // If order doesn't exist, return null
+      });
+    }).toList();
+
+    // Combine all individual order streams into one list
+    return CombineLatestStream.list(orderStreams).map((orders) {
+      // Filter out null orders (in case some orders are deleted)
+      return orders.whereType<OrdersModel>().toList();
     });
-  }
+  });
+}
+
 
   Future<void> confirmOrder({required OrdersModel ordersModel}) async {
     try {
