@@ -11,7 +11,8 @@ import '../../widgets/order_status_setup.dart';
 Here with orders i will get three status from admin 
 1. "Pending"
 2. "Received"
-3. "Delivered"
+3. "Confirmed"
+4. "Delivered"
 based on that i have rendered my widget for showing the status of orders
 
 Now if the status is Delivered i have activated the button for user to confirm the delivery and sent a 
@@ -37,6 +38,7 @@ class _MyOrdersStatusScreenState extends State<MyOrdersStatusScreen> {
   bool isDelivered = false;
   bool isLoading = false;
 
+///'Pending' 'Received' 'Confirmed' 'Delivered'
   @override
   void initState() {
     super.initState();
