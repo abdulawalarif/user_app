@@ -6,19 +6,7 @@ import 'package:user_app/core/providers/orders_provider.dart';
 import '../../../core/models/orders_model.dart';
 import '../../widgets/order_status_setup.dart';
 
-
-/*
-Here with orders i will get three status from admin 
-1. "Pending"
-2. "Received"
-3. "Confirmed"
-4. "Delivered"
-based on that i have rendered my widget for showing the status of orders
-
-Now if the status is Delivered i have activated the button for user to confirm the delivery and sent a 
-status that "confirmedByCustomer"
-*/
-class MyOrdersStatusScreen extends StatefulWidget {
+class MyOrdersStatusScreen extends StatelessWidget {
   final OrdersModel ordersModel;
 
   const MyOrdersStatusScreen({
@@ -27,38 +15,49 @@ class MyOrdersStatusScreen extends StatefulWidget {
   });
 
   @override
-  State<MyOrdersStatusScreen> createState() => _MyOrdersStatusScreenState();
-}
+  Widget build(BuildContext context) {
+    final ordersProvider = Provider.of<OrdersProvider>(context, listen: false);
 
-class _MyOrdersStatusScreenState extends State<MyOrdersStatusScreen> {
-  //Here I have implemented 4 conditions for that will be comming from the backend and based on this i have configured my widgets
-  bool isPending = true;
-  bool isReceived = false;
-  bool isOnTheWay = false;
-  bool isDelivered = false;
-  bool isLoading = false;
-
-///'Pending' 'Received' 'Confirmed' 'Delivered'
-  @override
-  void initState() {
-    super.initState();
-    String orderStatus = widget.ordersModel.status;
-    isPending = orderStatus == 'Pending';
-    isReceived = orderStatus == 'Received' ||
-        orderStatus == 'Confirmed' ||
-        orderStatus == 'Delivered';
-
-    isOnTheWay = orderStatus == 'Confirmed' || orderStatus == 'Delivered';
-    isDelivered = orderStatus == 'Delivered';
+    return StreamBuilder<OrdersModel>(
+      stream: ordersProvider.streamOrderStatus(ordersModel.orderId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Order Status')),
+            body: Center(
+              child: Text('Error: ${snapshot.error}'),
+            ),
+          );
+        } else if (!snapshot.hasData) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Order Status')),
+            body: const Center(
+              child: Text('No order data available'),
+            ),
+          );
+        } else {
+          final order = snapshot.data!;
+          return _buildOrderStatusScreen(context, order);
+        }
+      },
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context); // Access theme
+  Widget _buildOrderStatusScreen(BuildContext context, OrdersModel order) {
+    final theme = Theme.of(context);
     final bool isDarkTheme = theme.brightness == Brightness.dark;
 
+    final isPending = order.status == 'Pending';
+    final isReceived = order.status == 'Received' ||
+        order.status == 'Confirmed' ||
+        order.status == 'Delivered';
+    final isOnTheWay = order.status == 'Confirmed' || order.status == 'Delivered';
+    final isDelivered = order.status == 'Delivered';
+
     return ModalProgressHUD(
-      inAsyncCall: isLoading,
+      inAsyncCall: false,
       progressIndicator: Center(
         child: CircularProgressIndicator(
           color: theme.highlightColor,
@@ -85,54 +84,27 @@ class _MyOrdersStatusScreenState extends State<MyOrdersStatusScreen> {
                 ),
               ),
             ),
-            isPending
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 100),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 30),
-                            child: SizedBox(
-                              width: 350,
-                              child: Center(
-                                child: Text(
-                                  'YOUR ORDER IS PENDING! PLEASE WAIT FOR THE CONFIRMATION...',
-                                  textAlign: TextAlign.center,
-                                  style:
-                                      Theme.of(context).textTheme.headlineSmall,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 100,
-                            width: 100,
-                            child: Image.asset(
-                              'assets/orderPending.png',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                : Padding(
+            Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
                         const SizedBox(height: 4),
                         const SizedBox(height: 16),
                         OrderStatusStep(
+                          title: 'Order Pending',
+                          time: order.createdAt.formattedDate(),
+                          isCompleted: !isPending&&isReceived ||isPending,
+                        ),
+                        OrderStatusStep(
                           title: 'Order Received',
-                          time: widget.ordersModel.createdAt.formattedDate(),
+                          time:isReceived? order.createdAt.formattedDate():'...',
                           isCompleted: isReceived,
                         ),
                         OrderStatusStep(
                           title: 'On The Way',
-                          time: widget.ordersModel.status == 'Received'
+                          time: !isOnTheWay
                               ? '...'
-                              : widget.ordersModel.updatedAt.formattedDate(),
+                              : order.updatedAt.formattedDate(),
                           isCompleted: isOnTheWay,
                           showTracking: !isDelivered && isOnTheWay,
                         ),
@@ -147,38 +119,30 @@ class _MyOrdersStatusScreenState extends State<MyOrdersStatusScreen> {
                           child: Material(
                             color: theme.primaryColor,
                             child: InkWell(
-                            onTap: isDelivered
-    ? () async {
-        setState(() {
-          isLoading = true;
-        });
+                              onTap: isDelivered
+                                  ? () async {
+                                      try {
+                                        await Provider.of<OrdersProvider>(
+                                                context,
+                                                listen: false)
+                                            .confirmOrder(
+                                                ordersModel: order);
 
-        try {
-          await Provider.of<OrdersProvider>(context, listen: false)
-              .confirmOrder(ordersModel: widget.ordersModel);
-
-          // If successful, pop the screen or show success feedback
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
-        } catch (error) {
-          // Handle errors gracefully, such as showing a snackbar or dialog
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to confirm order: $error')),
-            );
-          }
-        } finally {
-          // Reset the loading state
-          if (mounted) {
-            setState(() {
-              isLoading = false;
-            });
-          }
-        }
-    }
-    : null,
-
+                                        if (context.mounted) {
+                                          Navigator.of(context).pop();
+                                        }
+                                      } catch (error) {
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    'Failed to confirm order: $error')),
+                                          );
+                                        }
+                                      }
+                                    }
+                                  : null,
                               child: Center(
                                 child: Text(
                                   'Confirm Delivery',

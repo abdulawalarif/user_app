@@ -88,4 +88,16 @@ class OrdersProvider with ChangeNotifier {
       rethrow;
     }
   }
+
+
+
+  Stream<OrdersModel> streamOrderStatus(String orderId) {
+  return _fireStore.collection('orders').doc(orderId).snapshots().map((doc) {
+    if (doc.exists) {
+      return OrdersModel.fromJson(doc.data()!);
+    }
+    throw Exception('Order not found');
+  });
+}
+
 }
