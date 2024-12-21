@@ -147,28 +147,38 @@ class _MyOrdersStatusScreenState extends State<MyOrdersStatusScreen> {
                           child: Material(
                             color: theme.primaryColor,
                             child: InkWell(
-                              onTap: isDelivered
-                                  ? () {
-                                      // sending received status to database for this order
-                                      setState(() {
-                                        isLoading = true;
-                                      });
+                            onTap: isDelivered
+    ? () async {
+        setState(() {
+          isLoading = true;
+        });
 
-                                      Provider.of<OrdersProvider>(context,
-                                              listen: false)
-                                          .confirmOrder(
-                                              ordersModel: widget.ordersModel)
-                                          .then((_) {
-                                        Future.delayed(Duration(seconds: 3),
-                                            () {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                          Navigator.of(context).pop();
-                                        });
-                                      });
-                                    }
-                                  : null,
+        try {
+          await Provider.of<OrdersProvider>(context, listen: false)
+              .confirmOrder(ordersModel: widget.ordersModel);
+
+          // If successful, pop the screen or show success feedback
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+        } catch (error) {
+          // Handle errors gracefully, such as showing a snackbar or dialog
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to confirm order: $error')),
+            );
+          }
+        } finally {
+          // Reset the loading state
+          if (mounted) {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        }
+    }
+    : null,
+
                               child: Center(
                                 child: Text(
                                   'Confirm Delivery',
