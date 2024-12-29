@@ -10,7 +10,7 @@ class ProductProvider with ChangeNotifier {
 
   final FirebaseFirestore _fireStore = FireStoreService().instance;
 
-  List<ProductModel> _products = [];
+  final List<ProductModel> _products = [];
 
   List<ProductModel> get products => _products;
 
@@ -26,17 +26,17 @@ class ProductProvider with ChangeNotifier {
       .toList();
 
   List<ProductModel> searchQuery(String query) => _products
-  // TODO improving the search making phrase based search 
-  // like Sliding Window for Phrase Search 
-      .where(
-          (element) => element.name.toLowerCase().contains(query.toLowerCase()))
+      .where((element) =>
+          element.name.toLowerCase().contains(query.toLowerCase()) ||
+          element.category.toLowerCase().contains(query.toLowerCase()) ||
+          element.brand.toLowerCase().contains(query.toLowerCase()))
       .toList();
 
   Future<void> fetchProducts() async {
     await _fireStore.collection('products').get().then((snapshot) {
-      snapshot.docs.forEach((element) {
+      for (var element in snapshot.docs) {
         _products.insert(0, ProductModel.fromJson(element.data()));
-      });
+      }
       notifyListeners();
     });
   }
