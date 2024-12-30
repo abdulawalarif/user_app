@@ -15,7 +15,6 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-//TODO in first signup call app shows some network issue error in emulator pixel 3
 
 class _SignUpScreenState extends State<SignUpScreen> {
   late FocusNode _fullNameNode;

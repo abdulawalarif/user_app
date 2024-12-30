@@ -52,7 +52,7 @@ class _LogInScreenState extends State<LogInScreen> {
       _formKey.currentState!.save();
       setState(() => _isLoading = true);
 
-      authProvider.signIn(email: _user.email, password: _password).then((_) {
+     await authProvider.signIn(email: _user.email, password: _password).then((_) {
         if (Navigator.canPop(context)) Navigator.pop(context);
       }).catchError((e) {
         print(e.toString());
