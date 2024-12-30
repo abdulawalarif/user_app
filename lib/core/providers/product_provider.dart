@@ -25,6 +25,10 @@ class ProductProvider with ChangeNotifier {
           element.category.toLowerCase().contains(categoryTitle.toLowerCase()))
       .toList();
 
+
+//TODO fixing the search query 
+// And writing proper way of searching the products..
+
   List<ProductModel> searchQuery(String query) => _products
       .where((element) =>
           element.name.toLowerCase().contains(query.toLowerCase()) ||

@@ -105,10 +105,7 @@ class Routes {
         return SlidePageRoute(
           builder: (context) => UpdateUsersInformation(userModel: userModel),
         );
-      // return MaterialPageRoute(
-      //   builder: (BuildContext context) =>
-      //       UpdateUsersInformation(userModel: userModel),
-      // );
+      
 
       default:
         return MaterialPageRoute(

@@ -15,6 +15,8 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
+//TODO in first signup call app shows some network issue error in emulator pixel 3
+
 class _SignUpScreenState extends State<SignUpScreen> {
   late FocusNode _fullNameNode;
    late FocusNode _passwordNode;
@@ -61,7 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       setState(() => _isLoading = true);
 
-      authProvider
+     await authProvider
           .signUp(
         email: _userModel.email.toLowerCase().trim(),
         password: _password.trim(),
