@@ -86,8 +86,11 @@ class _ProductPurchaseScreenState extends State<ProductPurchaseScreen> {
     countryFocusNode = FocusNode();
     latitudeFocusNode = FocusNode();
     longitudeFocusNode = FocusNode();
+    fetchData();
+  }
 
-    Provider.of<UserDataProvider>(context, listen: false)
+  void fetchData() async {
+    await Provider.of<UserDataProvider>(context, listen: false)
         .fetchUserData()
         .then((userAddressData) {
       phoneNumberController.text = userAddressData.phoneNumber;
