@@ -11,7 +11,7 @@ class UserDataProvider with ChangeNotifier {
    UserModel _userData = UserModel();
   UserModel get userData => _userData;
 
-    
+//TODO turning this user data future to stream    
 
   Future<UserModel> fetchUserData() async {
     try {
@@ -30,6 +30,8 @@ class UserDataProvider with ChangeNotifier {
       return UserModel();
     }
   }
+
+
 
   Future<void> uploadUserData(UserModel userModel) async {
     try {
