@@ -73,7 +73,7 @@ class _LogInScreenState extends State<LogInScreen> {
   void _googleSignIn() async {
     setState(() => _isLoading = true);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.googleSignIn().then((_) {
+  await  authProvider.googleSignIn().then((_) {
       if (Navigator.canPop(context)) Navigator.pop(context);
     }).whenComplete(() => setState(() => _isLoading = false));
   }
